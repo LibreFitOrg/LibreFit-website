@@ -29,8 +29,6 @@ export async function onRequestPost(context) {
         }
 
         const plaintextMessage = `
-A new message was submitted via contact form.
-
 Email: ${email}
 
 Message:
@@ -52,7 +50,7 @@ ${message}
         });
 
         // --- Prepare and Send Email ---
-        const fromAddress = `Contact Form <noreply@${context.env.SUBDOMAIN}>`;
+        const fromAddress = `Contact Form <form@${context.env.SUBDOMAIN}>`;
         const toAddress = `${context.env.CONTACT_EMAIL}`;
         
         const emailPayload = {
@@ -60,7 +58,7 @@ ${message}
             to: [toAddress],
             subject: `New Contact Form Submission`,
             reply_to: email,
-            html: `<pre>${encryptedMessage}</pre>`, // The body is the encrypted PGP block
+            html: `<pre>${encryptedMessage}</pre>`,
         };
 
         const response = await fetch('https://api.resend.com/emails', {

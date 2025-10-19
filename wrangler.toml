@@ -16,4 +16,4 @@ name = "RATE_LIMITER"
 # This is a unique number for this rule within your account.
 namespace_id = "1001"
 # This defines the actual limit.
-simple = { limit = 5, period = 60 } # 5 requests every 1200 seconds.
+simple = { limit = 5, period = 1200 } # 5 requests every 1200 seconds.
