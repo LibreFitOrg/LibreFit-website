@@ -1,0 +1,23 @@
+{
+  "name": "librefit-website",
+  "version": "1.0.0",
+  "description": "Official LibreFit website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LibreFitOrg/LibreFit-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LibreFitOrg/LibreFit-website/issues"
+  },
+  "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
+  "dependencies": {
+    "openpgp": "^6.2.2"
+  }
+}
