@@ -1,4 +1,4 @@
-# wrangler.toml
+name = "librefit-website-525957" 
 
 # This tells Wrangler that this is a Cloudflare Pages project.
 # It specifies the directory containing your static assets (HTML, CSS).
