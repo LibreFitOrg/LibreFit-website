@@ -380,7 +380,7 @@ body {
 }
 .nav-chips {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 

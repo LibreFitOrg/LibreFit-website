@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0E1416" />
+  <title>LibreFit - Privacy policy</title>
+  
+  <link rel="icon" href="/assets/logo.svg">
+
+
+
+  <link rel="stylesheet" href="/styles.css">
+
+  <style>
+    .form-group { margin-bottom: var(--space-4); }
+    
+    label { 
+        display: block; 
+        margin-bottom: var(--space-2); 
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+        padding: var(--space-3);
+        font-family: var(--md-ref-typeface-plain);
+        font-size: 1rem;
+        background-color: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        border: 1px solid var(--md-sys-color-outline);
+        border-radius: var(--radius-sm);
+        transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--md-sys-color-primary);
+        box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+    }
+    
+    .honeypot {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 0;
+        width: 0;
+        z-index: -1;
+    }
+
+    /* Make the main button full-width */
+    .md-filled-button {
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="LibreFit Home">
+        <span class="brand-icon">
+          <img class="brand-logo" src="/assets/logo_trimmed.svg" alt="">
+        </span>
+        <p class="brand-title">
+          <span class="brand-title-accent">Libre</span>Fit
+        </p>
+      </a>
+
+      <nav class="nav-chips" aria-label="Primary navigation">
+        <a href="/" class="md-assist-chip" >
+          <span class="material-symbols-outlined">home</span>
+          Home
+        </a>
+        <a href="/privacy.html" class="md-assist-chip" >
+          <span class="material-symbols-outlined">policy</span>
+          Privacy
+        </a>
+        <a href="/support.html" class="md-assist-chip">
+          <span class="material-symbols-outlined">favorite</span>
+          Support
+        </a>
+        <a href="/license-info.html" class="md-assist-chip">
+          <span class="material-symbols-outlined">license</span>
+          License
+        </a>
+        <a aria-current="page" class="md-assist-chip active">
+          <span class="material-symbols-outlined">person</span>
+          Contact
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="content-card">
+        <h1 class="md-typescale-headline-large">Contact Us</h1>
+        <p class="intro-text">Have a question or want to work together? Fill out the form below.</p>
+        <hr>
+        <form method="POST" action="/api/contact">
+            <div class="form-group">
+                <label for="name" class="md-typescale-title-small">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="md-typescale-title-small">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message" class="md-typescale-title-small">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="pgp" class="md-typescale-title-small">PGP key (optional)</label>
+                <input type="text" id="pgp" name="pgp">
+            </div>
+
+            <!-- Honeypot Field for Bots -->
+            <div class="honeypot">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject">
+            </div>
+
+            <div style="margin-top: var(--space-6);">
+                <button type="submit" class="md-filled-button">Send Message</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-chips">
+        <div class="md-assist-chip"><span class="material-symbols-outlined">android</span> Jetpack Compose</div>
+        <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy‑first</div>
+        <div class="md-assist-chip"><span class="material-symbols-outlined">palette</span> Material Expressive</div>
+      </div>
+      <div class="footer-copyright md-typescale-body-small">
+        <span>© 2025 LibreFit. <a href="/license-info.html">GPL‑3.0 licensed with additional terms</a>. No trackers. No cloud.</span>
+        
+        <details class="footer-attribution">
+          <summary>Credits</summary>
+          <div class="attribution-content">
+            This site uses the Roboto font and Material Symbols icons, both made available by Google and licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">Apache License 2.0</a>.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
