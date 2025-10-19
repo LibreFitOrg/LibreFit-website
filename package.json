@@ -19,5 +19,8 @@
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
     "openpgp": "^6.2.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.43.0"
   }
 }

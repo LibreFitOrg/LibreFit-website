@@ -1,0 +1,19 @@
+# wrangler.toml
+
+# This tells Wrangler that this is a Cloudflare Pages project.
+# It specifies the directory containing your static assets (HTML, CSS).
+pages_build_output_dir = "public"
+
+# This enables Node.js APIs in your function, which is a best practice
+# for projects with dependencies like 'openpgp'.
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+
+# This creates the Rate Limiter binding.
+[[ratelimits]]
+# This is the variable name uses in the code (context.env.RATE_LIMITER).
+name = "RATE_LIMITER" 
+# This is a unique number for this rule within your account.
+namespace_id = "1001"
+# This defines the actual limit.
+simple = { limit = 5, period = 60 } # 5 requests every 1200 seconds.

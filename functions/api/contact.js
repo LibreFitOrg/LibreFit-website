@@ -7,6 +7,19 @@ import * as openpgp from 'openpgp';
  */
 export async function onRequestPost(context) {
     try {
+        // Rate limiting by IP
+        const clientIP = context.request.headers.get('CF-Connecting-IP');
+        const limiter = context.env.RATE_LIMITER;
+
+        const { success } = await limiter.limit({ key: clientIP });
+
+        if (!success) {
+            return new Response(
+                'Too many requests from this IP. Please try again later.', {status: 429,}
+            );
+        }
+
+
         const formData = await context.request.formData();
         const { email, message, subject } = Object.fromEntries(formData);
 
