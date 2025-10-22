@@ -3,21 +3,20 @@ import * as openpgp from 'openpgp';
 /**
  * POST /api/contact
  * Handles a contact form submission, PGP-encrypts the content, and sends it via Resend.
- * This version does not require a name and uses environment variables for configuration.
  */
 export async function onRequestPost(context) {
     try {
         // Rate limiting by IP
-        const clientIP = context.request.headers.get('CF-Connecting-IP');
-        const limiter = context.env.RATE_LIMITER;
+        // const clientIP = context.request.headers.get('CF-Connecting-IP');
+        // const limiter = context.env.RATE_LIMITER;
 
-        const { success } = await limiter.limit({ key: clientIP });
+        // const { success } = await limiter.limit({ key: clientIP });
 
-        if (!success) {
-            return new Response(
-                'Too many requests from this IP. Please try again later.', {status: 429,}
-            );
-        }
+        // if (!success) {
+        //    return new Response(
+        //        'Too many requests from this IP. Please try again later.', {status: 429,}
+        //    );
+        // }
 
 
         const formData = await context.request.formData();
@@ -56,7 +55,7 @@ ${message}
         const emailPayload = {
             from: fromAddress,
             to: [toAddress],
-            subject: `New Contact Form Submission`,
+            subject: `Contact Form Submission`,
             reply_to: email,
             html: `<pre>${encryptedMessage}</pre>`,
         };
