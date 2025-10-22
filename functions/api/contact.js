@@ -27,10 +27,14 @@ export async function onRequestPost(context) {
             return Response.redirect(`${new URL(context.request.url).origin}/contact-success.html`, 302);
         }
 
+        if (!email || !message) {
+            return new Response('Invalid form data.', { status: 400 });
+        }
+
         const MAX_LENGTH = 1000;
 
-        if (!message || message.length > MAX_LENGTH) {
-            console.error('Validation Failed: Message is too long.');
+        if (message.length > MAX_LENGTH) {
+            console.error('Message is too long.');
             return new Response(`Error: Message cannot exceed ${MAX_LENGTH} characters.`, { status: 400 });
         }
 
@@ -64,7 +68,7 @@ ${message}
             to: [toAddress],
             subject: `Contact Form Submission`,
             reply_to: [email],
-            html: `<pre>${encryptedMessage}</pre>`,
+            text: message,
         };
 
         const response = await fetch('https://api.resend.com/emails', {
