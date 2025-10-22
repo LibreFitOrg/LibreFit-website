@@ -27,6 +27,13 @@ export async function onRequestPost(context) {
             return Response.redirect(`${new URL(context.request.url).origin}/contact-success.html`, 302);
         }
 
+        const MAX_LENGTH = 1000;
+
+        if (!message || message.length > MAX_LENGTH) {
+            console.error('Validation Failed: Message is too long.');
+            return new Response(`Error: Message cannot exceed ${MAX_LENGTH} characters.`, { status: 400 });
+        }
+
         const plaintextMessage = `
 Email: ${email}
 
