@@ -56,7 +56,7 @@ ${message}
             from: fromAddress,
             to: [toAddress],
             subject: `Contact Form Submission`,
-            reply_to: email,
+            reply_to: [email],
             html: `<pre>${encryptedMessage}</pre>`,
         };
 
