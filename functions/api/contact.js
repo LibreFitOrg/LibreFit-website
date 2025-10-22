@@ -1,5 +1,19 @@
 import * as openpgp from 'openpgp';
 
+async function verifyTurnstile(token, ip, secretKey) {
+    let formData = new FormData();
+    formData.append('secret', secretKey);
+    formData.append('response', token);
+    formData.append('remoteip', ip);
+
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: formData,
+    });
+
+    return await response.json();
+}
+
 /**
  * POST /api/contact
  * Handles a contact form submission, PGP-encrypts the content, and sends it via Resend.
@@ -20,11 +34,20 @@ export async function onRequestPost(context) {
 
 
         const formData = await context.request.formData();
-        const { email, message, subject } = Object.fromEntries(formData);
+        const { email, message, subject, turnstileToken } = Object.fromEntries(formData);
 
         // Honeypot for basic spam filtering
         if (subject) {
             return Response.redirect(`${new URL(context.request.url).origin}/contact-success.html`, 302);
+        }
+
+        // --- Verify Turnstile token ---
+        const secretKey = context.env.TURNSTILE_SECRET_KEY;
+        const outcome = await verifyTurnstile(turnstileToken, ip, secretKey);
+
+        if (!outcome.success) {
+            console.error('Turnstile verification failed:', outcome['error-codes'] || 'Unknown error');
+            return new Response('The CAPTCHA validation failed. Please try again.', { status: 403 }); // 403 Forbidden
         }
 
         if (!email || !message) {

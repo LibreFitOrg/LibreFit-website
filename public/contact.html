@@ -53,6 +53,12 @@
         z-index: -1;
     }
 
+    .turnstile-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
     /* Make the main button full-width */
     .md-filled-button {
         width: 100%;
@@ -118,6 +124,12 @@
                 <label for="subject">Subject</label>
                 <input type="text" id="subject" name="subject">
             </div>
+
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="turnstile-container">
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8JCf8sSsYyrET5"></div>
+            </div>
+            
 
             <div style="margin-top: var(--space-6);">
                 <button type="submit" class="md-filled-button">Send Message</button>
