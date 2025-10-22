@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
 
         const formData = await context.request.formData();
         const { email, message, subject, turnstileToken } = Object.fromEntries(formData);
-        const ip = request.headers.get('CF-Connecting-IP');
+        const ip = context.request.headers.get('CF-Connecting-IP');
 
         // Honeypot for basic spam filtering
         if (subject) {
