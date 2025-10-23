@@ -1,8 +1,8 @@
 import * as openpgp from 'openpgp';
 
-async function verifyTurnstile(token, ip, secretKey) {
+async function verifyTurnstile(token, ip) {
     let formData = new FormData();
-    formData.append('secret', secretKey);
+    formData.append('secret', context.env.TURNSTILE_SECRET_KEY);
     formData.append('response', token);
     formData.append('remoteip', ip);
 
@@ -40,8 +40,9 @@ export async function onRequestPost(context) {
 
 
         const formData = await context.request.formData();
-        const { email, message, subject, turnstileToken } = Object.fromEntries(formData);
-        const ip = context.request.headers.get('CF-Connecting-IP');
+        const { email, message, subject } = Object.fromEntries(formData);
+        const turnstileToken = formData.get('cf-turnstile-response')
+        const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
 
         // Honeypot for basic spam filtering
         if (subject) {
@@ -49,8 +50,7 @@ export async function onRequestPost(context) {
         }
 
         // --- Verify Turnstile token ---
-        const secretKey = context.env.TURNSTILE_SECRET_KEY;
-        const outcome = await verifyTurnstile(turnstileToken, ip, secretKey);
+        const outcome = await verifyTurnstile(turnstileToken, ip);
 
         if (!outcome.success) {
             console.error('Turnstile verification failed:', outcome['error-codes'] || 'Unknown error');
