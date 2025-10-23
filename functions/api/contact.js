@@ -42,7 +42,7 @@ export async function onRequestPost(context) {
         const formData = await context.request.formData();
         const { email, message, subject } = Object.fromEntries(formData);
         const turnstileToken = formData.get('cf-turnstile-response')
-        const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+        const ip = context.request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
 
         // Honeypot for basic spam filtering
         if (subject) {
