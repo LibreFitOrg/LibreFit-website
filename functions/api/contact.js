@@ -1,8 +1,8 @@
 import * as openpgp from 'openpgp';
 
-async function verifyTurnstile(token, ip) {
+async function verifyTurnstile(token, ip, secretKey) {
     let formData = new FormData();
-    formData.append('secret', context.env.TURNSTILE_SECRET_KEY);
+    formData.append('secret', secretKey);
     formData.append('response', token);
     formData.append('remoteip', ip);
 
@@ -50,7 +50,7 @@ export async function onRequestPost(context) {
         }
 
         // --- Verify Turnstile token ---
-        const outcome = await verifyTurnstile(turnstileToken, ip);
+        const outcome = await verifyTurnstile(turnstileToken, ip, context.env.TURNSTILE_SECRET_KEY);
 
         if (!outcome.success) {
             console.error('Turnstile verification failed:', outcome['error-codes'] || 'Unknown error');
