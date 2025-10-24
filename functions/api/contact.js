@@ -12,7 +12,7 @@ async function verifyTurnstile(token, ip, secretKey) {
             body: formData
         });
 
-        const result = await response.json();
+        const result= await response.json();
         return result;
     } catch (error) {
         console.error('Turnstile validation error:', error);
@@ -25,19 +25,17 @@ async function verifyTurnstile(token, ip, secretKey) {
  * Handles a contact form submission, PGP-encrypts the content, and sends it via Resend.
  */
 export async function onRequestPost(context) {
+    const successPath = '/contact-success.html';
+    const failPath = '/contact-fail.html';
+    const failCaptchaPath = '/contact-fail-captcha.html';
+    const invalidDataPath = '/contact-invalid-data.html';
+
+    const successRedirectURL = new URL(successPath, context.request.url);
+    const failRedirectURL = new URL(failPath, context.request.url);
+    const failCaptchaRedirectURL = new URL(failCaptchaPath, context.request.url);
+    const invalidDataRedirectURL = new URL(invalidDataPath, context.request.url);
+
     try {
-        // Rate limiting by IP
-        // const clientIP = context.request.headers.get('CF-Connecting-IP');
-        // const limiter = context.env.RATE_LIMITER;
-
-        // const { success } = await limiter.limit({ key: clientIP });
-
-        // if (!success) {
-        //    return new Response(
-        //        'Too many requests from this IP. Please try again later.', {status: 429,}
-        //    );
-        // }
-
 
         const formData = await context.request.formData();
         const { email, message, subject } = Object.fromEntries(formData);
@@ -46,46 +44,45 @@ export async function onRequestPost(context) {
 
         // Honeypot for basic spam filtering
         if (subject) {
-            return Response.redirect(`${new URL(context.request.url).origin}/contact-success.html`, 302);
+            console.error('Subject was submitted so the request is likely made by a bot.')
+            return Response.redirect(failCaptchaRedirectURL, 403);
         }
 
         // --- Verify Turnstile token ---
-        const outcome = await verifyTurnstile(turnstileToken, ip, context.env.TURNSTILE_SECRET_KEY);
+        const turnstileKey = context.env.TURNSTILE_SECRET_KEY
+        if (!turnstileKey) {
+            console.error('TURNSTILE_SECRET_KEY environment variable not set.');
+            return Response.redirect(failRedirectURL, 303);
+        }
+        const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
 
         if (!outcome.success) {
             console.error('Turnstile verification failed:', outcome['error-codes'] || 'Unknown error');
-            return new Response('The CAPTCHA validation failed. Please try again.', { status: 403 }); // 403 Forbidden
+            return Response.redirect(failCaptchaRedirectURL, 403); // 403 Forbidden
         }
 
         if (!email || !message) {
-            return new Response('Invalid form data.', { status: 400 });
+            return Response.redirect(invalidDataRedirectURL, 400);
         }
 
         const MAX_LENGTH = 1000;
 
         if (message.length > MAX_LENGTH) {
             console.error('Message is too long.');
-            return new Response(`Error: Message cannot exceed ${MAX_LENGTH} characters.`, { status: 400 });
+            return Response.redirect(invalidDataRedirectURL, 400);
         }
-
-        const plaintextMessage = `
-Email: ${email}
-
-Message:
-${message}
-        `;
 
         // --- PGP Encryption ---
         const publicKeyArmored = context.env.PGP_PUBLIC_KEY;
         if (!publicKeyArmored) {
             console.error('PGP_PUBLIC_KEY environment variable not set.');
-            return new Response('Server configuration error.', { status: 500 });
+            return Response.redirect(failRedirectURL, 303);
         }
         
         const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
 
         const encryptedMessage = await openpgp.encrypt({
-            message: await openpgp.createMessage({ text: plaintextMessage }),
+            message: await openpgp.createMessage({ text: message }),
             encryptionKeys: publicKey,
         });
 
@@ -98,7 +95,7 @@ ${message}
             to: [toAddress],
             subject: `Contact Form Submission`,
             reply_to: [email],
-            text: message,
+            text: encryptedMessage,
         };
 
         const response = await fetch('https://api.resend.com/emails', {
@@ -113,13 +110,14 @@ ${message}
         if (!response.ok) {
             const error = await response.json();
             console.error('Failed to send email:', error);
-            return new Response('Error: Failed to send message.', { status: 500 });
+            return Response.redirect(failRedirectURL, 500);
         }
 
-        return Response.redirect(`${new URL(context.request.url).origin}/contact-success.html`, 302);
+
+        return Response.redirect(successRedirectURL, 303);
 
     } catch (error) {
         console.error('Error processing form submission:', error);
-        return new Response('An unexpected error occurred.', { status: 500 });
+        return Response.redirect(failRedirectURL, 500);
     }
 }
