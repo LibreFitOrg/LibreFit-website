@@ -25,9 +25,9 @@ async function verifyTurnstile(token, ip, secretKey) {
  * Handles a contact form submission, PGP-encrypts the content, and sends it via Resend.
  */
 export async function onRequestPost(context) {
-    const successPath = '/contact-success.html';
-    const failPath = '/contact-fail.html';
-    const invalidDataPath = '/contact-invalid-data.html';
+    const successPath = '/results/contact-success.html';
+    const failPath = '/results/contact-fail.html';
+    const invalidDataPath = '/results/contact-invalid-data.html';
 
     const successRedirectURL = new URL(successPath, context.request.url);
     const failRedirectURL = new URL(failPath, context.request.url);
