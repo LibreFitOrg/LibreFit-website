@@ -27,12 +27,10 @@ async function verifyTurnstile(token, ip, secretKey) {
 export async function onRequestPost(context) {
     const successPath = '/contact-success.html';
     const failPath = '/contact-fail.html';
-    const failCaptchaPath = '/contact-fail-captcha.html';
     const invalidDataPath = '/contact-invalid-data.html';
 
     const successRedirectURL = new URL(successPath, context.request.url);
     const failRedirectURL = new URL(failPath, context.request.url);
-    const failCaptchaRedirectURL = new URL(failCaptchaPath, context.request.url);
     const invalidDataRedirectURL = new URL(invalidDataPath, context.request.url);
 
     try {
@@ -45,38 +43,30 @@ export async function onRequestPost(context) {
         // Honeypot for basic spam filtering
         if (subject) {
             console.error('Subject was submitted so the request is likely made by a bot.')
-            return Response.redirect(failCaptchaRedirectURL, 403);
+            return Response.redirect(successRedirectURL, 303);
         }
 
         // --- Verify Turnstile token ---
         const turnstileKey = context.env.TURNSTILE_SECRET_KEY
         if (!turnstileKey) {
-            console.error('TURNSTILE_SECRET_KEY environment variable not set.');
-            return Response.redirect(failRedirectURL, 303);
+            throw new Error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
         }
         const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
 
         if (!outcome.success) {
-            console.error('Turnstile verification failed:', outcome['error-codes'] || 'Unknown error');
-            return Response.redirect(failCaptchaRedirectURL, 403); // 403 Forbidden
-        }
-
-        if (!email || !message) {
-            return Response.redirect(invalidDataRedirectURL, 400);
+            return new Response("CAPTCHA verification failed.", { status: 403 });
         }
 
         const MAX_LENGTH = 1000;
 
-        if (message.length > MAX_LENGTH) {
-            console.error('Message is too long.');
-            return Response.redirect(invalidDataRedirectURL, 400);
+        if (!email || !message || message.length > MAX_LENGTH) {
+            return Response.redirect(invalidDataRedirectURL, 302);
         }
 
         // --- PGP Encryption ---
         const publicKeyArmored = context.env.PGP_PUBLIC_KEY;
         if (!publicKeyArmored) {
-            console.error('PGP_PUBLIC_KEY environment variable not set.');
-            return Response.redirect(failRedirectURL, 303);
+            throw new Error("Server configuration error: PGP_PUBLIC_KEY is not set.");
         }
         
         const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
@@ -85,6 +75,16 @@ export async function onRequestPost(context) {
             message: await openpgp.createMessage({ text: message }),
             encryptionKeys: publicKey,
         });
+
+        const contactEmail = context.env.CONTACT_EMAIL
+        if(!contactEmail) {
+            throw new Error("Server configuration error: CONTACT_EMAIL is not set.");
+        }
+
+        const subdomain = context.env.SUBDOMAIN
+        if(!contactEmail) {
+            throw new Error("Server configuration error: SUBDOMAIN is not set.");
+        }
 
         // --- Prepare and Send Email ---
         const fromAddress = `Contact Form <form@${context.env.SUBDOMAIN}>`;
@@ -98,19 +98,23 @@ export async function onRequestPost(context) {
             text: encryptedMessage,
         };
 
+
+        const resendApiKey = context.env.request.RESEND_API_KEY
+        if(!resendApiKey) {
+            throw new Error("Server configuration error: RESEND_API_KEY is not set.");
+        }
         const response = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${context.env.RESEND_API_KEY}`,
+                'Authorization': `Bearer ${resendApiKey}`,
             },
             body: JSON.stringify(emailPayload),
         });
 
         if (!response.ok) {
             const error = await response.json();
-            console.error('Failed to send email:', error);
-            return Response.redirect(failRedirectURL, 500);
+            throw new Error(`Resend API failed: ${JSON.stringify(error)}`);
         }
 
 
@@ -118,6 +122,6 @@ export async function onRequestPost(context) {
 
     } catch (error) {
         console.error('Error processing form submission:', error);
-        return Response.redirect(failRedirectURL, 500);
+        return Response.redirect(failRedirectURL, 302);
     }
 }
