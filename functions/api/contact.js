@@ -99,7 +99,7 @@ export async function onRequestPost(context) {
         };
 
 
-        const resendApiKey = context.env.request.RESEND_API_KEY
+        const resendApiKey = context.env.RESEND_API_KEY
         if(!resendApiKey) {
             throw new Error("Server configuration error: RESEND_API_KEY is not set.");
         }
