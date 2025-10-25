@@ -93,7 +93,7 @@ export async function onRequestPost(context) {
         const emailPayload = {
             from: fromAddress,
             to: [toAddress],
-            subject: `Contact Form Submission`,
+            subject: `New message from ${email}`,
             reply_to: [email],
             text: encryptedMessage,
         };
