@@ -26,7 +26,7 @@ export async function onRequestPost(context) {
     trocadorUrl.searchParams.set('address', DONATION_ADDRESS);
     trocadorUrl.searchParams.set('fiat_equiv', 'USD');
     trocadorUrl.searchParams.set('amount', amountUSD.toFixed(2));
-    trocadorUrl.searchParams.set('donation', 'True');
+    trocadorUrl.searchParams.set('donation', 'False');
     trocadorUrl.searchParams.set('direct', 'False');
     trocadorUrl.searchParams.set('name', 'TestDonation'); // Optional: Customize the name
     trocadorUrl.searchParams.set('description', 'Thank you for your support!'); // Optional
@@ -40,7 +40,20 @@ export async function onRequestPost(context) {
     if (!apiResponse.ok) {
       const errorText = await apiResponse.text();
       console.error("Trocador API Error:", errorText);
-      return new Response(`Error communicating with payment processor: ${apiResponse.statusText}`, { status: 502 });
+      
+      // Check for the specific "Bad Request" status from Trocador
+      if (apiResponse.status === 400 && errorText.includes("Invalid amount parameter")) {
+        // Use a regular expression to extract the minimum amount from the error string.
+        const match = errorText.match(/bigger than (\d+\.?\d*)/);
+        
+        if (match && match[1]) {
+          const minimumAmount = match[1];
+          return generateMinimumAmountErrorPage(amountUSD, minimumAmount);
+        }
+      }
+      
+      // For all other errors, return a generic error page.
+      return new Response(`Error communicating with payment processor: ${errorText}`, { status: 502 });
     }
 
     const data = await apiResponse.json();
@@ -100,4 +113,36 @@ export async function onRequestPost(context) {
     console.error("Donation function error:", error);
     return new Response("An unexpected error occurred.", { status: 500 });
   }
+}
+
+
+/**
+ * Helper function to generate a specific, user-friendly error page
+ * when the donation amount is too low.
+ */
+function generateMinimumAmountErrorPage(submittedAmount, minimumAmount) {
+  const friendlySubmitted = submittedAmount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const friendlyMinimum = parseFloat(minimumAmount).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+  const errorHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Amount Too Low</title>
+        <style>/* ... your styles ... */ .error-box { border-color: #dc3545; background-color: #fbebee; padding: 1rem; border-radius: 8px; }</style>
+    </head>
+    <body>
+        <div class="card">
+            <h1>Amount Too Low</h1>
+            <div class="error-box">
+                <p>You entered <strong>${friendlySubmitted}</strong>.</p>
+                <p>Unfortunately, the current minimum for a payment is <strong>${friendlyMinimum}</strong> due to network and exchange fees.</p>
+            </div>
+            <p style="margin-top: 2rem;">Please go back and enter an amount greater than ${friendlyMinimum}.</p>
+            <a href="/" style="display: inline-block; margin-top: 1rem; text-decoration: none; background: #007bff; color: white; padding: 0.5rem 1rem; border-radius: 4px;">Go Back</a>
+        </div>
+    </body>
+    </html>
+  `;
+  return new Response(errorHtml, { status: 400, headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
 }
