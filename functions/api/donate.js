@@ -1,9 +1,9 @@
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { DONATION_TICKER_TO, DONATION_NETWORK_TO, DONATION_ADDRESS, DONATION_DB } = env;
+    const { DONATION_ADDRESS, DONATION_DB } = env;
     
-    if (!DONATION_TICKER_TO || !DONATION_NETWORK_TO || !DONATION_ADDRESS) {
+    if (!DONATION_ADDRESS) {
       return new Response("Server is not configured for donations.", { status: 500 });
     }
 
@@ -21,8 +21,8 @@ export async function onRequestPost(context) {
     
     const trocadorUrl = new URL('https://trocador.app/anonpay/');
     
-    trocadorUrl.searchParams.set('ticker_to', DONATION_TICKER_TO);
-    trocadorUrl.searchParams.set('network_to', DONATION_NETWORK_TO);
+    trocadorUrl.searchParams.set('ticker_to', 'xmr');
+    trocadorUrl.searchParams.set('network_to', 'Mainnet');
     trocadorUrl.searchParams.set('address', DONATION_ADDRESS);
     trocadorUrl.searchParams.set('fiat_equiv', 'USD');
     trocadorUrl.searchParams.set('amount', amountUSD.toFixed(2));
