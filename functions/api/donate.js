@@ -26,8 +26,9 @@ export async function onRequestPost(context) {
     trocadorUrl.searchParams.set('address', DONATION_ADDRESS);
     trocadorUrl.searchParams.set('fiat_equiv', 'USD');
     trocadorUrl.searchParams.set('amount', amountUSD.toFixed(2));
-    trocadorUrl.searchParams.set('donation', 'True');
+    trocadorUrl.searchParams.set('donation', 'False');
     trocadorUrl.searchParams.set('direct', 'False');
+    trocadorUrl.searchParams.set('editable', 'False');
     trocadorUrl.searchParams.set('name', 'TestDonation'); // Optional: Customize the name
     trocadorUrl.searchParams.set('description', 'Thank you for your support!'); // Optional
     trocadorUrl.searchParams.set('webhook', webhookUrl);  
