@@ -37,26 +37,27 @@ export async function onRequestPost(context) {
 
     const apiResponse = await fetch(trocadorUrl.toString());
 
-    if (!apiResponse.ok) {
-      const errorText = await apiResponse.text();
-      console.error("Trocador API Error:", errorText);
-      
-      // Check for the specific "Bad Request" status from Trocador
-      if (apiResponse.status === 400 && errorText.includes("Invalid amount parameter")) {
-        // Use a regular expression to extract the minimum amount from the error string.
-        const match = errorText.match(/bigger than (\d+\.?\d*)/);
-        
+    const responseText = await apiResponse.text();
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch (error) {
+      // If JSON.parse fails, it's because the body was not JSON.
+      // This is the  "error in a 200 OK response" scenario.
+      if (error instanceof SyntaxError && responseText.includes("Invalid amount parameter")) {
+        const match = responseText.match(/bigger than (\d+\.?\d*)/);
         if (match && match[1]) {
           const minimumAmount = match[1];
           return generateMinimumAmountErrorPage(amountUSD, minimumAmount);
         }
       }
-      
-      // For all other errors, return a generic error page.
-      return new Response(`Error communicating with payment processor: ${errorText}`, { status: 502 });
+
+      // If it was another parsing error or an unknown text response.
+      console.error("Failed to parse Trocador response. Body was:", responseText);
+      return new Response("Received an invalid or unreadable response from the payment processor.", { status: 502 });
     }
 
-    const data = await apiResponse.json();
     const donationId = data.ID;
     const redirectUrl = data.url;
 
