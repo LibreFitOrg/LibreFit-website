@@ -28,12 +28,11 @@ export async function onRequestPost(context) {
     trocadorUrl.searchParams.set('amount', amountUSD.toFixed(2));
     trocadorUrl.searchParams.set('donation', 'False');
     trocadorUrl.searchParams.set('direct', 'False');
-    trocadorUrl.searchParams.set('editable', 'False');
     trocadorUrl.searchParams.set('name', 'TestDonation'); // Optional: Customize the name
     trocadorUrl.searchParams.set('description', 'Thank you for your support!'); // Optional
     trocadorUrl.searchParams.set('webhook', webhookUrl);  
     // From official docs: if you provide an URL on this parameter, every time the status of the transaction changes,  you will receive
-    //  on this URL a POST request sending you the transaction data; this avoids having to call so many times our server to check the transaction status (Optional); 
+    // on this URL a POST request sending you the transaction data; this avoids having to call so many times our server to check the transaction status (Optional); 
 
 
     const apiResponse = await fetch(trocadorUrl.toString());
