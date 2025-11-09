@@ -68,15 +68,15 @@ export async function onRequestPost(context) {
         }
 
         // Prepare and send email
-        const fromAddress = `Contact Form <form@${context.env.SUBDOMAIN}>`;
-        const toAddress = `${context.env.CONTACT_EMAIL}`;
+        const fromAddress = `Contact Form <form@${subdomain}>`;
+        const toAddress = `${contactEmail}`;
         
         const emailPayload = {
             from: fromAddress,
             to: [toAddress],
             subject: `New message from ${email}`,
             reply_to: [email],
-            text: encryptedMessage,
+            text: encrypted_message,
         };
 
 
