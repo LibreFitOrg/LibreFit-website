@@ -9,6 +9,8 @@
   
   <link rel="icon" href="/assets/logo.svg">
 
+  <!--Used for contact encryption at client-side-->
+  <script src="https://cdn.jsdelivr.net/npm/openpgp@5.11.1/dist/openpgp.min.js"></script>
 
 
   <link rel="stylesheet" href="/styles.css">
@@ -126,6 +128,64 @@
             </div>
         </form>
         <hr>
+
+        <!-- Client-side encryption form -->
+        <script>
+            const form = document.getElementById('contact-form');
+            const messageTextarea = document.getElementById('message');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            // The path to public key file.
+            const pgpKeyPath = '/pgp-key.asc';
+
+            form.addEventListener('submit', async (event) => {
+                // Prevent the default form submission
+                event.preventDefault();
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Encrypting...';
+
+                try {
+                    const response = await fetch(pgpKeyPath);
+                    if (!response.ok) {
+                      throw new Error(`Network error: Could not fetch PGP key from ${pgpKeyPath}`);
+                    }
+                    const publicKeyArmored = await response.text();
+                    const plaintextMessage = messageTextarea.value;
+                    
+                    // Encrypt the message
+                    const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
+
+                    const encryptedMessage = await openpgp.encrypt({
+                      message: await openpgp.createMessage({ text: plaintextMessage }),
+                      encryptionKeys: publicKey,
+                    });
+
+                    // Create a new hidden input for the encrypted data
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'encrypted_message';
+                    hiddenInput.value = encryptedMessage;
+                    form.appendChild(hiddenInput);
+
+                    // (Security) Clear the original message so plaintext is not sent
+                    messageTextarea.value = '';
+                    messageTextarea.removeAttribute('name'); // Extra precaution
+
+                    // Submit the form with the encrypted data
+                    form.submit();
+
+                } catch (error) {
+                    console.error('Encryption failed:', error);
+                    // Restore form if anything goes wrong (network or encryption)
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                    alert('An error occurred during encryption. Please check your connection and try again.');
+                }
+            });
+        </script>
+
+
         <h2 class="md-typescale-headline-medium">SimpleX</h2>
         <p class="md-typescale-body-large"><a href="https://simplex.chat" target="_blank" rel="noopener noreferrer" >SimpleX</a> is an anonymous, decentralized messenger providing end-to-end encrypted chats without requiring phone numbers, emails, or any personal identifier—not even random IDs.</p>
         <p class="md-typescale-body-large">Tap <a href="https://smp8.simplex.im/a#orqAPac3b1X5kGWdOhvkkZSBY1r5vtAnDyepzY4-PME" target="_blank" rel="noopener noreferrer" >here</a> to start a chat.</p>

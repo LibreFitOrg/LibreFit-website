@@ -34,41 +34,28 @@ export async function onRequestPost(context) {
     const invalidDataRedirectURL = new URL(invalidDataPath, context.request.url);
 
     try {
-
         const formData = await context.request.formData();
-        const { email, message } = Object.fromEntries(formData);
-        const turnstileToken = formData.get('cf-turnstile-response')
+        
+        const email = formData.get('email');
+        const encrypted_message = formData.get('encrypted_message');
+        const turnstileToken = formData.get('cf-turnstile-response');
         const ip = context.request.headers.get('CF-Connecting-IP') || context.request.headers.get('X-Forwarded-For') || 'unknown';
 
-        // --- Verify Turnstile token ---
-        const turnstileKey = context.env.TURNSTILE_SECRET_KEY
+        // Verify Turnstile token
+        const turnstileKey = context.env.TURNSTILE_SECRET_KEY;
         if (!turnstileKey) {
             throw new Error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
         }
         const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
 
         if (!outcome.success) {
-            return new Response("CAPTCHA verification failed.", { status: 403 });
+            return Response.redirect(failRedirectURL, 302);
         }
 
-        const MAX_LENGTH = 1000;
 
-        if (!email || !message || message.length > MAX_LENGTH) {
+        if (!email || !encrypted_message) {
             return Response.redirect(invalidDataRedirectURL, 302);
         }
-
-        // --- PGP Encryption ---
-        const publicKeyArmored = context.env.PGP_PUBLIC_KEY;
-        if (!publicKeyArmored) {
-            throw new Error("Server configuration error: PGP_PUBLIC_KEY is not set.");
-        }
-        
-        const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
-
-        const encryptedMessage = await openpgp.encrypt({
-            message: await openpgp.createMessage({ text: message }),
-            encryptionKeys: publicKey,
-        });
 
         const contactEmail = context.env.CONTACT_EMAIL
         if(!contactEmail) {
@@ -80,7 +67,7 @@ export async function onRequestPost(context) {
             throw new Error("Server configuration error: SUBDOMAIN is not set.");
         }
 
-        // --- Prepare and Send Email ---
+        // Prepare and send email
         const fromAddress = `Contact Form <form@${context.env.SUBDOMAIN}>`;
         const toAddress = `${context.env.CONTACT_EMAIL}`;
         
