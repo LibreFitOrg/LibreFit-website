@@ -42,16 +42,6 @@
         border-color: var(--md-sys-color-primary);
         box-shadow: 0 0 0 1px var(--md-sys-color-primary);
     }
-    
-    .honeypot {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 0;
-        width: 0;
-        z-index: -1;
-    }
 
     .turnstile-container {
       display: flex;
@@ -123,12 +113,6 @@
             <div class="form-group">
                 <label for="message" class="md-typescale-title-small">Message</label>
                 <textarea id="message" name="message" rows="5" required maxlength="1000"></textarea>
-            </div>
-
-            <!-- Honeypot Field for Bots -->
-            <div class="honeypot">
-                <label for="subject">Subject</label>
-                <input type="text" id="subject" name="subject">
             </div>
 
             <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

@@ -36,15 +36,9 @@ export async function onRequestPost(context) {
     try {
 
         const formData = await context.request.formData();
-        const { email, message, subject } = Object.fromEntries(formData);
+        const { email, message } = Object.fromEntries(formData);
         const turnstileToken = formData.get('cf-turnstile-response')
         const ip = context.request.headers.get('CF-Connecting-IP') || context.request.headers.get('X-Forwarded-For') || 'unknown';
-
-        // Honeypot for basic spam filtering
-        if (subject) {
-            console.error('Subject was submitted so the request is likely made by a bot.')
-            return Response.redirect(successRedirectURL, 303);
-        }
 
         // --- Verify Turnstile token ---
         const turnstileKey = context.env.TURNSTILE_SECRET_KEY
