@@ -827,6 +827,29 @@ main {
 }
 
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*  Apply the animation and link it to the scroll timeline */
+.reveal {
+  /* Attach the animation */
+  animation: fade-up linear;
+  
+  /* Link it to the element's visibility in the viewport */
+  animation-timeline: view();
+  
+  /* Define the range: animation starts when the element is 10% visible and ends when it's 30% visible. */
+  animation-range: entry 10% cover 30%;
+}
+
 /* =============================================== */
 /* MATERIAL DESIGN COMPONENTS
 /* =============================================== */
