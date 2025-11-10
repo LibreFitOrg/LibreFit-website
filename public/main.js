@@ -7,7 +7,6 @@ let submitButton = null;
 
 let originalButtonText = null;
 
-// The path to public key file.
 const pgpKeyPath = '/assets/pgp_key.asc';
 
 async function encryptContactForm(event) {
@@ -59,7 +58,7 @@ async function encryptContactForm(event) {
 window.addEventListener('DOMContentLoaded', () => 
     {
         form = document.getElementById('contact-form');
-        messageTextarea = messageTextarea = document.getElementById('message');
+        messageTextarea = document.getElementById('message');
         submitButton = form.querySelector('button[type="submit"]');
         originalButtonText = submitButton.textContent
 
