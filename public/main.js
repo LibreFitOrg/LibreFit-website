@@ -22,7 +22,7 @@ async function encryptContactForm(event) {
             throw new Error(`Network error: Could not fetch PGP key from ${pgpKeyPath}`);
         }
         const publicKeyArmored = await response.text();
-        const plaintextMessage = event.currentTarget.querySelector('message')
+        const plaintextMessage = messageTextarea.value;
         
         // Encrypt the message
         const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', () =>
         submitButton = form.querySelector('button[type="submit"]');
         originalButtonText = submitButton.textContent
 
-        form.addEventListener('sumbit', encryptContactForm)
+        form.addEventListener('submit', encryptContactForm)
     }
 )
 
