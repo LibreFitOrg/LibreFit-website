@@ -9,9 +9,8 @@
   
   <link rel="icon" href="/assets/logo.svg">
 
-  <!--Used for contact encryption at client-side-->
-  <script src="https://cdn.jsdelivr.net/npm/openpgp@5.11.1/dist/openpgp.min.js"></script>
-
+  <!-- Client-side encryption form: see main.js file-->
+  <script type="module" src="/main.js"></script>
 
   <link rel="stylesheet" href="/styles.css">
 
@@ -128,78 +127,6 @@
             </div>
         </form>
         <hr>
-
-        <!-- Client-side encryption form -->
-        <script>
-            const form = document.getElementById('contact-form');
-            const messageTextarea = document.getElementById('message');
-            const submitButton = form.querySelector('button[type="submit"]');
-
-            const originalButtonText = submitButton.textContent;
-
-            // The path to public key file.
-            const pgpKeyPath = '/assets/pgp_key.asc';
-
-            form.addEventListener('submit', async (event) => {
-                // Prevent the default form submission
-                event.preventDefault();
-
-                submitButton.disabled = true;
-                submitButton.textContent = 'Encrypting...';
-
-                try {
-                    const response = await fetch(pgpKeyPath);
-                    if (!response.ok) {
-                      throw new Error(`Network error: Could not fetch PGP key from ${pgpKeyPath}`);
-                    }
-                    const publicKeyArmored = await response.text();
-                    const plaintextMessage = messageTextarea.value;
-                    
-                    // Encrypt the message
-                    const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
-
-                    const encryptedMessage = await openpgp.encrypt({
-                      message: await openpgp.createMessage({ text: plaintextMessage }),
-                      encryptionKeys: publicKey,
-                    });
-
-                    // Create a new hidden input for the encrypted data
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = 'encrypted_message';
-                    hiddenInput.value = encryptedMessage;
-                    form.appendChild(hiddenInput);
-
-                    // (Security) Clear the original message so plaintext is not sent
-                    messageTextarea.value = '';
-                    messageTextarea.removeAttribute('name'); // Extra precaution
-
-                    // Submit the form with the encrypted data
-                    form.submit();
-
-                } catch (error) {
-                    console.error('Encryption failed:', error);
-                    // Restore form if anything goes wrong (network or encryption)
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                    alert('An error occurred during encryption. Please check your connection and try again.');
-                }
-          });
-
-          window.addEventListener('pageshow', function(event) {
-            // The event.persisted property is true if the page is being restored from bfcache.
-            if (event.persisted) {
-
-              // Re-enable the button and restore its original text
-              submitButton.disabled = false;
-              submitButton.textContent = originalButtonText;
-
-              // This is the most reliable way to clear all user-entered data
-              // from the form, including the email and message fields.
-              form.reset();
-              }
-          });
-        </script>
 
 
         <h2 class="md-typescale-headline-medium">SimpleX</h2>
