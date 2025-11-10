@@ -22,7 +22,7 @@ async function encryptContactForm(event) {
             throw new Error(`Network error: Could not fetch PGP key from ${pgpKeyPath}`);
         }
         const publicKeyArmored = await response.text();
-        const plaintextMessage = messageTextarea.value;
+        const plaintextMessage = event.currentTarget.querySelector('message')
         
         // Encrypt the message
         const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
