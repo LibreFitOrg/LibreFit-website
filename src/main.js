@@ -1,3 +1,5 @@
+import './styles.css'; 
+
 import * as openpgp from 'openpgp'
 
 
@@ -7,7 +9,7 @@ let submitButton = null;
 
 let originalButtonText = null;
 
-const pgpKeyPath = '/assets/pgp_key.asc';
+const pgpKeyPath = '/pgp_key.asc';
 
 async function encryptContactForm(event) {
     // Prevent the default form submission
