@@ -88,18 +88,18 @@ export async function onRequestPost(context) {
         const attachment = formData.get('pgp-key');
 
         // Attach key if valid
-        if (attachment) {
-            if (!attachment.name.toLowerCase().endsWith('.asc') || attachment.size === 0) {
-                return Response.redirect(invalidDataRedirectURL, 302);
-            }
-
-            const userKeyText = await file.text();
+        if (attachment && attachment.size !== 0) {
+            const userKeyText = await attachment.text();
         
             let userKey;
             try {
                 userKey = await openpgp.readKey({ armoredKey: userKeyText });
             } catch (error) {
                 console.error('OpenPGP parsing error:', error);
+                return Response.redirect(invalidDataRedirectURL, 302);
+            }
+
+            if (!userKey) {
                 return Response.redirect(invalidDataRedirectURL, 302);
             }
 
