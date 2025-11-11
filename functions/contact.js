@@ -36,8 +36,7 @@ export async function onRequestPost(context) {
     try {
         const formData = await context.request.formData();
         
-        const email = formData.get('email');
-        const encrypted_message = formData.get('encrypted_message');
+        const encryptedMessage = formData.get('encrypted-message');
         const turnstileToken = formData.get('cf-turnstile-response');
         const ip = context.request.headers.get('CF-Connecting-IP') || context.request.headers.get('X-Forwarded-For') || 'unknown';
 
@@ -52,10 +51,14 @@ export async function onRequestPost(context) {
             return Response.redirect(failRedirectURL, 302);
         }
 
+        const email = formData.get('email');
 
-        if (!email || !encrypted_message) {
+        if (!email || !encryptedMessage) {
             return Response.redirect(invalidDataRedirectURL, 302);
-        }
+        }   
+
+
+        // Prepare and send email
 
         const contactEmail = context.env.CONTACT_EMAIL
         if(!contactEmail) {
@@ -67,7 +70,7 @@ export async function onRequestPost(context) {
             throw new Error("Server configuration error: SUBDOMAIN is not set.");
         }
 
-        // Prepare and send email
+        
         const fromAddress = `Contact Form <form@${subdomain}>`;
         const toAddress = `${contactEmail}`;
         
@@ -76,8 +79,51 @@ export async function onRequestPost(context) {
             to: [toAddress],
             subject: `New message from ${email}`,
             reply_to: [email],
-            text: encrypted_message,
+            text: encryptedMessage,
         };
+        
+        const attachment = formData.get('pgp-key');
+
+        // Attach key if valid
+        if (attachment && typeof attachment !== 'string' && attachment.name) {
+            if (!attachment.name.toLowerCase().endsWith('.asc') || attachment.size === 0) {
+                return Response.redirect(invalidDataRedirectURL, 302);
+            }
+
+            const userKeyText = await file.text();
+        
+            let userKey;
+            try {
+                userKey = await openpgp.readKey({ armoredKey: userKeyText });
+            } catch (error) {
+                console.error('OpenPGP parsing error:', error.message);
+                return Response.redirect(invalidDataRedirectURL, 302);
+            }
+
+            if (userKey.isPrivate()) {
+                return Response.redirect(invalidDataRedirectURL, 302);
+            }
+
+            // Read the file as a raw binary buffer
+            const buffer = await attachment.arrayBuffer();
+
+            // Convert the buffer to a Base64 string
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            const base64String = btoa(binary)
+
+            // Append the key
+            emailPayload.attachments = [
+                {
+                    content: base64String,
+                    filename: attachment.name,
+                },
+            ]
+        }
 
 
         const resendApiKey = context.env.RESEND_API_KEY

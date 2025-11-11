@@ -35,7 +35,7 @@ async function encryptContactForm(event) {
         // Create a new hidden input for the encrypted data
         const hiddenInput = document.createElement('input');
         hiddenInput.type = 'hidden';
-        hiddenInput.name = 'encrypted_message';
+        hiddenInput.name = 'encrypted-message';
         hiddenInput.value = encryptedMessage;
         form.appendChild(hiddenInput);
 

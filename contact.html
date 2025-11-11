@@ -29,6 +29,7 @@
 
     input[type="text"],
     input[type="email"],
+    input[type="file"],
     textarea {
         width: 100%;
         padding: var(--space-3);
@@ -43,6 +44,7 @@
 
     input[type="text"]:focus,
     input[type="email"]:focus,
+    input[type="file"]:focus
     textarea:focus {
         outline: none;
         border-color: var(--md-sys-color-primary);
@@ -120,6 +122,11 @@
             <div class="form-group">
                 <label for="message" class="md-typescale-title-small">Message</label>
                 <textarea id="message" name="message" rows="5" required maxlength="1000" minlength="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="pgp-key" class="md-typescale-title-small">Your PGP key to receive encrypted email replies (Optional)</label>
+              <input id="pgp-key" type="file" name="pgp-key" accept=".asc, application/pgp-keys">
             </div>
 
             <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

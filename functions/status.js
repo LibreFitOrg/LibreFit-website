@@ -52,7 +52,7 @@ function getFriendlyStatus(status) {
     'confirming': { title: 'Confirming Deposit', description: 'Your deposit has been detected on the network and is awaiting confirmation. This can take a few minutes.' },
     'sending': { title: 'Sending to Recipient', description: 'Your deposit is confirmed. The exchange is now processing the trade and sending the final coins.' },
     'finished': { title: 'Finished', description: 'The donation is complete! The funds have been sent. Thank you for your support!' },
-    'paid_partially': { title: 'Partially Paid', description: 'The donation was completed, but the amount received was lower than requested. Thank you for your support!' },
+    'paid_partially': { title: 'Partially Paid', description: 'The donation was completed, but the amount received was lower then expected.' },
     'expired': { title: 'Expired', description: 'The time limit to make a deposit has passed. Please start a new donation if you still wish to contribute.' },
     'failed': { title: 'Failed', description: 'There was a problem with the exchange. Please contact Trocador support with your donation ID.' },
     'halted': { title: 'Halted', description: 'The transaction has been halted due to an issue. Please contact Trocador support with your donation ID.' },

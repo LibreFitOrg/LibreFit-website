@@ -96,7 +96,7 @@ export async function onRequestPost(context) {
                 <h1>Thank You!</h1>
                 <p>Your Donation ID:</p>
                 <div class="id-box">${donationId}</div>
-                <p>Please save it immediately in order to request the your code.</p>
+                <p>Please save it immediately in order to request your supporter code.</p>
                 <p>You will be redirected to the payment page in 20 seconds. If you are not redirected, <a href="${redirectUrl}">click here</a>.</p>
             </div>
         </body>
