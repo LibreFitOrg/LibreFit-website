@@ -12,7 +12,7 @@ async function verifyTurnstile(token, ip, secretKey) {
             body: formData
         });
 
-        const result= await response.json();
+        const result = await response.json();
         return result;
     } catch (error) {
         console.error('Turnstile validation error:', error);
@@ -22,7 +22,7 @@ async function verifyTurnstile(token, ip, secretKey) {
 
 /**
  * POST /api/contact
- * Handles a contact form submission, PGP-encrypts the content, and sends it via Resend.
+ * Handles a contact form submission and sends it via Resend.
  */
 export async function onRequestPost(context) {
     const successPath = '/results/contact-success.html';
@@ -45,11 +45,14 @@ export async function onRequestPost(context) {
         if (!turnstileKey) {
             throw new Error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
         }
+
         const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
 
         if (!outcome.success) {
             return Response.redirect(failRedirectURL, 302);
         }
+
+
 
         const email = formData.get('email');
 
@@ -58,8 +61,7 @@ export async function onRequestPost(context) {
         }   
 
 
-        // Prepare and send email
-
+        // Prepare email
         const contactEmail = context.env.CONTACT_EMAIL
         if(!contactEmail) {
             throw new Error("Server configuration error: CONTACT_EMAIL is not set.");
@@ -82,10 +84,11 @@ export async function onRequestPost(context) {
             text: encryptedMessage,
         };
         
+
         const attachment = formData.get('pgp-key');
 
         // Attach key if valid
-        if (attachment && typeof attachment !== 'string' && attachment.name) {
+        if (attachment) {
             if (!attachment.name.toLowerCase().endsWith('.asc') || attachment.size === 0) {
                 return Response.redirect(invalidDataRedirectURL, 302);
             }
@@ -96,7 +99,7 @@ export async function onRequestPost(context) {
             try {
                 userKey = await openpgp.readKey({ armoredKey: userKeyText });
             } catch (error) {
-                console.error('OpenPGP parsing error:', error.message);
+                console.error('OpenPGP parsing error:', error);
                 return Response.redirect(invalidDataRedirectURL, 302);
             }
 
@@ -125,11 +128,12 @@ export async function onRequestPost(context) {
             ]
         }
 
-
+        // Send email
         const resendApiKey = context.env.RESEND_API_KEY
         if(!resendApiKey) {
             throw new Error("Server configuration error: RESEND_API_KEY is not set.");
         }
+
         const response = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
@@ -146,7 +150,6 @@ export async function onRequestPost(context) {
 
 
         return Response.redirect(successRedirectURL, 303);
-
     } catch (error) {
         console.error('Error processing form submission:', error);
         return Response.redirect(failRedirectURL, 302);
