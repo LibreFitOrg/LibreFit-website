@@ -525,11 +525,11 @@ main {
 }
 .glow {
   position: absolute;
-  inset: -10%;
+  inset: 1%;
   z-index: -1;
   background:
-    radial-gradient(600px 300px at 70% 30%, color-mix(in oklab, var(--md-sys-color-primary) 25%, transparent), transparent 60%),
-    radial-gradient(300px 500px at 20% 70%, color-mix(in oklab, var(--md-sys-color-tertiary) 20%, transparent), transparent 70%);
+    radial-gradient(100% 75% at 70% 30%, color-mix(in oklab, var(--md-sys-color-primary) 25%, transparent), transparent 60%),
+    radial-gradient(75% 100% at 20% 70%, color-mix(in oklab, var(--md-sys-color-tertiary) 20%, transparent), transparent 70%);
   filter: blur(20px) saturate(120%);
   opacity: 0.7;
   animation: glowShift 24s var(--md-motion-easing-emphasized) infinite alternate;
