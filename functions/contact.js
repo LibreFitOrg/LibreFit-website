@@ -88,7 +88,11 @@ export async function onRequestPost(context) {
         const attachment = formData.get('pgp-key');
 
         // Attach key if valid
-        if (attachment && attachment.size !== 0) {
+        if (attachment) {
+            if(typeof attachment === 'string' || attachment.size === 0) {
+                return Response.redirect(invalidDataRedirectURL, 302);
+            }
+
             const userKeyText = await attachment.text();
         
             let userKey;
