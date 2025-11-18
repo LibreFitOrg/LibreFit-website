@@ -97,7 +97,7 @@
       <p class="md-typescale-body-large">
         LibreFit is only possible with your support, whether by donating or by contributing to code or translations.
       </p>
-      <p class="md-typescale-title-large">
+      <p class="md-typescale-title-medium">
         All donators and contributors get the supporter version and a credit in the app and on GitHub.
       </p>
       
@@ -108,21 +108,11 @@
       </h1>
       
       <form action="/donate" method="POST">
-        <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to Trocador to complete your donation with the cryptocurrency of your choice. Monero is recommended for best privacy and lowest fees.</label>
-        <label class="form-group md-typescale-title-large">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
+        <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to Trocador to complete your donation with the cryptocurrency of your choice.</label>
+        <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
         
         <div class="form-group">
-          <label for="amount_usd" class="md-typescale-title-small">Amount (USD)</label>
-          <input 
-            type="number" 
-            id="amount_usd" 
-            name="amount_usd" 
-            min="1"
-            max="1000"
-            step="0.01" 
-            placeholder="5.00"
-            required
-          >
+          <input type="checkbox" id="use-xmr">   Check this box if want to use Monero
         </div>
         
         <div style="margin-top: var(--space-6);">
@@ -133,7 +123,7 @@
       <hr>
 
       <h1 class="md-typescale-headline-large">Check Donation Status</h1>
-      <p>Enter the Donation ID you received when you started the donation process.</p>
+      <p>Enter the Donation ID you received when you started the donation process. When donation is finalized, a supported code can be requested.</p>
       
       <form action="/status" method="GET">
         <label for="id">Donation ID:</label>

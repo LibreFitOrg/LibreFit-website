@@ -1,14 +1,23 @@
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { DONATION_DB } = env;
+    const { DONATION_DB, WEBHOOK_TOKEN } = env;
+
+    // Get the token from the URL
+    const url = new URL(request.url);
+    const receivedToken = url.searchParams.get('token');
+
+    // Validate request
+    if(WEBHOOK_TOKEN != receivedToken) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     // Trocador sends the data as JSON in the POST body
     const donationData = await request.json();
-    const donationId = donationData.id;
+    const donationId = donationData.trade_id;
 
     if (!donationId) {
-      console.log("Webhook received a request without a donation ID.");
+      console.log("Webhook received a request without an ID.");
       return new Response('ID missing', { status: 400 });
     }
 
