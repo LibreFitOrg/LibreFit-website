@@ -21,8 +21,15 @@ export async function onRequestPost(context) {
       return new Response('ID missing', { status: 400 });
     }
 
+    // Fetch id in KV database from donation id
+    const id = await DONATION_DB.get(donationId);
+    if(!id) {
+      console.error(`Webhook received update for non-existent donation ID: ${id}`);
+      return new Response('Donation ID does not exist', { status: 400 });
+    }
+
     // Fetch the existing record from KV to preserve original data
-    const existingRecordJSON = await DONATION_DB.get(donationId);
+    const existingRecordJSON = await DONATION_DB.get(id);
     if (!existingRecordJSON) {
       console.error(`Webhook received update for non-existent ID: ${donationId}`);
       return new Response('ID does not exist', { status: 400 });

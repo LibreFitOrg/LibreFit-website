@@ -82,6 +82,9 @@ export async function onRequestPost(context) {
     // The key is the UUID, the value is the JSON object.
     await DONATION_DB.put(id, JSON.stringify(initialRecord));
 
+    // Used by webhook to get back the id in kv database
+    await DONATION_DB.put(donationId, id);
+
     // A HTML response page with the Donation ID and a meta-refresh tag for redirection
     // TODO: load from root folder (here and status.js)
     const htmlResponse = `
