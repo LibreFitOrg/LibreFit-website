@@ -77,8 +77,10 @@ export async function onRequestPost(context) {
       updatedAt: new Date().toISOString(),
     };
 
-    // The key is the donation ID, the value is the JSON object.
-    await DONATION_DB.put(donationId, JSON.stringify(initialRecord));
+    const id = crypto.randomUUID()
+
+    // The key is the UUID, the value is the JSON object.
+    await DONATION_DB.put(id, JSON.stringify(initialRecord));
 
     // A HTML response page with the Donation ID and a meta-refresh tag for redirection
     // TODO: load from root folder (here and status.js)
@@ -99,7 +101,7 @@ export async function onRequestPost(context) {
             <div class="card">
                 <h1>Thank You!</h1>
                 <p>Your Donation ID:</p>
-                <div class="id-box">${donationId}</div>
+                <div class="id-box">${id}</div>
                 <p>Please save it immediately in order to request your supporter code.</p>
                 <p>You will be redirected to the payment page in 20 seconds. If you are not redirected, <a href="${redirectUrl}">click here</a>.</p>
             </div>

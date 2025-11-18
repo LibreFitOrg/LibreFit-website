@@ -8,18 +8,18 @@ export async function onRequestGet(context) {
     const { DONATION_DB } = env;
 
     const url = new URL(request.url);
-    const donationId = url.searchParams.get('id');
+    const id = url.searchParams.get('id');
 
 
-    if (!donationId) {
-      return new Response("No Donation ID provided. Please go back and enter an ID.", { status: 400 });
+    if (!id) {
+      return new Response("No ID provided. Please go back and enter an ID.", { status: 400 });
     }
 
-    const recordJSON = await DONATION_DB.get(donationId);
+    const recordJSON = await DONATION_DB.get(id);
 
     // If the record is not in the database, it's an invalid ID.
     if (!recordJSON) {
-      return generateHtmlResponse('Status Not Found', `... No donation found with ID: ${donationId} ...`);
+      return generateHtmlResponse('Status Not Found', `... No donation found with ID: ${id} ...`);
     }
 
     const record = JSON.parse(recordJSON);
@@ -29,7 +29,7 @@ export async function onRequestGet(context) {
     
     return generateHtmlResponse('Donation Status', `
         <p>Status for Donation ID:</p>
-        <div class="id-box">${donationId}</div>
+        <div class="id-box">${id}</div>
         <div class="status-box status-${record.status}">
           <strong>${friendlyStatus.title}</strong>
           <p>${friendlyStatus.description}</p>
