@@ -59,12 +59,25 @@ window.addEventListener('DOMContentLoaded', () =>
     {
         form = document.getElementById('contact-form');
         messageTextarea = document.getElementById('message');
-        submitButton = form.querySelector('button[type="submit"]');
+        submitButton = document.getElementById("submitButton");
         originalButtonText = submitButton.textContent
 
         form.addEventListener('submit', encryptContactForm)
     }
 )
+
+
+// Define the logic for turnstile verification
+const enableButton = (token) => {
+  submitButton.disabled = false;
+};
+const disableButton = () => {
+  submitButton.disabled = true;
+};
+window.onTurnstileSuccess = enableButton;
+window.onTurnstileError = disableButton;
+
+
 
 window.addEventListener('pageshow', function(event) 
     {

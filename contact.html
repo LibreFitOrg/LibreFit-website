@@ -130,16 +130,34 @@
             </div>
 
             <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
             <div class="turnstile-container">
-              <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8JCf8sSsYyrET5"></div>
+              <div class="cf-turnstile"
+                  data-sitekey="0x4AAAAAAB8JCf8sSsYyrET5"
+                  data-callback="onTurnstileSuccess"
+                  data-error-callback="onTurnstileError"
+                  data-expired-callback="onTurnstileError"
+                  data-timeout-callback="onTurnstileError"></div>
             </div>
             
 
             <div style="margin-top: var(--space-6);">
-                <button type="submit" class="md-filled-button">Send Encrypted Message</button>
+                <button id="submitButton" type="submit" class="md-filled-button">Send Encrypted Message</button>
             </div>
         </form>
         <hr>
+
+        <script>
+          const submitButton = document.getElementById("submitButton");
+
+          function enableSubmitButton(token) {
+              submitButton.disabled = false;
+          }
+
+          function disableSubmitButton() {
+              submitButton.disabled = true;
+          }
+        </script>
 
 
         <h2 class="md-typescale-headline-medium">SimpleX</h2>

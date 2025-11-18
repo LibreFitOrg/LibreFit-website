@@ -37,10 +37,10 @@ export async function onRequestPost(context) {
       trocadorUrl.searchParams.set('network_to', 'Mainnet');
       trocadorUrl.searchParams.set('address', XMR_ADDRESS);
     }
-    
+    trocadorUrl.searchParams.set('simple_mode', 'True');
     trocadorUrl.searchParams.set('bgcolor', 'True');
     trocadorUrl.searchParams.set('donation', 'True');
-    trocadorUrl.searchParams.set('direct', 'False');
+    trocadorUrl.searchParams.set('direct', 'False'); // Enable tracking of donation status
     trocadorUrl.searchParams.set('remove_direct_pay', 'True'); // Otherwise the transaction cannot be tracked
     trocadorUrl.searchParams.set('name', 'TestDonation'); // TODO: change
     trocadorUrl.searchParams.set('description', 'Thank you for your support!');
