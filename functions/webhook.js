@@ -44,7 +44,7 @@ export async function onRequestPost(context) {
     };
 
     // Save the updated record back to KV
-    await DONATION_DB.put(donationId, JSON.stringify(updatedRecord));
+    await DONATION_DB.put(id, JSON.stringify(updatedRecord));
 
     // Acknowledge receipt
     return new Response('OK', { status: 200 });
