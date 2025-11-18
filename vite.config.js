@@ -12,11 +12,11 @@ export default defineConfig({
 
         contact: resolve(__dirname, 'contact.html'),
 
-        contactSuccess: resolve(__dirname, 'results/contact-success.html'),
+        contactSuccess: resolve(__dirname, 'contact-result/contact-success.html'),
 
-        contactFail: resolve(__dirname, 'results/contact-fail.html'),
+        contactFail: resolve(__dirname, 'contact-result/contact-fail.html'),
 
-        contactInvalid: resolve(__dirname, 'results/contact-invalid-data.html'),
+        contactInvalid: resolve(__dirname, 'contact-result/contact-invalid-data.html'),
 
         support: resolve(__dirname, 'support.html'),
 
