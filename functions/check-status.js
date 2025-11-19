@@ -16,8 +16,8 @@ export async function onRequestGet(context) {
 
     const recordJSON = await DONATION_DB.get(id);
     // If the record is not in the database, it's an invalid ID.
-    let title
-    let description
+    let title;
+    let description;
     if (!recordJSON) {
       title = 'Status not found'
       description = `No donation found with ID: ${id}`
@@ -31,14 +31,14 @@ export async function onRequestGet(context) {
 
     let code = 'When donation transaction is completed, your supporter code will be available here.';
 
-    if (title == 'Finished') {
+    if (title === 'Finished') {
       code = `Your supported code is: ${1}` // TODO: implement logic to sign code with pgp key.
     }
 
     const statusHtml = html
-      .replace('{{STATUS_TITLE}}', title)
-      .replace('{{STATUS_DESCRIPTION}}', description)
-      .replace('{{SUPPORTER_CODE}}', code);
+      .replace('{{STATUS_TITLE}}', `${title}`)
+      .replace('{{STATUS_DESCRIPTION}}', `${description}`)
+      .replace('{{SUPPORTER_CODE}}', `${code}`);
 
     
     return new Response(statusHtml, {
