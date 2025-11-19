@@ -20,6 +20,8 @@ export default defineConfig({
 
         support: resolve(__dirname, 'support.html'),
 
+        status: resolve(__dirname, 'status.html'),
+
         license: resolve(__dirname, 'license-info.html'), 
 
         notfound: resolve(__dirname, '404.html'), 
