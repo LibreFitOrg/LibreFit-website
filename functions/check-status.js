@@ -1,4 +1,5 @@
 import html from '../status.html';
+import css from '../src/styles.css'; 
 
 
 export async function onRequestGet(context) {
@@ -29,13 +30,14 @@ export async function onRequestGet(context) {
     let code = 'When donation transaction is completed, your supporter code will be available here.';
 
     if (title === 'Finished') {
-      code = `Your supported code is: ${1}` // TODO: implement logic to sign code with pgp key.
+      code = `Your supported code is: ${1234}` // TODO: implement logic to sign code with pgp key.
     }
 
     const statusHtml = html
       .replace('{{STATUS_TITLE}}', `${title}`)
       .replace('{{STATUS_DESCRIPTION}}', `${description}`)
-      .replace('{{SUPPORTER_CODE}}', `${code}`);
+      .replace('{{SUPPORTER_CODE}}', `${code}`)
+      .replace('.css_placeholder{}', `${css}`);;
 
     
     return new Response(statusHtml, {
