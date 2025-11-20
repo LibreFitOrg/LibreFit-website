@@ -18,7 +18,7 @@ export default defineConfig({
 
         contactInvalid: resolve(__dirname, 'contact-result/contact-invalid-data.html'),
 
-        support: resolve(__dirname, 'support.html'),
+        donate: resolve(__dirname, 'donate.html'),
 
         status: resolve(__dirname, 'status.html'),
 

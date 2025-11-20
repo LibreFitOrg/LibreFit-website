@@ -16,12 +16,9 @@ export async function onRequestGet(context) {
 
     const recordJSON = await DONATION_DB.get(id);
     // If the record is not in the database, it's an invalid ID.
-    let title;
-    let description;
-    if (!recordJSON) {
-      title = 'Status not found'
-      description = `No donation found with ID: ${id}`
-    } else {
+    let title = 'Status not found';
+    let description = `No donation found with ID: ${id}`;
+    if (recordJSON){
       const record = JSON.parse(recordJSON);
     
       const status = getStatus(record.status);
