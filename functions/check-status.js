@@ -1,5 +1,4 @@
 import html from '../status.html';
-import css from '../src/styles.css'; 
 
 
 export async function onRequestGet(context) {
@@ -36,8 +35,7 @@ export async function onRequestGet(context) {
     const statusHtml = html
       .replace('{{STATUS_TITLE}}', `${title}`)
       .replace('{{STATUS_DESCRIPTION}}', `${description}`)
-      .replace('{{SUPPORTER_CODE}}', `${code}`)
-      .replace('.css_placeholder{}', `${css}`);;
+      .replace('{{SUPPORTER_CODE}}', `${code}`);
 
     
     return new Response(statusHtml, {
