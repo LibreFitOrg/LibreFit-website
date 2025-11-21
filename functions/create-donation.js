@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
     const trocadorUrl = new URL('https://trocador.app/anonpay/');
 
     // Fro official docs: https://trocador.app/en/anonpaydocumentation
-    if (useXmr) {
+    if (useXmr !== null) {
       trocadorUrl.searchParams.set('ticker_to', 'sol');
       trocadorUrl.searchParams.set('network_to', 'Mainnet');
       trocadorUrl.searchParams.set('address', SOL_ADDRESS);
@@ -75,8 +75,6 @@ export async function onRequestPost(context) {
     const initialRecord = {
       id: donationId,
       status: 'anonpaynew', // The initial status from Trocador
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
     const id = crypto.randomUUID()

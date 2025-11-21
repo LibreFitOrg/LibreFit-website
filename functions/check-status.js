@@ -18,7 +18,7 @@ export async function onRequestGet(context) {
     
     let status = 'anonpaynew'
     let title = '🔍 Status not found';
-    let description = `No donation found with ID: ${id}`;
+    let description = `No donation found with the following ID`;
     let urlPaymentPage = ``;
     let redirectSnippet = ``;
 
