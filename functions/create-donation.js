@@ -87,7 +87,7 @@ export async function onRequestPost(context) {
     // Used by webhook to get back the id in kv database
     await DONATION_DB.put(donationId, id);
 
-    urlPaymentPage = `
+    const urlPaymentPage = `
       Go to payment <a href="https://trocador.app/anonpay/${donationId}">page</a>
     `
 
