@@ -30,9 +30,7 @@ export async function onRequestGet(context) {
       title = status.title
       description = status.description
       urlPaymentPage = `
-      <p class="md-typescale-body-large">
-        Go to payment <a href="https://trocador.app/en/anonpay/checkout/${id}">page</a>
-      </p>
+        Go to payment <a href="https://trocador.app/en/anonpay/checkout/${record.id}">page</a>
       `
     }
 
@@ -45,8 +43,9 @@ export async function onRequestGet(context) {
     const statusHtml = html
       .replace('{{STATUS_TITLE}}', `${title}`)
       .replace('{{STATUS_DESCRIPTION}}', `${description}`)
+      .replace('{{DONATION_ID}}', `${id}`)
       .replace('{{SUPPORTER_CODE}}', `${code}`)
-      .replace('{{URL_SNIPPET}}', `${urlPaymentPage}`)
+      .replace('{{URL_DESC}}', `${urlPaymentPage}`)
       .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (check craete-donation.js))
 
     

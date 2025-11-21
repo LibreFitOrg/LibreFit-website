@@ -88,19 +88,18 @@ export async function onRequestPost(context) {
     await DONATION_DB.put(donationId, id);
 
     urlPaymentPage = `
-      <p class="md-typescale-body-large">
-        Go to payment <a href="https://trocador.app/anonpay/${donationId}">page</a>
-      </p>
-      `
+      Go to payment <a href="https://trocador.app/anonpay/${donationId}">page</a>
+    `
 
     // A HTML response page with the Donation ID and a meta-refresh tag for redirection
     // TODO: load from root folder (here and status.js)
     const statusHtml = html
-          .replace('{{STATUS_TITLE}}', `🚀 Created`)
-          .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the payment page to select a coin and get a deposit address.`)
-          .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
-          .replace('{{URL_SNIPPET}}', `${urlPaymentPage}`)
-          .replace('{{REDIRECT_SNIPPET}}', `"20;url=${redirectUrl}"`);
+        .replace('{{STATUS_TITLE}}', `🚀 Created`)
+        .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the payment page to select a coin and get a deposit address.`)
+        .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
+        .replace('{{DONATION_ID}}', `${id}`)
+        .replace('{{URL_DESC}}', `${urlPaymentPage}`)
+        .replace('{{REDIRECT_SNIPPET}}', `"20;url=${redirectUrl}"`);
 
     
     return new Response(statusHtml, {
