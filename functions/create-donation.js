@@ -1,3 +1,5 @@
+import html from '../status.html';
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
@@ -85,37 +87,25 @@ export async function onRequestPost(context) {
     // Used by webhook to get back the id in kv database
     await DONATION_DB.put(donationId, id);
 
+    urlPaymentPage = `
+      <p class="md-typescale-body-large">
+        Go to payment <a href="https://trocador.app/anonpay/${donationId}">page</a>
+      </p>
+      `
+
     // A HTML response page with the Donation ID and a meta-refresh tag for redirection
     // TODO: load from root folder (here and status.js)
-    const htmlResponse = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Processing Donation...</title>
-            <meta http-equiv="refresh" content="20;url=${redirectUrl}">
-            <style>
-                body { font-family: sans-serif; max-width: 600px; margin: 4rem auto; text-align: center; }
-                .card { padding: 2rem; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
-                .id-box { background: #eee; padding: 0.5rem 1rem; border-radius: 4px; font-family: monospace; display: inline-block; margin-top: 1rem; }
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <h1>Thank You!</h1>
-                <p>Your Donation ID:</p>
-                <div class="id-box">${id}</div>
-                <p>Please save it immediately in order to request your supporter code.</p>
-                <p>You will be redirected to the payment page in 20 seconds. If you are not redirected, <a href="${redirectUrl}">click here</a>.</p>
-            </div>
-        </body>
-        </html>
-    `;
+    const statusHtml = html
+          .replace('{{STATUS_TITLE}}', `🚀 Created`)
+          .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the payment page to select a coin and get a deposit address.`)
+          .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
+          .replace('{{URL_SNIPPET}}', `${urlPaymentPage}`)
+          .replace('{{REDIRECT_SNIPPET}}', `"20;url=${redirectUrl}"`);
 
     
-    return new Response(htmlResponse, {
+    return new Response(statusHtml, {
       headers: {
-        'Content-Type': 'text/html;charset=UTF-8',
+        'Content-Type': 'text/html',
       },
     });
 
