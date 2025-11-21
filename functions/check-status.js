@@ -18,7 +18,7 @@ export async function onRequestGet(context) {
     
     let status = 'anonpaynew'
     let title = '🔍 Status not found';
-    let description = `No donation found with the following ID`;
+    let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
     let redirectSnippet = ``;
 
@@ -30,7 +30,7 @@ export async function onRequestGet(context) {
       title = status.title
       description = status.description
       urlPaymentPage = `
-        Go to payment <a href="https://trocador.app/en/anonpay/checkout/${record.id}">page</a>
+        Go to donation <a href="https://trocador.app/en/anonpay/checkout/${record.id}">page</a>
       `
     }
 
