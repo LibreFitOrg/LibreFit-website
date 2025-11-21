@@ -88,7 +88,7 @@ export async function onRequestPost(context) {
     await DONATION_DB.put(donationId, id);
 
     const urlPaymentPage = `
-      Go to payment <a href="https://trocador.app/anonpay/${donationId}">page</a>
+      You will be automatically redirected to payment <a href="https://trocador.app/anonpay/${donationId}">page</a> in 30 seconds.
     `
 
     // A HTML response page with the Donation ID and a meta-refresh tag for redirection
@@ -97,7 +97,7 @@ export async function onRequestPost(context) {
         .replace('{{STATUS_TITLE}}', `🚀 Created`)
         .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the payment page to select a coin and get a deposit address.`)
         .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
-        .replace('{{DONATION_ID}}', `${id}`)
+        .replace('{{DONATION_ID}}', `Save this ID to request supporter code later: ${id}`)
         .replace('{{URL_DESC}}', `${urlPaymentPage}`)
         .replace('{{REDIRECT_SNIPPET}}', `"20;url=${redirectUrl}"`);
 
