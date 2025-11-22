@@ -24,8 +24,8 @@ export async function onRequestGet(context) {
     let title = '🔍 Status not found';
     let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
-    let redirectSnippet = ``;
     let trade_id = ``;
+    let codeDesc = 'When donation transaction is completed, your supporter code will be available here.';
 
     // If the record is not in the database, it's an invalid ID.
     if (recordJSON){
@@ -38,19 +38,17 @@ export async function onRequestGet(context) {
       urlPaymentPage = `
         Go to donation <a href="https://trocador.app/en/anonpay/checkout/${trade_id}">page</a>
       `
-    }
 
-    let codeDesc = 'When donation transaction is completed, your supporter code will be available here.';
+      if (record.status === 'finished') {
 
-    if (title === 'Finished') {
+        // Private Key (PKCS#8 format from Kotlin)
+        // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
+        const privateKeyB64 = PRIVATE_KEY;
 
-      // Private Key (PKCS#8 format from Kotlin)
-      // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
-      const privateKeyB64 = PRIVATE_KEY;
-
-      const signature = await signString(trade_id, privateKeyB64);
-      code = `${trade_id}.${signature}`
-      codeDesc = `Your supported code is: ${code}`
+        const signature = await signString(trade_id, privateKeyB64);
+        code = `${trade_id}.${signature}`
+        codeDesc = `Your supported code is: ${code}`
+      }
     }
 
     const statusHtml = html
