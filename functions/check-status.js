@@ -25,7 +25,7 @@ export async function onRequestGet(context) {
     let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
     let trade_id = ``;
-    let codeDesc = 'When donation transaction is completed, your supporter code will be available here.';
+    let code = 'When donation transaction is completed, your supporter code will be available here.';
 
     // If the record is not in the database, it's an invalid ID.
     if (recordJSON){
@@ -46,8 +46,7 @@ export async function onRequestGet(context) {
         const privateKeyB64 = PRIVATE_KEY;
 
         const signature = await signString(id, privateKeyB64);
-        const code = `${id}.${signature}`
-        codeDesc = `Your supported code is: ${code}`
+        code = `${id}.${signature}`
       }
     }
 
@@ -55,7 +54,7 @@ export async function onRequestGet(context) {
       .replace('{{STATUS_TITLE}}', `${title}`)
       .replace('{{STATUS_DESCRIPTION}}', `${description}`)
       .replace('{{DONATION_ID}}', `${id}`)
-      .replace('{{SUPPORTER_CODE}}', `${codeDesc}`)
+      .replace('{{SUPPORTER_CODE}}', `${code}`)
       .replace('{{URL_DESC}}', `${urlPaymentPage}`)
       .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (check craete-donation.js))
 
