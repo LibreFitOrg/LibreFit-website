@@ -46,7 +46,7 @@ export async function onRequestGet(context) {
         const privateKeyB64 = PRIVATE_KEY;
 
         const signature = await signString(trade_id, privateKeyB64);
-        code = `${trade_id}.${signature}`
+        const code = `${trade_id}.${signature}`
         codeDesc = `Your supported code is: ${code}`
       }
     }
