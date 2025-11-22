@@ -3,9 +3,9 @@ import html from '../status.html';
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { XMR_ADDRESS, SOL_ADDRESS, DONATION_DB, WEBHOOK_TOKEN } = env;
+    const { XMR_ADDRESS, SOL_ADDRESS, DONATION_DB, WEBHOOK_KEY } = env;
 
-    if(!WEBHOOK_TOKEN) {
+    if(!WEBHOOK_KEY) {
       return new Error("Server configuration error: WEBHOOK_TOKEN is not set.")
     }
 
@@ -22,7 +22,7 @@ export async function onRequestPost(context) {
     const useXmr = formData.get('use-xmr')
 
     const siteURL = new URL(request.url);
-    const webhookUrl = `${siteURL.origin}/webhook?token=${WEBHOOK_TOKEN}`;
+    const webhookUrl = `${siteURL.origin}/webhook?key=${WEBHOOK_KEY}`;
 
     
     const trocadorUrl = new URL('https://trocador.app/anonpay/');
@@ -85,19 +85,18 @@ export async function onRequestPost(context) {
     // Used by webhook to get back the id in kv database
     await DONATION_DB.put(donationId, id);
 
-    const urlPaymentPage = `
+    const urlDonationDesc = `
       You will be automatically redirected to donation <a href="https://trocador.app/anonpay/${donationId}">page</a> in 30 seconds.
     `
 
-    // A HTML response page with the Donation ID and a meta-refresh tag for redirection
-    // TODO: load from root folder (here and status.js)
+
     const statusHtml = html
         .replace('{{STATUS_TITLE}}', `🚀 Created`)
         .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the donation page to select a coin and get a deposit address.`)
         .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
         .replace('{{DONATION_ID}}', `Save IMMEDIATELY this ID to request supporter code: ${id}`)
-        .replace('{{URL_DESC}}', `${urlPaymentPage}`)
-        .replace('{{REDIRECT_SNIPPET}}', `"20;url=${redirectUrl}"`);
+        .replace('{{URL_DESC}}', `${urlDonationDesc}`)
+        .replace('{{REDIRECT_SNIPPET}}', `"30;url=${redirectUrl}"`);
 
     
     return new Response(statusHtml, {

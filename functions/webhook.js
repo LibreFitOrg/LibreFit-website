@@ -1,14 +1,14 @@
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { DONATION_DB, WEBHOOK_TOKEN } = env;
+    const { DONATION_DB, WEBHOOK_KEY } = env;
 
     // Get the token from the URL
     const url = new URL(request.url);
-    const receivedToken = url.searchParams.get('token');
+    const receivedKey = url.searchParams.get('key');
 
     // Validate request
-    if(WEBHOOK_TOKEN != receivedToken) {
+    if(WEBHOOK_KEY != receivedKey) {
       return new Response("Unauthorized", { status: 401 });
     }
 
