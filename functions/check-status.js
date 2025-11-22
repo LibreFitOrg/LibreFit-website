@@ -7,7 +7,7 @@ export async function onRequestGet(context) {
     const { DONATION_DB, PRIVATE_KEY } = env;
 
     if(!PRIVATE_KEY) {
-      return new Error("Server configuration error: PRIVATE_KEY is not set.")
+      return new Response("Server configuration error: PRIVATE_KEY is not set.")
     }
 
     const url = new URL(request.url);
