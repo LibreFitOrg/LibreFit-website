@@ -14,8 +14,12 @@
   <link rel="stylesheet" href="/styles.css">
 
   <style>
-    .wrap {
-      overflow-wrap: break-word;
+    pre.scrollable-code {
+      overflow-x: auto; /* Scroll horizontally if needed */
+      white-space: pre; /* Keeps text on one line, preserves spaces */
+      user-select: all; /* Let user select whole code when clicking on it */
+      -webkit-user-select: all; /* For older Safari */
+      cursor: pointer; /* Indicates it's actionable */
     }
   </style>
 
@@ -66,9 +70,7 @@
         {{STATUS_DESCRIPTION}}
       </p>
 
-      <p class="md-typescale-title-large">
-        {{DONATION_ID}}
-      </p>
+      <pre class="scrollable-code">{{DONATION_ID}}</pre>
 
       <p class="md-typescale-body-large">
         {{URL_DESC}}
@@ -78,10 +80,7 @@
 
       <h1 class="md-typescale-headline-large">Supporter code</h1>
 
-      <p class="md-typescale-body-large ">
-        {{SUPPORTER_CODE}}
-      </p>
-
+      <pre class="scrollable-code">{{SUPPORTER_CODE}}</pre>
     </div>
   </main>
 
@@ -89,7 +88,7 @@
     <div class="container footer-content">
       <div class="footer-chips">
         <div class="md-assist-chip"><span class="material-symbols-outlined">android</span> Jetpack Compose</div>
-        <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy‑first</div>
+        <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy-first</div>
         <div class="md-assist-chip"><span class="material-symbols-outlined">palette</span> Material Expressive</div>
       </div>
       <div class="footer-copyright md-typescale-body-small">
