@@ -86,7 +86,7 @@ export async function onRequestPost(context) {
     await DONATION_DB.put(donationId, id);
 
     const urlDonationDesc = `
-      You will be automatically redirected to donation <a href="${redirectUrl}">page</a> in 30 seconds.
+      You will be automatically redirected to donation <a href="${redirectUrl}">page</a> in 60 seconds.
     `
 
 
@@ -96,7 +96,7 @@ export async function onRequestPost(context) {
         .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
         .replace('{{DONATION_ID}}', `${id}`)
         .replace('{{URL_DESC}}', `${urlDonationDesc}`)
-        .replace('{{REDIRECT_SNIPPET}}', `"30;url=${redirectUrl}"`);
+        .replace('{{REDIRECT_SNIPPET}}', `"60;url=${redirectUrl}"`);
 
     
     return new Response(statusHtml, {
