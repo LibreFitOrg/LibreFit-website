@@ -86,15 +86,15 @@ export async function onRequestPost(context) {
     await DONATION_DB.put(donationId, id);
 
     const urlDonationDesc = `
-      You will be automatically redirected to donation <a href="https://trocador.app/anonpay/${donationId}">page</a> in 30 seconds.
+      You will be automatically redirected to donation <a href="${redirectUrl}">page</a> in 30 seconds.
     `
 
 
     const statusHtml = html
         .replace('{{STATUS_TITLE}}', `🚀 Created`)
-        .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Please proceed to the donation page to select a coin and get a deposit address.`)
+        .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Save IMMEDIATELY the ID below to request supporter code once donation is completed.`)
         .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
-        .replace('{{DONATION_ID}}', `Save IMMEDIATELY this ID to request supporter code: ${id}`)
+        .replace('{{DONATION_ID}}', `${id}`)
         .replace('{{URL_DESC}}', `${urlDonationDesc}`)
         .replace('{{REDIRECT_SNIPPET}}', `"30;url=${redirectUrl}"`);
 

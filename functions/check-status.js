@@ -47,6 +47,7 @@ export async function onRequestGet(context) {
 
         const signature = await signString(id, privateKeyB64);
         code = `${id}.${signature}`
+        urlPaymentPage = `` // Leave blank if donation is completed
       }
     }
 
