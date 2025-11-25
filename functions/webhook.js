@@ -25,7 +25,7 @@ export async function onRequestPost(context) {
     const id = await DONATION_DB.get(donationId);
     if(!id) {
       console.error(`Webhook received update for non-existent donation ID: ${id}`);
-      return new Response('Donation ID does not exist', { status: 400 });
+      return new Response('ID does not exist', { status: 400 });
     }
 
     // Fetch the existing record from KV to preserve original data
@@ -40,7 +40,6 @@ export async function onRequestPost(context) {
     const updatedRecord = {
       ...existingRecord, // Keep original data
       status: donationData.status, // Update the status
-      updatedAt: new Date().toISOString(),
     };
 
     // Save the updated record back to KV

@@ -20,7 +20,6 @@ export async function onRequestGet(context) {
 
     const recordJSON = await DONATION_DB.get(id);
     
-    let status = 'anonpaynew'
     let title = '🔍 Status not found';
     let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
