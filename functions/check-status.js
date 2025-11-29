@@ -21,7 +21,7 @@ export async function onRequestGet(context) {
     const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     if(!regex.test(id)) {
-      return new Response("No ID does not follow UUID v4 format. Please go back and enter an ID with valid format.", { status: 400 });
+      return new Response("ID does not follow UUID v4 format. Please go back and enter an ID with valid format.", { status: 400 });
     }
     
     let title = '🔍 Status not found';
@@ -40,7 +40,6 @@ export async function onRequestGet(context) {
       title = status.title
       description = status.description
       trade_id = record.id
-      code = 'When donation transaction is completed, your supporter code will be available here.';
       urlPaymentPage = `
         Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
       `
@@ -53,7 +52,11 @@ export async function onRequestGet(context) {
 
         const signature = await signString(id, privateKeyB64);
         code = `${id}.${signature}`
-        urlPaymentPage = `` // Leave blank if donation is completed
+      }
+      
+      const waitingKeywords = ["anonpaynew", "waiting", "confirming", "sending", "paid_partially"];
+      if(waitingKeywords.includes(record.status)) {
+        code = 'When donation transaction is completed, your supporter code will be available here.';
       }
     }
 
