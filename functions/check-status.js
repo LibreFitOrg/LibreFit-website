@@ -24,7 +24,7 @@ export async function onRequestGet(context) {
     let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
     let trade_id = ``;
-    let code = 'When donation transaction is completed, your supporter code will be available here.';
+    let code = 'Not available';
 
     // If the record is not in the database, it's an invalid ID.
     if (recordJSON){
@@ -34,8 +34,9 @@ export async function onRequestGet(context) {
       title = status.title
       description = status.description
       trade_id = record.id
+      code = 'When donation transaction is completed, your supporter code will be available here.';
       urlPaymentPage = `
-        Go to donation <a href="https://trocador.app/en/anonpay/checkout/${trade_id}">page</a>
+        Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
       `
 
       if (record.status === 'finished') {
@@ -56,7 +57,7 @@ export async function onRequestGet(context) {
       .replace('{{DONATION_ID}}', `${id}`)
       .replace('{{SUPPORTER_CODE}}', `${code}`)
       .replace('{{URL_DESC}}', `${urlPaymentPage}`)
-      .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (check craete-donation.js))
+      .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (see create-donation.js))
 
     
     return new Response(statusHtml, {

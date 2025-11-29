@@ -1,16 +1,11 @@
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { DONATION_DB, WEBHOOK_KEY } = env;
+    const { DONATION_DB } = env;
 
-    // Get the token from the URL
+    // Get key from the URL
     const url = new URL(request.url);
     const receivedKey = url.searchParams.get('key');
-
-    // Validate request
-    if(WEBHOOK_KEY != receivedKey) {
-      return new Response("Unauthorized", { status: 401 });
-    }
 
     // Trocador sends the data as JSON in the POST body
     const donationData = await request.json();
@@ -18,7 +13,7 @@ export async function onRequestPost(context) {
 
     if (!donationId) {
       console.log("Webhook received a request without an ID.");
-      return new Response('ID missing', { status: 400 });
+      return new Response('Trade ID missing', { status: 400 });
     }
 
     // Fetch id in KV database from donation id
@@ -36,6 +31,12 @@ export async function onRequestPost(context) {
     }
     
     const existingRecord = JSON.parse(existingRecordJSON);
+    const webhookKey = existingRecord.webhookKey
+
+    // Validate request
+    if(webhookKey != receivedKey) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     const updatedRecord = {
       ...existingRecord, // Keep original data

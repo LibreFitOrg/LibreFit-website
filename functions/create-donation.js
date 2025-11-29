@@ -3,11 +3,7 @@ import html from '../status.html';
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { XMR_ADDRESS, SOL_ADDRESS, DONATION_DB, WEBHOOK_KEY } = env;
-
-    if(!WEBHOOK_KEY) {
-      return new Error("Server configuration error: WEBHOOK_TOKEN is not set.")
-    }
+    const { XMR_ADDRESS, SOL_ADDRESS, DONATION_DB } = env;
 
     if(!XMR_ADDRESS) {
       return new Error("Server configuration error: XMR_ADDRESS is not set.")
@@ -22,12 +18,13 @@ export async function onRequestPost(context) {
     const useXmr = formData.get('use-xmr')
 
     const siteURL = new URL(request.url);
-    const webhookUrl = `${siteURL.origin}/webhook?key=${WEBHOOK_KEY}`;
+    const webhookKey = crypto.randomUUID(); // Used for webhook validation
+    const webhookUrl = `${siteURL.origin}/webhook?key=${webhookKey}`;
 
     
     const trocadorUrl = new URL('https://trocador.app/anonpay/');
 
-    // Fro official docs: https://trocador.app/en/anonpaydocumentation
+    // Fro official docs: https://trocador.app/anonpaydocumentation
     if (useXmr !== null) {
       trocadorUrl.searchParams.set('ticker_to', 'sol');
       trocadorUrl.searchParams.set('network_to', 'Mainnet');
@@ -43,12 +40,10 @@ export async function onRequestPost(context) {
     trocadorUrl.searchParams.set('bgcolor', 'True');
     trocadorUrl.searchParams.set('donation', 'True');
     trocadorUrl.searchParams.set('direct', 'False'); // Enable tracking of donation status
-    trocadorUrl.searchParams.set('remove_direct_pay', 'True'); // Otherwise the transaction cannot be tracked
+    trocadorUrl.searchParams.set('remove_direct_pay', 'True'); // Transaction of same coin (without swap) cannot be tracked
     trocadorUrl.searchParams.set('name', 'TestDonation'); // TODO: change
     trocadorUrl.searchParams.set('description', 'Thank you for your support!');
-    trocadorUrl.searchParams.set('webhook', webhookUrl);  
-    // From official docs: if you provide an URL on this parameter, every time the status of the transaction changes,  you will receive
-    // on this URL a POST request sending you the transaction data; this avoids having to call so many times our server to check the transaction status (Optional); 
+    trocadorUrl.searchParams.set('webhook', webhookUrl);
 
 
     const apiResponse = await fetch(trocadorUrl.toString());
@@ -75,9 +70,10 @@ export async function onRequestPost(context) {
     const initialRecord = {
       id: donationId,
       status: 'anonpaynew', // The initial status from Trocador
+      webhookKey: webhookKey,
     };
 
-    const id = crypto.randomUUID()
+    const id = crypto.randomUUID();
 
     // The key is the UUID, the value is the JSON object.
     await DONATION_DB.put(id, JSON.stringify(initialRecord));
