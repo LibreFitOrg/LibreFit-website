@@ -7,7 +7,7 @@ export async function onRequestGet(context) {
     const { DONATION_DB, PRIVATE_KEY } = env;
 
     if(!PRIVATE_KEY) {
-      return new Response("Server configuration error: PRIVATE_KEY is not set.")
+      return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
     }
 
     const url = new URL(request.url);
@@ -18,13 +18,19 @@ export async function onRequestGet(context) {
       return new Response("No ID provided. Please go back and enter an ID.", { status: 400 });
     }
 
-    const recordJSON = await DONATION_DB.get(id);
+    const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if(!regex.test(id)) {
+      return new Response("No ID does not follow UUID v4 format. Please go back and enter an ID with valid format.", { status: 400 });
+    }
     
     let title = '🔍 Status not found';
     let description = `No donation found with this ID`;
     let urlPaymentPage = ``;
     let trade_id = ``;
     let code = 'Not available';
+
+    const recordJSON = await DONATION_DB.get(id);
 
     // If the record is not in the database, it's an invalid ID.
     if (recordJSON){
