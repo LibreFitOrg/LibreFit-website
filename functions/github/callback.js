@@ -45,15 +45,15 @@ export async function onRequest({ request, env }) {
   
   if (userCode) {
     page = html
-        .replace('{{STATUS_TITLE}}', `Thank you for your contribution!`)
-        .replace('{{STATUS_DESCRIPTION}}', `TODO`)
+        .replace('{{STATUS_TITLE}}', `Successful login`)
+        .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution! Your supporter code is down below: just copy and paste it inside the app.`)
         .replace('{{SUPPORTER_ID}}', `${username}`)
         .replace('{{SUPPORTER_CODE}}', `${supporterCode}`)
         .replace('{{URL_DESC}}', ``)
         .replace('{{REDIRECT_SNIPPET}}', ``);
   } else {
     page = html
-        .replace('{{STATUS_TITLE}}', `Nothing to show`)
+        .replace('{{STATUS_TITLE}}', `Successful login but...`)
         .replace('{{STATUS_DESCRIPTION}}', `It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
         .replace('{{SUPPORTER_ID}}', `${username}`)
         .replace('{{SUPPORTER_CODE}}', `Not available`)
