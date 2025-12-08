@@ -55,15 +55,15 @@ export async function onRequest({ request, env }) {
   });
   const userData = await userResp.json();
   const username = userData.login;
+  
+  // Check KV for UUID (only to know if user is present in db)
+  const uuid = await DONATION_DB.get(username);
+  
+  if (uuid) {
+    // Sign username
+    const codeSignature = await signString(username, PRIVATE_KEY);
+    const supporterCode = `${username}.${codeSignature}`
 
-  // Check KV for UUID
-  const userCode = await DONATION_DB.get(username);
-  const codeSignature = await signString(userCode, PRIVATE_KEY);
-  const supporterCode = `${userCode}.${codeSignature}`
-  
-  
-  
-  if (userCode) {
     page = html
         .replace('{{STATUS_TITLE}}', `Successful login`)
         .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution! Your supporter code is down below: just copy and paste it inside the app.`)
