@@ -109,7 +109,7 @@
       
       <form action="/create-donation" method="POST">
         <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to Trocador to complete your donation with the cryptocurrency of your choice.</label>
-        <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your SUPPORTER ID when it's shown.</label>
+        <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
         
         <div class="form-group">
           <input type="checkbox" id="use-xmr" name="use-xmr">   Check this box if want to use Monero
@@ -123,7 +123,9 @@
       <hr>
 
       <h1 class="md-typescale-headline-large">Get supporter code</h1>
-      <p>Once you gave supporter either by donating, contributing to code or translating, insert your SUPPORTER ID to receive your supporter code.</p>
+
+      <h2 class="md-typescale-headline-medium">Donators</h2>
+      <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
       
       <form action="/check-status" method="GET">
         <label for="id">SUPPORTER ID:</label>
@@ -143,6 +145,15 @@
           <button type="submit" class="md-filled-button">Check donation status</button>
         </div>
       </form>
+
+      <h2 class="md-typescale-headline-medium">Contributors</h2>
+      <p>Once your pull request is merged, login to Github to receive your supporter code.</p>
+
+      <a href="/github/login" class="md-filled-button">
+        <span class="material-symbols-outlined">login</span>
+        Login GitHub
+      </a>
+
     </div>
   </main>
 
