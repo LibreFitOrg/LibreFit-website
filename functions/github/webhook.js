@@ -24,11 +24,11 @@ export async function onRequestPost({ request, env }) {
     const username = payload.pull_request.user.login;
 
     // Check if user already exists.
-    const existingUser = await env.DONATIONS_KV.get(username);
+    const existingUser = await env.DONATION_DB.get(username);
 
     // Store only new users
     if (!existingUser) {
-        await env.DONATIONS_KV.put(username, JSON.stringify({code: crypto.randomUUID()}));
+        await env.DONATION_DB.put(username, JSON.stringify({code: crypto.randomUUID()}));
     }
   }
 
