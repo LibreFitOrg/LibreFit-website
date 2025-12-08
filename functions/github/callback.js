@@ -1,4 +1,5 @@
 import html from '../../status.html';
+import { signString } from './_supporter-code-sign.js';
 
 export async function onRequest({ request, env }) {
   const code = new URL(request.url).searchParams.get("code");
@@ -39,7 +40,7 @@ export async function onRequest({ request, env }) {
 
   // Check KV for UUID
   const userCode = await env.DONATION_DB.get(username);
-  const supporterCode = userCode; //TODO: implement sign logic
+  const supporterCode = await signString(userCode);
   
   
   
