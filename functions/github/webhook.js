@@ -28,7 +28,7 @@ export async function onRequestPost({ request, env }) {
 
     // Store only new users
     if (!existingUser) {
-        await env.DONATION_DB.put(username, JSON.stringify({code: crypto.randomUUID()}));
+        await env.DONATION_DB.put(username, crypto.randomUUID());
     }
   }
 
