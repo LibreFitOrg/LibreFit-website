@@ -26,7 +26,7 @@ export async function onRequest({ request, env }) {
   const username = userData.login;
 
   // Check KV for reward (which is a random UUID)
-  const userCode = await env.DONATIONS_KV.get(`${username}`);
+  const userCode = await env.DONATIONS_DB.get(`${username}`);
   let supporterCode; //TODO:
   
   // HTML Template for response
