@@ -5,16 +5,16 @@ export async function onRequestPost({ request, env }) {
   const signature = request.headers.get("x-hub-signature-256");
   const body = await request.text();
 
-  const eventType = request.headers.get("x-github-event");
-  if (eventType !== "pull_request") {
-    // Return 200 immediately for non-PR events so GitHub doesn't mark it as failed
-    return new Response("OK"); 
-  }
-
   // Security verification
   if (secret && signature) {
     const isValid = await verify(secret, body, signature);
     if (!isValid) return new Response("Invalid Signature", { status: 401 });
+  }
+
+  const eventType = request.headers.get("x-github-event");
+  if (eventType !== "pull_request") {
+    // Return 200 immediately for non-PR events so GitHub doesn't mark it as failed
+    return new Response("OK"); 
   }
 
   const payload = JSON.parse(body);
