@@ -2,6 +2,24 @@ import html from '../../status.html';
 import { signString } from '../_supporter-code-sign.js';
 
 export async function onRequest({ request, env }) {
+  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, PRIVATE_KEY, DONATION_DB } = env
+
+  if(!GITHUB_CLIENT_ID) {
+    console.error("GITHUB_CLIENT_ID not found")
+    return new Error("Internal error")
+  }
+
+  if(!GITHUB_CLIENT_SECRET) {
+    console.error("GITHUB_CLIENT_SECRET not found")
+    return new Error("Internal error")
+  }
+
+  if(!PRIVATE_KEY) {
+    console.error("PRIVATE_KEY not found")
+    return new Error("Internal error")
+  }
+
+
   const code = new URL(request.url).searchParams.get("code");
   if (!code) return new Response("Missing code", { status: 400 });
 
@@ -10,8 +28,8 @@ export async function onRequest({ request, env }) {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify({
-      client_id: env.GITHUB_CLIENT_ID,
-      client_secret: env.GITHUB_CLIENT_SECRET,
+      client_id: GITHUB_CLIENT_ID,
+      client_secret: GITHUB_CLIENT_SECRET,
       code
     })
   });
@@ -39,8 +57,8 @@ export async function onRequest({ request, env }) {
   const username = userData.login;
 
   // Check KV for UUID
-  const userCode = await env.DONATION_DB.get(username);
-  const supporterCode = await signString(userCode);
+  const userCode = await DONATION_DB.get(username);
+  const supporterCode = await signString(userCode, PRIVATE_KEY);
   
   
   
