@@ -16,7 +16,19 @@ export async function onRequest({ request, env }) {
   });
   const tokenData = await tokenResp.json();
 
-  if (tokenData.error) return new Response("GitHub OAuth Error", { status: 400 });
+  // HTML for response
+  let page;
+
+  if (tokenData.error) {
+    page = html
+        .replace('{{STATUS_TITLE}}', `GitHub OAuth Error`)
+        .replace('{{STATUS_DESCRIPTION}}', `There was an error during OAuth with GitHub, try to restart the login. If error persist, contact us.`)
+        .replace('{{SUPPORTER_ID}}', `Unknown`)
+        .replace('{{SUPPORTER_CODE}}', `Not available`)
+        .replace('{{URL_DESC}}', ``)
+        .replace('{{REDIRECT_SNIPPET}}', ``);
+    return new Response( page, { headers: { "Content-Type": "text/html" } });
+  }
 
   // Identify User
   const userResp = await fetch("https://api.github.com/user", {
@@ -25,31 +37,30 @@ export async function onRequest({ request, env }) {
   const userData = await userResp.json();
   const username = userData.login;
 
-  // Check KV for reward (which is a random UUID)
-  const userCode = await env.DONATION_DB.get(`${username}`);
-  let supporterCode; //TODO:
+  // Check KV for UUID
+  const userCode = await env.DONATION_DB.get(username);
+  const supporterCode = userCode; //TODO: implement sign logic
   
-  // HTML Template for response
-  let page;
   
-  if (!userCode) {
-    page = html
-        .replace('{{STATUS_TITLE}}', `Nothing to show`)
-        .replace('{{STATUS_DESCRIPTION}}', `It looks like you didn't have merged any pull request. If you think this is an error, contact us.`)
-        .replace('{{SUPPORTER_ID}}', `${username}`)
-        .replace('{{SUPPORTER_CODE}}', `Not available`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-  } else {
+  
+  if (userCode) {
     page = html
         .replace('{{STATUS_TITLE}}', `Thank you for your contribution!`)
         .replace('{{STATUS_DESCRIPTION}}', `TODO`)
         .replace('{{SUPPORTER_ID}}', `${username}`)
-        .replace('{{SUPPORTER_CODE}}', `TODO`)
+        .replace('{{SUPPORTER_CODE}}', `${supporterCode}`)
+        .replace('{{URL_DESC}}', ``)
+        .replace('{{REDIRECT_SNIPPET}}', ``);
+  } else {
+    page = html
+        .replace('{{STATUS_TITLE}}', `Nothing to show`)
+        .replace('{{STATUS_DESCRIPTION}}', `It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
+        .replace('{{SUPPORTER_ID}}', `${username}`)
+        .replace('{{SUPPORTER_CODE}}', `Not available`)
         .replace('{{URL_DESC}}', ``)
         .replace('{{REDIRECT_SNIPPET}}', ``);
   }
 
   
-  return new Response(page, { headers: { "Content-Type": "text/html" } });
+  return new Response( page, { headers: { "Content-Type": "text/html" } });
 }
