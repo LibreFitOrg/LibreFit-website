@@ -58,7 +58,8 @@ export async function onRequest({ request, env }) {
 
   // Check KV for UUID
   const userCode = await DONATION_DB.get(username);
-  const supporterCode = await signString(userCode, PRIVATE_KEY);
+  const codeSignature = await signString(userCode, PRIVATE_KEY);
+  const supporterCode = `${userCode}.${codeSignature}`
   
   
   
