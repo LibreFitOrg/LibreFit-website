@@ -1,4 +1,4 @@
-import html from '../status.html';
+import html from '../../status.html';
 
 export async function onRequest({ request, env }) {
   const code = new URL(request.url).searchParams.get("code");
