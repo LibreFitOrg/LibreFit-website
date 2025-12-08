@@ -1,5 +1,5 @@
 import html from '../../status.html';
-import { signString } from './_supporter-code-sign.js';
+import { signString } from '../_supporter-code-sign.js';
 
 export async function onRequest({ request, env }) {
   const code = new URL(request.url).searchParams.get("code");
