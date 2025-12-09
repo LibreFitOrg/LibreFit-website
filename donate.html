@@ -15,6 +15,14 @@
 
   <style>
     .form-group { margin-bottom: var(--space-4); }
+
+    /* Overwrite `content-card a` of styles.css*/
+    .md-filled-button,
+    .md-filled-button:hover,
+    .md-filled-button:focus-visible {
+      color: var(--md-sys-color-on-primary) !important;
+      text-decoration: none !important;
+    }
     
     label { 
         display: block; 
@@ -128,7 +136,7 @@
       <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
       
       <form action="/check-status" method="GET">
-        <label for="id">SUPPORTER ID:</label>
+        <label for="id">DONATION ID:</label>
         <input 
           type="text" 
           id="id" 
@@ -147,11 +155,11 @@
       </form>
 
       <h2 class="md-typescale-headline-medium">Contributors</h2>
-      <p>Once your pull request is merged, login below to your Github account to receive your supporter code.</p>
+      <p>Once your pull request is merged, login below with your Github account to receive your supporter code.</p>
 
       <a href="/github/login" class="md-filled-button">
         <span class="material-symbols-outlined">login</span>
-        Login GitHub
+        GitHub login
       </a>
 
     </div>
