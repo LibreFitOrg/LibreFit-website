@@ -22,7 +22,7 @@ export default defineConfig({
 
         status: resolve(__dirname, 'status.html'),
 
-        license: resolve(__dirname, 'license-info.html'), 
+        license: resolve(__dirname, 'license.html'), 
 
         notfound: resolve(__dirname, '404.html'), 
       },
