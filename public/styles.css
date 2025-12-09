@@ -430,57 +430,6 @@ main {
   text-decoration: underline;
 }
 
-.footer-attribution {
-  position: relative;
-}
-
-.footer-attribution summary {
-  cursor: pointer;
-  color: var(--md-sys-color-on-surface-variant);
-  transition: color var(--md-motion-duration-short2);
-  list-style: none; /* Removes the default arrow/marker */
-  display: inline-block; /* Fix for marker removal in some browsers */
-}
-
-.footer-attribution summary::-webkit-details-marker {
-  display: none; /* Also removes the default arrow in WebKit browsers */
-}
-
-.footer-attribution summary:hover {
-  color: var(--md-sys-color-on-surface);
-}
-
-.attribution-content {
-  /* This positions the box above the footer link */
-  position: absolute;
-  bottom: 150%; /* Position it above the 'Credits' text */
-  right: 0;
-  
-  /* Styling for the box */
-  background: var(--md-sys-color-surface-container-high);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  box-shadow: var(--md-elev-3);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  width: max-content;
-  max-width: 300px; /* Prevents it from getting too wide on desktop */
-  z-index: 10;
-  line-height: 1.5;
-}
-
-.attribution-content a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-}
-.attribution-content a:hover {
-  text-decoration: underline;
-}
-
-/* Hide content when details is not open */
-.footer-attribution:not([open]) .attribution-content {
-  display: none;
-}
-
 
 /* =============================================== */
 /* PAGE SECTIONS
