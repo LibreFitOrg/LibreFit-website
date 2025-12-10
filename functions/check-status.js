@@ -1,7 +1,6 @@
 import html from '../status.html';
 import { signString } from './_supporter-code-sign.js';
 import { getDb, donations } from "./_db.js";
-import { eq } from 'drizzle-orm';
 
 
 export async function onRequestGet(context) {
@@ -36,21 +35,22 @@ export async function onRequestGet(context) {
     // Initialize DB
     const db = getDb(env);
 
-    const donation = await db.query.donations.findFirst({
-      where: eq(donations.id, id)
-    })
+    const records = await db.select()
+          .from(donations)
+          .where(eq(donations.id, id));    
 
     // If the record is not in the database, it's an invalid ID.
-    if (donation){   
-      const status = getStatus(record.status);
+    if (records.length != 0){
+      const donation = records[0];   
+      const status = getStatus(donation.status);
       title = status.title
       description = status.description
-      trade_id = record.trade_id
+      trade_id = donation.trade_id
       urlPaymentPage = `
         Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
       `
 
-      if (record.status === 'finished') {
+      if (donation.status === 'finished') {
 
         // Private Key (PKCS#8 format from Kotlin)
         // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
@@ -61,7 +61,7 @@ export async function onRequestGet(context) {
       }
       
       const waitingKeywords = ["anonpaynew", "waiting", "confirming", "sending", "paid_partially"];
-      if(waitingKeywords.includes(record.status)) {
+      if(waitingKeywords.includes(donation.status)) {
         code = 'When donation transaction is completed, your supporter code will be available here.';
       }
     }

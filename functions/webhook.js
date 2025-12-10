@@ -32,14 +32,16 @@ export async function onRequestPost(context) {
     const db = getDb(env);
 
     // Fetch id in database from donation id
-    const donation = await db.query.donations.findFirst({
-      where: eq(donations.trade_id, tradeId)
-    })
+    const records = await db.select()
+        .from(donations)
+        .where(eq(donations.id, id));
 
-    if(!donation) {
+    if(records.length == 0) {
       console.error(`Webhook received update for non-existent donation: ${tradeId}`);
       return new Response('ID does not exist', { status: 400 });
     }
+
+    const donation = records[0];
 
     // Validate request
     if(donation.webhook_key != receivedKey) {
