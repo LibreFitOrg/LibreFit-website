@@ -64,7 +64,7 @@ export async function onRequestGet(context) {
     const statusHtml = html
       .replace('{{STATUS_TITLE}}', `${title}`)
       .replace('{{STATUS_DESCRIPTION}}', `${description}`)
-      .replace('{{SUPPORTER_ID}}', `${id}`)
+      .replace('{{ID}}', `${id}`)
       .replace('{{SUPPORTER_CODE}}', `${code}`)
       .replace('{{URL_DESC}}', `${urlPaymentPage}`)
       .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (see create-donation.js))

@@ -2,7 +2,7 @@
 
 The official website for LibreFit, built with Vite and Cloudflare Pages to handle contact forms, donations and supporter code rewards.
 
-## Quick Start ⚡
+## ⚡ Quick Start
 
 1.  **Install Dependencies**
     ```bash
@@ -25,7 +25,7 @@ The official website for LibreFit, built with Vite and Cloudflare Pages to handl
     npm run build
     ```
 
-## License ⚖
+## ⚖ License
 
 LibreFit is licensed under the [GNU General Public License v3.0 (GPL-3)](COPYING) and it is subject
 to these [additional terms](ADDITIONAL_TERMS.md).

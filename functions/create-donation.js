@@ -90,7 +90,7 @@ export async function onRequestPost(context) {
         .replace('{{STATUS_TITLE}}', `🚀 Created`)
         .replace('{{STATUS_DESCRIPTION}}', `The donation has been created. Save IMMEDIATELY the ID below to request supporter code once donation is completed.`)
         .replace('{{SUPPORTER_CODE}}', `When donation transaction is completed, your supporter code will be available here.`)
-        .replace('{{DONATION_ID}}', `${id}`)
+        .replace('{{ID}}', `${id}`)
         .replace('{{URL_DESC}}', `${urlDonationDesc}`)
         .replace('{{REDIRECT_SNIPPET}}', `"60;url=${redirectUrl}"`);
 
