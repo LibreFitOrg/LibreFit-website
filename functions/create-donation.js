@@ -1,4 +1,5 @@
 import html from '../status.html';
+import { getDb, donations } from "./_db.js";
 
 export async function onRequestPost(context) {
   try {
@@ -59,27 +60,27 @@ export async function onRequestPost(context) {
       return new Response("Received an unreadable response from the payment processor.", { status: 502 });
     }
 
-    const donationId = data.ID;
+    const tradeId = data.ID;
     const redirectUrl = data.url;
 
-    if (!donationId || !redirectUrl) {
+    if (!tradeId || !redirectUrl) {
         console.error("Invalid response from Trocador:", data);
         return new Response('Failed to process donation request. Invalid response from processor.', { status: 500 });
     }
 
-    const initialRecord = {
-      id: donationId,
-      status: 'anonpaynew', // The initial status from Trocador
-      webhookKey: webhookKey,
-    };
-
     const id = crypto.randomUUID();
 
-    // The key is the UUID, the value is the JSON object.
-    await DONATION_DB.put(id, JSON.stringify(initialRecord));
+    // Initialize DB
+    const db = getDb(env);
 
-    // Used by webhook to get back the id in kv database
-    await DONATION_DB.put(donationId, id);
+    await db.insert(donations)
+      .values({
+        id: id,
+        trade_id: tradeId,
+        status: 'anonpaynew', // The initial status from Trocador
+        webhook_key: webhookKey,
+        code: ''
+      })
 
     const urlDonationDesc = `
       You will be automatically redirected to donation <a href="${redirectUrl}">page</a> in 60 seconds.

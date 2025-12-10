@@ -1,7 +1,19 @@
+import { eq } from "drizzle-orm";
+import { getDb, donations } from "./_db.js";
+import { signString } from './_supporter-code-sign.js';
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { DONATION_DB } = env;
+    const { PRIVATE_KEY } = env;
+
+    if(!PRIVATE_KEY) {
+      return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
+    }
+
+    const privateKeyB64 = PRIVATE_KEY;
+
+
 
     // Get key from the URL
     const url = new URL(request.url);
@@ -9,42 +21,44 @@ export async function onRequestPost(context) {
 
     // Trocador sends the data as JSON in the POST body
     const donationData = await request.json();
-    const donationId = donationData.trade_id;
+    const tradeId = donationData.trade_id;
 
-    if (!donationId) {
+    if (!tradeId) {
       console.log("Webhook received a request without an ID.");
       return new Response('Trade ID missing', { status: 400 });
     }
 
-    // Fetch id in KV database from donation id
-    const id = await DONATION_DB.get(donationId);
-    if(!id) {
-      console.error(`Webhook received update for non-existent donation ID: ${id}`);
-      return new Response('ID does not exist', { status: 400 });
-    }
+    // Initialize DB
+    const db = getDb(env);
 
-    // Fetch the existing record from KV to preserve original data
-    const existingRecordJSON = await DONATION_DB.get(id);
-    if (!existingRecordJSON) {
-      console.error(`Webhook received update for non-existent ID: ${donationId}`);
+    // Fetch id in database from donation id
+    const donation = await db.query.donations.findFirst({
+      where: eq(donations.trade_id, tradeId)
+    })
+
+    if(!donation) {
+      console.error(`Webhook received update for non-existent donation: ${tradeId}`);
       return new Response('ID does not exist', { status: 400 });
     }
-    
-    const existingRecord = JSON.parse(existingRecordJSON);
-    const webhookKey = existingRecord.webhookKey
 
     // Validate request
-    if(webhookKey != receivedKey) {
+    if(donation.webhook_key != receivedKey) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const updatedRecord = {
-      ...existingRecord, // Keep original data
-      status: donationData.status, // Update the status
-    };
+    let code = donation.code
 
-    // Save the updated record back to KV
-    await DONATION_DB.put(id, JSON.stringify(updatedRecord));
+    if(donationData.status == 'finished') {
+      code = await signString(donation.id, privateKeyB64);
+    }
+
+    // Save the updated record back to DB
+    await db.update(donations)
+      .set({ 
+        status: donationData.status,
+        code: code
+      })
+      .where(eq(donations.id, donation.id))
 
     // Acknowledge receipt
     return new Response('OK', { status: 200 });

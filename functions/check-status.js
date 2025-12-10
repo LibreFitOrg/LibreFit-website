@@ -1,11 +1,15 @@
 import html from '../status.html';
 import { signString } from './_supporter-code-sign.js';
+import { getDb, donations } from "./_db.js";
 
 
 export async function onRequestGet(context) {
   try {
     const { request, env } = context;
     const { DONATION_DB, PRIVATE_KEY } = env;
+
+    // Initialize DB
+    const db = getDb(env);
 
     if(!PRIVATE_KEY) {
       return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
@@ -31,16 +35,16 @@ export async function onRequestGet(context) {
     let trade_id = ``;
     let code = 'Not available';
 
-    const recordJSON = await DONATION_DB.get(id);
+    const record = await db.select()
+          .from(donations)
+          .where(eq(donations.id, id));
 
     // If the record is not in the database, it's an invalid ID.
-    if (recordJSON){
-      const record = JSON.parse(recordJSON);
-    
+    if (record){   
       const status = getStatus(record.status);
       title = status.title
       description = status.description
-      trade_id = record.id
+      trade_id = record.trade_id
       urlPaymentPage = `
         Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
       `
