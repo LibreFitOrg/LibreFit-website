@@ -20,7 +20,8 @@
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
     "@octokit/webhooks-methods": "^6.0.0",
-    "openpgp": "^6.2.2"
+    "openpgp": "^6.2.2",
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
     "vite": "^7.2.2",
