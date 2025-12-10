@@ -9,9 +9,6 @@ export async function onRequestGet(context) {
     const { request, env } = context;
     const { DONATION_DB, PRIVATE_KEY } = env;
 
-    // Initialize DB
-    const db = getDb(env);
-
     if(!PRIVATE_KEY) {
       return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
     }
@@ -36,12 +33,15 @@ export async function onRequestGet(context) {
     let trade_id = ``;
     let code = 'Not available';
 
-    const record = await db.select()
-          .from(donations)
-          .where(eq(donations.id, id));
+    // Initialize DB
+    const db = getDb(env);
+
+    const donation = await db.query.donations.findFirst({
+      where: eq(donations.id, id)
+    })
 
     // If the record is not in the database, it's an invalid ID.
-    if (record){   
+    if (donation){   
       const status = getStatus(record.status);
       title = status.title
       description = status.description
