@@ -3,7 +3,7 @@ import postgres from "postgres";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 // Donations schema
-export const donations = pgTable("user_preferences", {
+export const donations = pgTable("donations", {
   id: uuid("id").primaryKey().defaultRandom(),
   trade_id: text("trade_id"),
   status: text("status"),
