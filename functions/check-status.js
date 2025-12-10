@@ -1,6 +1,7 @@
 import html from '../status.html';
 import { signString } from './_supporter-code-sign.js';
 import { getDb, donations } from "./_db.js";
+import { eq } from "drizzle-orm";
 
 
 export async function onRequestGet(context) {
