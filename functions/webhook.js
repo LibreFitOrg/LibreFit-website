@@ -34,7 +34,7 @@ export async function onRequestPost(context) {
     // Fetch id in database from donation id
     const records = await db.select()
         .from(donations)
-        .where(eq(donations.id, id));
+        .where(eq(donations.trade_id, tradeId));
 
     if(records.length == 0) {
       console.error(`Webhook received update for non-existent donation: ${tradeId}`);
