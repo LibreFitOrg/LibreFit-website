@@ -1,5 +1,6 @@
 import html from '../../status.html';
 import { getDb, contributors } from "../_db.js";
+import { eq } from "drizzle-orm";
 
 export async function onRequest({ request, env }) {
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
