@@ -1,5 +1,4 @@
 import html from '../status.html';
-import { signString } from './_supporter-code-sign.js';
 import { getDb, donations } from "./_db.js";
 import { eq } from "drizzle-orm";
 
@@ -7,11 +6,6 @@ import { eq } from "drizzle-orm";
 export async function onRequestGet(context) {
   try {
     const { request, env } = context;
-    const { DONATION_DB, PRIVATE_KEY } = env;
-
-    if(!PRIVATE_KEY) {
-      return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
-    }
 
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
@@ -40,7 +34,7 @@ export async function onRequestGet(context) {
           .from(donations)
           .where(eq(donations.id, id));    
 
-    // If the record is not in the database, it's an invalid ID.
+    // If there isn't any record in database, then the ID is invalid
     if (records.length != 0){
       const donation = records[0];   
       const status = getStatus(donation.status);
@@ -52,13 +46,7 @@ export async function onRequestGet(context) {
       `
 
       if (donation.status === 'finished') {
-
-        // Private Key (PKCS#8 format from Kotlin)
-        // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
-        const privateKeyB64 = PRIVATE_KEY;
-
-        const signature = await signString(id, privateKeyB64);
-        code = `${id}.${signature}`
+        code = donation.code
       }
       
       const waitingKeywords = ["anonpaynew", "waiting", "confirming", "sending", "paid_partially"];
@@ -76,9 +64,7 @@ export async function onRequestGet(context) {
       .replace('{{REDIRECT_SNIPPET}}', ``); // No redirect here (only when creating donation (see create-donation.js))
 
     
-    return new Response(statusHtml, {
-      headers: { "Content-Type": "text/html" },
-    });
+    return new Response(statusHtml, { headers: { "Content-Type": "text/html" } });
   } catch (error) {
     console.error("Status function error:", error);
     return new Response("An unexpected error occurred while checking the status.", { status: 500 });

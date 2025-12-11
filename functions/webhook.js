@@ -8,12 +8,9 @@ export async function onRequestPost(context) {
     const { PRIVATE_KEY } = env;
 
     if(!PRIVATE_KEY) {
-      return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 })
+      console.error("Configuration error: PRIVATE_KEY is not set.");
+      return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 });
     }
-
-    const privateKeyB64 = PRIVATE_KEY;
-
-
 
     // Get key from the URL
     const url = new URL(request.url);
@@ -51,7 +48,12 @@ export async function onRequestPost(context) {
     let code = donation.code
 
     if(donationData.status == 'finished') {
-      code = await signString(donation.id, privateKeyB64);
+      // Private Key (PKCS#8 format from Kotlin)
+      // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
+      const privateKeyB64 = PRIVATE_KEY;
+
+      const signature = await signString(donation.id, privateKeyB64);
+      code = `${donation.id}.${signature}`;
     }
 
     // Save the updated record back to DB
