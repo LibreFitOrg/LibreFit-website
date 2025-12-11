@@ -3,13 +3,22 @@ import postgres from "postgres";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 // Donations schema
-export const donations = pgTable("donations", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  trade_id: text("trade_id"),
-  status: text("status"),
-  webhook_key: text("webhook_key"),
-  code: text("code")
-});
+export const donations = pgTable("donations", 
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    trade_id: text("trade_id"),
+    status: text("status"),
+    webhook_key: text("webhook_key"),
+    code: text("code")
+  }
+);
+
+export const contributors = pgTable("contributors",
+  {
+    username: text("username").primaryKey(),
+    code: text("code")
+  }
+);
 
 // Connection Helper
 export function getDb(env) {

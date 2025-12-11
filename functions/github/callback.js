@@ -1,22 +1,17 @@
 import html from '../../status.html';
-import { signString } from '../_supporter-code-sign.js';
+import { getDb, contributors } from "../_db.js";
 
 export async function onRequest({ request, env }) {
-  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, PRIVATE_KEY, DONATION_DB } = env
+  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
 
   if(!GITHUB_CLIENT_ID) {
-    console.error("GITHUB_CLIENT_ID not found")
-    return new Error("Internal error")
+    console.error("Configuration error: GITHUB_CLIENT_ID is not set.");
+    return new Response("Server configuration error: GITHUB_CLIENT_ID is not set.", { status: 500 });
   }
 
   if(!GITHUB_CLIENT_SECRET) {
-    console.error("GITHUB_CLIENT_SECRET not found")
-    return new Error("Internal error")
-  }
-
-  if(!PRIVATE_KEY) {
-    console.error("PRIVATE_KEY not found")
-    return new Error("Internal error")
+    console.error("Configuration error: GITHUB_CLIENT_SECRET is not set.");
+    return new Response("Server configuration error: GITHUB_CLIENT_SECRET is not set.", { status: 500 });
   }
 
 
@@ -55,14 +50,19 @@ export async function onRequest({ request, env }) {
   });
   const userData = await userResp.json();
   const username = userData.login;
+
+  // Initialize DB
+  const db = getDb(env);
+
+  // Fetch user
+  const records = await db.select()
+    .from(contributors)
+    .where(eq(contributors.username, username));  
   
-  // Check KV for UUID (only to know if user is present in db)
-  const uuid = await DONATION_DB.get(username);
-  
-  if (uuid) {
-    // Sign username
-    const codeSignature = await signString(username, PRIVATE_KEY);
-    const supporterCode = `${username}.${codeSignature}`
+  // Check if user exits, then show code
+  if (records.length != 0) {
+    const record = records[0];
+    const supporterCode = `${record.code}`;
 
     page = html
         .replace('{{STATUS_TITLE}}', `Successful login`)
