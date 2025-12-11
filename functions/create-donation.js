@@ -4,14 +4,16 @@ import { getDb, donations } from "./_db.js";
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
-    const { XMR_ADDRESS, SOL_ADDRESS, DONATION_DB } = env;
+    const { XMR_ADDRESS, SOL_ADDRESS } = env;
 
     if(!XMR_ADDRESS) {
-      return new Error("Server configuration error: XMR_ADDRESS is not set.")
+      console.error("Configuration error: XMR_ADDRESS is not set.");
+      return new Response("Server configuration error: XMR_ADDRESS is not set.", { status: 500 });
     }
 
     if(!SOL_ADDRESS) {
-      return new Error("Server configuration error: SOL_ADDRESS is not set.")
+      console.error("Configuration error: SOL_ADDRESS is not set.");
+      return new Response("Server configuration error: SOL_ADDRESS is not set.", { status: 500 });
     }
 
     // Get the data from the form

@@ -43,7 +43,8 @@ export async function onRequestPost(context) {
         // Verify Turnstile token
         const turnstileKey = context.env.TURNSTILE_SECRET_KEY;
         if (!turnstileKey) {
-            throw new Error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
+            console.error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
+            return new Response("Server configuration error: TURNSTILE_SECRET_KEY is not set.", { stauts: 500 });
         }
 
         const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
@@ -135,7 +136,8 @@ export async function onRequestPost(context) {
         // Send email
         const resendApiKey = context.env.RESEND_API_KEY
         if(!resendApiKey) {
-            throw new Error("Server configuration error: RESEND_API_KEY is not set.");
+            console.error("Server configuration error: RESEND_API_KEY is not set.");
+            return new Response("Server configuration error: RESEND_API_KEY is not set.");
         }
 
         const response = await fetch('https://api.resend.com/emails', {
