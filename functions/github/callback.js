@@ -1,8 +1,9 @@
 import html from '../../status.html';
 import { getDb, contributors } from "../_db.js";
+import { signString } from '../_supporter-code-sign.js';
 
 export async function onRequest({ request, env }) {
-  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
+  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, PRIVATE_KEY } = env;
 
   if(!GITHUB_CLIENT_ID) {
     console.error("Configuration error: GITHUB_CLIENT_ID is not set.");
@@ -12,6 +13,11 @@ export async function onRequest({ request, env }) {
   if(!GITHUB_CLIENT_SECRET) {
     console.error("Configuration error: GITHUB_CLIENT_SECRET is not set.");
     return new Response("Server configuration error: GITHUB_CLIENT_SECRET is not set.", { status: 500 });
+  }
+
+  if(!PRIVATE_KEY) {
+    console.error("Configuration error: PRIVATE_KEY is not set.");
+    return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 });
   }
 
   // Validate State (CSRF Protection)
@@ -71,17 +77,25 @@ export async function onRequest({ request, env }) {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 7 Days
 
+  // Generate code
+  const signature = await signString(username, PRIVATE_KEY);
+  const userCode = `${username}.${signature}`;
+
   // Query to handle everything
   await db.insert(contributors)
     .values({
+      githubId: userData.id,
       username: username,
+      code:userCode,
       sessionId: sessionId,
       expiresAt: expiresAt
     })
     .onConflictDoUpdate({
-      target: contributors.username, // If this ID exists...
+      target: contributors.githubId, // If this ID exists...
       set: { 
         // Update these fields instead of inserting
+        username: username,
+        code:userCode,
         sessionId: sessionId,
         expiresAt: expiresAt
       }

@@ -16,6 +16,8 @@ export const donations = pgTable("donations",
 
 export const contributors = pgTable("contributors",
   {
+    id: uuid("id").primaryKey().defaultRandom(),
+    githubId: integer('github_id').unique().notNull(), 
     username: text("username").primaryKey(),
     code: text("code"),
     sessionId: text("session_id").unique(),
