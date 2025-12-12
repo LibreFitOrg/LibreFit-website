@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, integer } from "drizzle-orm/pg-core";
 import { timestamptz } from "drizzle-orm/gel-core";
 
 // Donations schema
