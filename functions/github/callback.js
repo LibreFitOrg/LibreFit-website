@@ -19,7 +19,7 @@ export async function onRequest({ request, env }) {
   if (!code) return new Response("Missing code", { status: 400 });
 
 
-  const receivedState = url.searchParams.get("state");
+  const receivedState = new URL(request.url).searchParams.get("state");
   if (!receivedState) return new Response("Missing state", { status: 400 });
   
   // Extract state from cookie
