@@ -17,7 +17,7 @@ export const contributors = pgTable("contributors",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     githubId: integer('github_id').unique().notNull(), 
-    username: text("username").primaryKey(),
+    username: text("username"),
     code: text("code"),
     sessionId: text("session_id").unique(),
     expiresAt: timestamp('expires_at')
