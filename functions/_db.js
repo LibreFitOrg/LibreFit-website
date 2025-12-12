@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { timestamptz } from "drizzle-orm/gel-core";
 
 // Donations schema
 export const donations = pgTable("donations", 
@@ -16,7 +17,9 @@ export const donations = pgTable("donations",
 export const contributors = pgTable("contributors",
   {
     username: text("username").primaryKey(),
-    code: text("code")
+    code: text("code"),
+    sessionId: text("session_id").unique(),
+    expiresAt: timestamptz('expires_at')
   }
 );
 

@@ -1,6 +1,5 @@
 import html from '../../status.html';
 import { getDb, contributors } from "../_db.js";
-import { eq } from "drizzle-orm";
 
 export async function onRequest({ request, env }) {
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
@@ -15,9 +14,22 @@ export async function onRequest({ request, env }) {
     return new Response("Server configuration error: GITHUB_CLIENT_SECRET is not set.", { status: 500 });
   }
 
-
+  // Validate State (CSRF Protection)
   const code = new URL(request.url).searchParams.get("code");
   if (!code) return new Response("Missing code", { status: 400 });
+
+
+  const receivedState = url.searchParams.get("state");
+  if (!receivedState) return new Response("Missing state", { status: 400 });
+  
+  // Extract state from cookie
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const storedState = cookieHeader.split(';').find(c => c.trim().startsWith('oauth_state='))?.split('=')[1];
+
+  if (!receivedState || receivedState !== storedState) {
+    return new Response("Security Error: State mismatch", { status: 403 });
+  }
+  
 
   // Exchange Code for Token
   const tokenResp = await fetch("https://github.com/login/oauth/access_token", {
@@ -55,33 +67,30 @@ export async function onRequest({ request, env }) {
   // Initialize DB
   const db = getDb(env);
 
-  // Fetch user
-  const records = await db.select()
-    .from(contributors)
-    .where(eq(contributors.username, username));  
-  
-  // Check if user exits, then show code
-  if (records.length != 0) {
-    const record = records[0];
-    const supporterCode = `${record.code}`;
+  // Generate new Session ID
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 7 Days
 
-    page = html
-        .replace('{{STATUS_TITLE}}', `Successful login`)
-        .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution! Your supporter code is down below: just copy and paste it inside the app.`)
-        .replace('{{SUPPORTER_ID}}', `${username}`)
-        .replace('{{SUPPORTER_CODE}}', `${supporterCode}`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-  } else {
-    page = html
-        .replace('{{STATUS_TITLE}}', `Successful login but...`)
-        .replace('{{STATUS_DESCRIPTION}}', `It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
-        .replace('{{SUPPORTER_ID}}', `${username}`)
-        .replace('{{SUPPORTER_CODE}}', `Not available`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-  }
+  // Query to handle everything
+  await db.insert(contributors)
+    .values({
+      username: username,
+      sessionId: sessionId,
+      expiresAt: expiresAt
+    })
+    .onConflictDoUpdate({
+      target: contributors.username, // If this ID exists...
+      set: { 
+        // Update these fields instead of inserting
+        sessionId: sessionId,
+        expiresAt: expiresAt
+      }
+    });
 
-  
-  return new Response( page, { headers: { "Content-Type": "text/html" } });
+  // Set Cookie and Redirect
+  const headers = new Headers();
+  headers.append("Set-Cookie", `session_id=${sessionId}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800`);
+  headers.append("Location", "/github/contribution-status");
+
+  return new Response(null, { status: 302, headers });
 }
