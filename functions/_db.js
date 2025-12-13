@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { pgTable, text, uuid, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, bigint, timestamp } from "drizzle-orm/pg-core";
 
 // Donations schema
 export const donations = pgTable("donations", 
@@ -16,11 +16,11 @@ export const donations = pgTable("donations",
 export const contributors = pgTable("contributors",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    githubId: integer('github_id').unique().notNull(), 
-    username: text("username"),
+    githubId: bigint('github_id').unique().notNull(), 
+    username: text("username").notNull(),
     code: text("code"),
-    sessionId: text("session_id").unique(),
-    expiresAt: timestamp('expires_at')
+    sessionId: text("session_id").unique().notNull(),
+    expiresAt: timestamp('expires_at').notNull()
   }
 );
 
