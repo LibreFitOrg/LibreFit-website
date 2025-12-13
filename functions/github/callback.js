@@ -77,29 +77,31 @@ export async function onRequest({ request, env }) {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 7 Days
 
-  // Generate code
-  const signature = await signString(username, PRIVATE_KEY);
-  const userCode = `${username}.${signature}`;
-
   // Query to handle everything
-  await db.insert(contributors)
-    .values({
-      githubId: userData.id,
-      username: username,
-      code:userCode,
-      sessionId: sessionId,
-      expiresAt: expiresAt
-    })
-    .onConflictDoUpdate({
-      target: contributors.githubId, // If this ID exists...
-      set: { 
-        // Update these fields instead of inserting
+  try {
+    await db.insert(contributors)
+      .values({
+        githubId: userData.id,
         username: username,
-        code:userCode,
+        code: "",
         sessionId: sessionId,
         expiresAt: expiresAt
-      }
-    });
+      })
+      .onConflictDoUpdate({
+        target: contributors.githubId, // If this ID exists...
+        set: { 
+          // Update these fields instead of inserting
+          username: username,
+          sessionId: sessionId,
+          expiresAt: expiresAt
+        }
+      });
+  } catch (error) {
+    // Log the specific Postgres error code and message
+    console.error("Database Error:", error); 
+    console.error("Original Cause:", error.cause); // often contains the real SQL error
+    throw new Error("Database error")
+  }
 
   // Set Cookie and Redirect
   const headers = new Headers();
