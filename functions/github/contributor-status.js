@@ -15,9 +15,23 @@ export async function onRequest({ request, env }) {
     return new Response("Server configuration error: GITHUB_CLIENT_SECRET is not set.", { status: 500 });
   }
 
+  const url = new URL(request.url);
+  const code = url.searchParams.get("code");
 
-  const code = new URL(request.url).searchParams.get("code");
-  if (!code) return new Response("Missing code", { status: 400 });
+  // HTML for response
+  let page;
+  
+  if (!code) {
+    page = html
+        .replace('{{STATUS_TITLE}}', `GitHub Login Error`)
+        .replace('{{STATUS_DESCRIPTION}}', `You have to login to GitHub from donate page in order to see this page correctly. If you did it and this error persists, contact us.`)
+        .replace('{{ID}}', `Unknown`)
+        .replace('{{SUPPORTER_CODE}}', `Not available`)
+        .replace('{{URL_DESC}}', ``)
+        .replace('{{REDIRECT_SNIPPET}}', ``);
+    return new Response( page, { headers: { "Content-Type": "text/html" } });
+  }
+
 
   // Exchange Code for Token
   const tokenResp = await fetch("https://github.com/login/oauth/access_token", {
@@ -31,14 +45,13 @@ export async function onRequest({ request, env }) {
   });
   const tokenData = await tokenResp.json();
 
-  // HTML for response
-  let page;
+
 
   if (tokenData.error) {
     page = html
         .replace('{{STATUS_TITLE}}', `GitHub OAuth Error`)
-        .replace('{{STATUS_DESCRIPTION}}', `There was an error during OAuth with GitHub, try to restart the login. If error persist, contact us.`)
-        .replace('{{SUPPORTER_ID}}', `Unknown`)
+        .replace('{{STATUS_DESCRIPTION}}', `There was an error during OAuth with GitHub, try to restart the login. If error persists, contact us.`)
+        .replace('{{ID}}', `Unknown`)
         .replace('{{SUPPORTER_CODE}}', `Not available`)
         .replace('{{URL_DESC}}', ``)
         .replace('{{REDIRECT_SNIPPET}}', ``);
@@ -83,6 +96,6 @@ export async function onRequest({ request, env }) {
         .replace('{{REDIRECT_SNIPPET}}', ``);
   }
 
-  
+  url.searchParams.delete("code");
   return new Response( page, { headers: { "Content-Type": "text/html" } });
 }
