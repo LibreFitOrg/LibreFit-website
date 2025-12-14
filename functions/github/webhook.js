@@ -34,7 +34,9 @@ export async function onRequestPost({ request, env }) {
 
   // Filter: only closed and merged PRs
   if (payload.action === 'closed' && payload.pull_request.merged) {
-    const username = payload.pull_request.user.login;
+    const user = payload.pull_request.user;
+    const username = user.login;
+    const githubId = user.id;
 
     // Sign username with private key to generate code
     const signature = await signString(username, PRIVATE_KEY);
@@ -47,7 +49,7 @@ export async function onRequestPost({ request, env }) {
     await db.insert(contributors)
       .values(
         {
-          username: username,
+          githudId: githubId,
           code: code
         }
       )

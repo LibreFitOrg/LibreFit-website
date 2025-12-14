@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 // Donations schema
 export const donations = pgTable("donations", 
@@ -15,7 +15,7 @@ export const donations = pgTable("donations",
 
 export const contributors = pgTable("contributors",
   {
-    username: text("username").primaryKey(),
+    githubId: integer("github_id").primaryKey(),
     code: text("code")
   }
 );

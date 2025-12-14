@@ -51,6 +51,7 @@ export async function onRequest({ request, env }) {
   });
   const userData = await userResp.json();
   const username = userData.login;
+  const githubId = userData.id;
 
   // Initialize DB
   const db = getDb(env);
@@ -58,7 +59,7 @@ export async function onRequest({ request, env }) {
   // Fetch user
   const records = await db.select()
     .from(contributors)
-    .where(eq(contributors.username, username));  
+    .where(eq(contributors.githubId, githubId));  
   
   // Check if user exits, then show code
   if (records.length != 0) {
@@ -67,16 +68,16 @@ export async function onRequest({ request, env }) {
 
     page = html
         .replace('{{STATUS_TITLE}}', `Successful login`)
-        .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution! Your supporter code is down below: just copy and paste it inside the app.`)
-        .replace('{{SUPPORTER_ID}}', `${username}`)
+        .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution ${username}! Your supporter code is down below: just copy and paste it inside the app.`)
+        .replace('{{ID}}', `GitHub ID: ${githubId}`)
         .replace('{{SUPPORTER_CODE}}', `${supporterCode}`)
         .replace('{{URL_DESC}}', ``)
         .replace('{{REDIRECT_SNIPPET}}', ``);
   } else {
     page = html
         .replace('{{STATUS_TITLE}}', `Successful login but...`)
-        .replace('{{STATUS_DESCRIPTION}}', `It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
-        .replace('{{SUPPORTER_ID}}', `${username}`)
+        .replace('{{STATUS_DESCRIPTION}}', `Hi ${username}! It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
+        .replace('{{ID}}', `GitHub ID: ${githubId}`)
         .replace('{{SUPPORTER_CODE}}', `Not available`)
         .replace('{{URL_DESC}}', ``)
         .replace('{{REDIRECT_SNIPPET}}', ``);
