@@ -20,8 +20,6 @@ export default defineConfig({
 
         donate: resolve(__dirname, 'donate.html'),
 
-        status: resolve(__dirname, 'status.html'),
-
         license: resolve(__dirname, 'license.html'), 
 
         notfound: resolve(__dirname, '404.html'), 
