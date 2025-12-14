@@ -1,4 +1,4 @@
-import html from '../templates/status.html';
+import html from '../../templates/status.html';
 import { getDb, donations } from "../_db.js";
 
 export async function onRequestPost({ request, env }) {

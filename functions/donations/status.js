@@ -1,4 +1,4 @@
-import html from '../templates/status.html';
+import html from '../../templates/status.html';
 import { getDb, donations } from "../_db.js";
 import { eq } from "drizzle-orm";
 
