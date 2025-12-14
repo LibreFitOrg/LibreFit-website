@@ -4,7 +4,7 @@ import { getDb, donations } from "./_db.js";
 export async function onRequestPost({ request, env }) {
   const { XMR_ADDRESS, SOL_ADDRESS } = env;
 
-  return new Error("Test middleware")
+  throw new Error("Test middleware")
 
   // Get the data from the form
   const formData = await request.formData();
