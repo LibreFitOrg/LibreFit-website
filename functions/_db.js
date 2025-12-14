@@ -1,8 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-// Donations schema
 export const donations = pgTable("donations", 
   {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -19,6 +18,15 @@ export const contributors = pgTable("contributors",
     code: text("code")
   }
 );
+
+export const errorLogs = pgTable("error_logs", {
+  id: uuid("id").primaryKey(),
+  method: text("method").notNull(), 
+  url: text("url").notNull(),
+  message: text("message").notNull(),
+  stack: text("stack").notNull(),
+  timestamp: timestamp("timestamp").notNull(),
+});
 
 // Connection Helper
 export function getDb(env) {
