@@ -24,140 +24,115 @@ async function verifyTurnstile(token, ip, secretKey) {
  * POST /api/contact
  * Handles a contact form submission and sends it via Resend.
  */
-export async function onRequestPost(context) {
+export async function onRequestPost({ request, env }) {
+    const { TURNSTILE_SECRET_KEY, CONTACT_EMAIL, SUBDOMAIN, RESEND_API_KEY } = env;
+
     const successPath = '/contact-result/contact-success.html';
     const failPath = '/contact-result/contact-fail.html';
     const invalidDataPath = '/contact-result/contact-invalid-data.html';
 
-    const successRedirectURL = new URL(successPath, context.request.url);
-    const failRedirectURL = new URL(failPath, context.request.url);
-    const invalidDataRedirectURL = new URL(invalidDataPath, context.request.url);
+    const successRedirectURL = new URL(successPath, request.url);
+    const failRedirectURL = new URL(failPath, request.url);
+    const invalidDataRedirectURL = new URL(invalidDataPath, request.url);
 
-    try {
-        const formData = await context.request.formData();
-        
-        const encryptedMessage = formData.get('encrypted-message');
-        const turnstileToken = formData.get('cf-turnstile-response');
-        const ip = context.request.headers.get('CF-Connecting-IP') || context.request.headers.get('X-Forwarded-For') || 'unknown';
+    
+    
+    const formData = await request.formData();
+    
+    const encryptedMessage = formData.get('encrypted-message');
+    const turnstileToken = formData.get('cf-turnstile-response');
+    const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
 
-        // Verify Turnstile token
-        const turnstileKey = context.env.TURNSTILE_SECRET_KEY;
-        if (!turnstileKey) {
-            console.error("Server configuration error: TURNSTILE_SECRET_KEY is not set.");
-            return new Response("Server configuration error: TURNSTILE_SECRET_KEY is not set.", { stauts: 500 });
-        }
+    // Verify Turnstile token
+    const outcome = await verifyTurnstile(turnstileToken, ip, TURNSTILE_SECRET_KEY);
 
-        const outcome = await verifyTurnstile(turnstileToken, ip, turnstileKey);
-
-        if (!outcome.success) {
-            return Response.redirect(failRedirectURL, 302);
-        }
-
-
-
-        const email = formData.get('email');
-
-        if (!email || !encryptedMessage) {
-            return Response.redirect(invalidDataRedirectURL, 302);
-        }   
-
-
-        // Prepare email
-        const contactEmail = context.env.CONTACT_EMAIL
-        if(!contactEmail) {
-            throw new Error("Server configuration error: CONTACT_EMAIL is not set.");
-        }
-
-        const subdomain = context.env.SUBDOMAIN
-        if(!contactEmail) {
-            throw new Error("Server configuration error: SUBDOMAIN is not set.");
-        }
-
-        
-        const fromAddress = `Contact Form <form@${subdomain}>`;
-        const toAddress = `${contactEmail}`;
-        
-        const emailPayload = {
-            from: fromAddress,
-            to: [toAddress],
-            subject: `New message from ${email}`,
-            reply_to: [email],
-            text: encryptedMessage,
-        };
-        
-
-        const attachment = formData.get('pgp-key');
-
-        // Attach key if valid
-        if (attachment) {
-            if(typeof attachment === 'string' || attachment.size === 0) {
-                return Response.redirect(invalidDataRedirectURL, 302);
-            }
-
-            const userKeyText = await attachment.text();
-        
-            let userKey;
-            try {
-                userKey = await openpgp.readKey({ armoredKey: userKeyText });
-            } catch (error) {
-                console.error('OpenPGP parsing error:', error);
-                return Response.redirect(invalidDataRedirectURL, 302);
-            }
-
-            if (!userKey) {
-                return Response.redirect(invalidDataRedirectURL, 302);
-            }
-
-            if (userKey.isPrivate()) {
-                return Response.redirect(invalidDataRedirectURL, 302);
-            }
-
-            // Read the file as a raw binary buffer
-            const buffer = await attachment.arrayBuffer();
-
-            // Convert the buffer to a Base64 string
-            let binary = '';
-            const bytes = new Uint8Array(buffer);
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            const base64String = btoa(binary)
-
-            // Append the key
-            emailPayload.attachments = [
-                {
-                    content: base64String,
-                    filename: attachment.name,
-                },
-            ]
-        }
-
-        // Send email
-        const resendApiKey = context.env.RESEND_API_KEY
-        if(!resendApiKey) {
-            console.error("Server configuration error: RESEND_API_KEY is not set.");
-            return new Response("Server configuration error: RESEND_API_KEY is not set.");
-        }
-
-        const response = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${resendApiKey}`,
-            },
-            body: JSON.stringify(emailPayload),
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(`Resend API failed: ${JSON.stringify(error)}`);
-        }
-
-
-        return Response.redirect(successRedirectURL, 303);
-    } catch (error) {
-        console.error('Error processing form submission:', error);
+    if (!outcome.success) {
         return Response.redirect(failRedirectURL, 302);
     }
+
+
+    const email = formData.get('email');
+
+    if (!email || !encryptedMessage) {
+        return Response.redirect(invalidDataRedirectURL, 302);
+    }   
+
+
+    // Prepare email    
+    const fromAddress = `Contact Form <form@${SUBDOMAIN}>`;
+    const toAddress = `${CONTACT_EMAIL}`;
+    
+    const emailPayload = {
+        from: fromAddress,
+        to: [toAddress],
+        subject: `New message from ${email}`,
+        reply_to: [email],
+        text: encryptedMessage,
+    };
+    
+
+    const attachment = formData.get('pgp-key');
+
+    // Attach key if valid
+    if (attachment) {
+        if(typeof attachment === 'string' || attachment.size === 0) {
+            return Response.redirect(invalidDataRedirectURL, 302);
+        }
+
+        const userKeyText = await attachment.text();
+    
+        let userKey;
+        try {
+            userKey = await openpgp.readKey({ armoredKey: userKeyText });
+        } catch (error) {
+            console.error('OpenPGP parsing error:', error);
+            return Response.redirect(invalidDataRedirectURL, 302);
+        }
+
+        if (!userKey) {
+            return Response.redirect(invalidDataRedirectURL, 302);
+        }
+
+        if (userKey.isPrivate()) {
+            return Response.redirect(invalidDataRedirectURL, 302);
+        }
+
+        // Read the file as a raw binary buffer
+        const buffer = await attachment.arrayBuffer();
+
+        // Convert the buffer to a Base64 string
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        const base64String = btoa(binary)
+
+        // Append the key
+        emailPayload.attachments = [
+            {
+                content: base64String,
+                filename: attachment.name,
+            },
+        ]
+    }
+
+    // Send email
+    const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(emailPayload),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`Resend API failed: ${JSON.stringify(error)}`);
+    }
+
+
+    return Response.redirect(successRedirectURL, 303);
 }

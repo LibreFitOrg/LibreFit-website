@@ -5,16 +5,6 @@ import { eq } from "drizzle-orm";
 export async function onRequest({ request, env }) {
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
 
-  if(!GITHUB_CLIENT_ID) {
-    console.error("Configuration error: GITHUB_CLIENT_ID is not set.");
-    return new Response("Server configuration error: GITHUB_CLIENT_ID is not set.", { status: 500 });
-  }
-
-  if(!GITHUB_CLIENT_SECRET) {
-    console.error("Configuration error: GITHUB_CLIENT_SECRET is not set.");
-    return new Response("Server configuration error: GITHUB_CLIENT_SECRET is not set.", { status: 500 });
-  }
-
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
 

@@ -4,8 +4,6 @@ import { getDb, donations } from "./_db.js";
 export async function onRequestPost({ request, env }) {
   const { XMR_ADDRESS, SOL_ADDRESS } = env;
 
-  throw new Error("Test middleware")
-
   // Get the data from the form
   const formData = await request.formData();
   const useXmr = formData.get('use-xmr')
@@ -88,9 +86,5 @@ export async function onRequestPost({ request, env }) {
       .replace('{{REDIRECT_SNIPPET}}', `"60;url=${redirectUrl}"`);
 
   
-  return new Response(statusHtml, {
-    headers: {
-      'Content-Type': 'text/html',
-    },
-  });
+  return new Response(statusHtml, {headers: {'Content-Type': 'text/html',},});
 }
