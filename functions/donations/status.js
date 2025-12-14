@@ -1,5 +1,5 @@
 import html from '../templates/status.html';
-import { getDb, donations } from "./_db.js";
+import { getDb, donations } from "../_db.js";
 import { eq } from "drizzle-orm";
 
 
@@ -42,7 +42,7 @@ export async function onRequestGet({ request, env } ) {
       Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
     `
 
-    if (donation.status === 'finished') {
+    if (donation.code !== "") {
       code = donation.code
     }
     

@@ -1,5 +1,5 @@
 import html from '../templates/status.html';
-import { getDb, donations } from "./_db.js";
+import { getDb, donations } from "../_db.js";
 
 export async function onRequestPost({ request, env }) {
   const { XMR_ADDRESS, SOL_ADDRESS } = env;
@@ -10,7 +10,7 @@ export async function onRequestPost({ request, env }) {
 
   const siteURL = new URL(request.url);
   const webhookKey = crypto.randomUUID(); // Used for webhook validation
-  const webhookUrl = `${siteURL.origin}/webhook?key=${webhookKey}`;
+  const webhookUrl = `${siteURL.origin}/webhook-donation?key=${webhookKey}`;
 
   
   const trocadorUrl = new URL('https://trocador.app/anonpay/');

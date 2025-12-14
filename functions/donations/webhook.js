@@ -1,14 +1,9 @@
 import { eq } from "drizzle-orm";
-import { getDb, donations } from "./_db.js";
-import { signString } from './_supporter-code-sign.js';
+import { getDb, donations } from "../_db.js";
+import { signString } from '../_supporter-code-sign.js';
 
 export async function onRequestPost({ request, env }) {
   const { PRIVATE_KEY } = env;
-
-  if(!PRIVATE_KEY) {
-    console.error("Configuration error: PRIVATE_KEY is not set.");
-    return new Response("Server configuration error: PRIVATE_KEY is not set.", { status: 500 });
-  }
 
   // Get key from the URL
   const url = new URL(request.url);

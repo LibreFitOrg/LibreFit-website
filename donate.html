@@ -115,7 +115,7 @@
         Donate
       </h1>
       
-      <form action="/create-donation" method="POST">
+      <form action="/donations/create" method="POST">
         <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to Trocador to complete your donation with the cryptocurrency of your choice.</label>
         <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
         
@@ -135,7 +135,7 @@
       <h2 class="md-typescale-headline-medium">Donators</h2>
       <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
       
-      <form action="/check-status" method="GET">
+      <form action="/donations/status" method="GET">
         <label for="id">DONATION ID:</label>
         <input 
           type="text" 
@@ -157,7 +157,7 @@
       <h2 class="md-typescale-headline-medium">Contributors</h2>
       <p>Once your pull request is merged, login below with your Github account to receive your supporter code.</p>
 
-      <a href="/github/login" class="md-filled-button">
+      <a href="/contributors/login" class="md-filled-button">
         <span class="material-symbols-outlined">login</span>
         GitHub login
       </a>
