@@ -1,4 +1,4 @@
-import { errorTemplate } from '../templates/error.html';
+import errorTemplate from '../templates/error.html';
 
 export async function onRequest({ request, env, next }) {
   try {
