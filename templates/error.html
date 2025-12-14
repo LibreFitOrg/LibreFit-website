@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0E1416" />
-  <title>LibreFit - Something went wrong</title>
+  <title>LibreFit - Internal Server Error</title>
   <link rel="stylesheet" href="/styles.css">
+
+  <style>
+    pre.scrollable-code {
+      overflow-x: auto; /* Scroll horizontally if needed */
+      white-space: pre; /* Keeps text on one line, preserves spaces */
+      user-select: all; /* Let user select whole code when clicking on it */
+      -webkit-user-select: all; /* For older Safari */
+      cursor: pointer; /* Indicates it's actionable */
+    }
+  </style>
   
   <link rel="icon" href="/assets/logo.svg">
   
@@ -53,7 +63,9 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 class="hero-title md-typescale-display-medium">Internal Server Error</h1>
-        <p class="hero-subtitle md-typescale-body-large" >There was an unexpected error. Please wait a minute and try again. If error persists, contact us and provide the following reference code: {{ERROR_ID}}.</p>
+        <p class="hero-subtitle md-typescale-body-large" >There was an unexpected error. Please wait a minute and try again. If error persists, contact us and provide the following reference code:</p>
+
+        <pre class="scrollable-code md-typescale-title-medium">{{ERROR_ID}}</pre>
         
         <a href="/index.html" class="md-filled-button">
           <span class="material-symbols-outlined">home</span>
