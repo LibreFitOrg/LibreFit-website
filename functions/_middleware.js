@@ -1,4 +1,5 @@
 import errorTemplate from '../templates/error.html';
+import { getDb, errorLogs } from "./_db.js";
 
 export async function onRequest({ request, env, next }) {
   try {
