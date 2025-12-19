@@ -799,6 +799,45 @@ main {
   animation-range: entry 10% cover 30%;
 }
 
+/* Animation for text (used for hero section) */
+.animate-hero {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s cubic-bezier(0.2,1,0.3,1) forwards;
+}
+
+.animation-delay-0-5s {
+  animation-delay: 0.5s   ;
+}
+
+.animation-delay-1s {
+  animation-delay: 1s;
+}
+
+.animation-delay-1-5s {
+  animation-delay: 1.5s;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .animate-text {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* =============================================== */
 /* MATERIAL DESIGN COMPONENTS
 /* =============================================== */
