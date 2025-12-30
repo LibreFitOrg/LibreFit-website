@@ -52,8 +52,9 @@ export async function onRequestPost({ request, env }) {
 
 
     const email = formData.get('email');
+    const subject = formData.get('subject');
 
-    if (!email || !encryptedMessage) {
+    if (!email || !encryptedMessage || !subject) {
         return Response.redirect(invalidDataRedirectURL, 302);
     }   
 
@@ -65,7 +66,7 @@ export async function onRequestPost({ request, env }) {
     const emailPayload = {
         from: fromAddress,
         to: [toAddress],
-        subject: `New message from ${email}`,
+        subject: subject,
         reply_to: [email],
         text: encryptedMessage,
     };
