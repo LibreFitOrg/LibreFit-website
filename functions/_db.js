@@ -5,6 +5,7 @@ import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 export const donations = pgTable("donations", 
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    username: text("username"),
     trade_id: text("trade_id"),
     status: text("status"),
     webhook_key: text("webhook_key"),

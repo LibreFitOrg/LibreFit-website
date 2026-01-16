@@ -6,7 +6,7 @@ export async function onRequestPost({ request, env }) {
 
   // Get the data from the form
   const formData = await request.formData();
-  const useXmr = formData.get('use-xmr')
+  const useXmr = formData.get('use-xmr');
 
   const siteURL = new URL(request.url);
   const webhookKey = crypto.randomUUID(); // Used for webhook validation
@@ -63,9 +63,12 @@ export async function onRequestPost({ request, env }) {
   // Initialize DB
   const db = getDb(env);
 
+  const username = formData.get('username');
+
   await db.insert(donations)
     .values({
       id: id,
+      username: username,
       trade_id: tradeId,
       status: 'anonpaynew', // The initial status from Trocador
       webhook_key: webhookKey,
