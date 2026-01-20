@@ -317,6 +317,10 @@ body {
   padding-inline: clamp(var(--space-4), 4vw, var(--space-6));
 }
 
+.bold {
+  font-weight: bold;
+}
+
 
 /* =============================================== */
 /* LAYOUT: HEADER, MAIN, FOOTER
@@ -380,8 +384,16 @@ body {
 }
 .nav-chips {
   display: flex;
-  flex-wrap: wrap;
+  overflow-x: auto;
   gap: var(--space-2);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* Hide scrollbar for cleaner appearance */
+  scrollbar-width: none;
+  padding: 4px;
+}
+.nav-chips::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 600px) {
@@ -440,9 +452,10 @@ main {
   position: relative;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  align-items: center;
+  align-items: top;
   gap: clamp(var(--space-4), 4vw, var(--space-8));
-  padding-block: clamp(var(--space-8), 6vw, 72px);
+  padding-block-start: clamp(var(--space-4), 4vw, var(--space-6)); /* smaller top padding */
+  padding-block-end:   clamp(var(--space-8), 6vw, 72px);          /* unchanged bottom padding */
 }
 .hero-title {
   margin: 0 0 var(--space-3);
@@ -481,7 +494,7 @@ main {
     radial-gradient(75% 100% at 20% 70%, color-mix(in oklab, var(--md-sys-color-tertiary) 20%, transparent), transparent 70%);
   filter: blur(20px) saturate(120%);
   opacity: 0.7;
-  animation: glowShift 24s var(--md-motion-easing-emphasized) infinite alternate;
+  animation: glowShift 5s var(--md-motion-easing-emphasized) infinite alternate;
 }
 .phone {
   width: min(320px, 80vw);
@@ -494,7 +507,7 @@ main {
   border: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant) 50%, transparent);
   position: relative;
   overflow: hidden;
-  animation: float 6s var(--md-motion-easing-emphasized) infinite;
+  animation: float 6s ease-in-out infinite;
   transition: transform var(--md-motion-duration-medium2) var(--md-motion-easing-standard);
 }
 .phone::after {
@@ -531,6 +544,30 @@ main {
   width: 96px;
   height: 96px;
 }
+
+/* word switcher animation */
+.words {
+  display: inline-grid;
+  height: 1.2em;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.words span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(100%);
+  background: linear-gradient(90deg, var(--md-sys-color-primary), var(--md-sys-color-secondary));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flip 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.words span:nth-child(2) { animation-delay: 3s; }
+.words span:nth-child(3) { animation-delay: 6s; }
+
+
 
 /* --- Features Section --- */
 .features-section {
@@ -754,8 +791,8 @@ main {
 /* =============================================== */
 
 @keyframes glowShift {
-  from { transform: translateY(0) rotate(0deg) scale(1); }
-  to   { transform: translateY(-12px) rotate(2deg) scale(1.05); }
+  from { transform: translateY(0) rotate(0deg) scale(1.1); }
+  to   { transform: translateY(-24px) rotate(2deg) scale(1.05); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0); }
@@ -838,6 +875,21 @@ main {
   }
 }
 
+@keyframes flip {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  5%, 30% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  35%, 100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
 /* =============================================== */
 /* MATERIAL DESIGN COMPONENTS
 /* =============================================== */
@@ -880,6 +932,15 @@ main {
   pointer-events: none;
   transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
   z-index: -1;
+}
+
+/* add a translate‑Y to the button itself */
+.md-assist-chip:hover,
+.md-filled-button:hover,
+.md-tonal-button:hover,
+.md-outlined-button:hover,
+.md-text-button:hover {
+  transform: translateY(-2px);
 }
 
 /* Hover State Layer */
@@ -945,6 +1006,7 @@ main {
   direction: ltr;
   display: inline-block;
   vertical-align: middle;
+  font-feature-settings:"liga";
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
   user-select: none;
@@ -979,6 +1041,11 @@ main {
 /* Chip active state */
 .md-assist-chip:active {
   transform: scale(0.96);
+}
+
+.nav-chips .md-assist-chip {
+  scroll-snap-align: start;
+  flex-shrink: 0;
 }
 
 /* Active navigation chip */
