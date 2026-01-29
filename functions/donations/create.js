@@ -32,7 +32,7 @@ export async function onRequestPost({ request, env }) {
   trocadorUrl.searchParams.set('donation', 'True');
   trocadorUrl.searchParams.set('direct', 'False'); // Enable tracking of donation status
   trocadorUrl.searchParams.set('remove_direct_pay', 'True'); // Transaction of same coin (without swap) cannot be tracked
-  trocadorUrl.searchParams.set('name', 'TestDonation'); // TODO: change
+  trocadorUrl.searchParams.set('name', 'LibreFit');
   trocadorUrl.searchParams.set('description', 'Thank you for your support!');
   trocadorUrl.searchParams.set('webhook', webhookUrl);
 
