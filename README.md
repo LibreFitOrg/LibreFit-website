@@ -41,12 +41,6 @@ In short, this means you are free to use, modify, and distribute the code, but y
 
 ### Branding and Assets
 
-The "LibreFit" name and logos are trademarks. Their use is governed by
-the [Trademark Policy](TRADEMARK_POLICY.md).
+The "LibreFit" name and logos are trademarks. **All Rights Reserved**.
 
-The source design files for the brand assets are located in the `public/assets` directory and are licensed
-under [CC BY-NC-ND 4.0](http://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-### Credits
-
-This site uses the Roboto font and Material Symbols icons, both made available by Google and licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0). 
+Their use is governed by the [Trademark Policy](TRADEMARK_POLICY.md) which applies to relevant files located `public/assets`.
