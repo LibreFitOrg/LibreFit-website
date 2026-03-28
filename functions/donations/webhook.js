@@ -49,13 +49,13 @@ export async function onRequestPost({ request, env }) {
     code = `${donation.id}.${signature}`;
 
     // Prepare email
-    const fromAddress = `Donation status <donation@${SUBDOMAIN}>`;
+    const fromAddress = `Donation alert <donation@${SUBDOMAIN}>`;
     const toAddress = `${CONTACT_EMAIL}`;
     
     const emailPayload = {
       from: fromAddress,
       to: [toAddress],
-      subject: `${donation.username || "Anonymous"} donated`,
+      subject: `${donation.username || "Anonymous"} has donated`,
       text: `${donation.username || "Anonymous"} has completed a donation successfully! If username is available, add it in donators section of README.md.`,
     };
 
