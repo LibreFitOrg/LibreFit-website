@@ -3,7 +3,7 @@ import { getDb, donations } from "../_db.js";
 import { signString } from '../_supporter-code-sign.js';
 
 export async function onRequestPost({ request, env }) {
-  const { PRIVATE_KEY } = env;
+  const { PRIVATE_KEY, CONTACT_EMAIL, SUBDOMAIN, RESEND_API_KEY } = env;
 
   // Get key from the URL
   const url = new URL(request.url);
@@ -47,6 +47,33 @@ export async function onRequestPost({ request, env }) {
 
     const signature = await signString(donation.id, privateKeyB64);
     code = `${donation.id}.${signature}`;
+
+    // Prepare email
+    const fromAddress = `Donation status <donation@${SUBDOMAIN}>`;
+    const toAddress = `${CONTACT_EMAIL}`;
+    
+    const emailPayload = {
+      from: fromAddress,
+      to: [toAddress],
+      subject: `${donation.username || "Anonymous"} donated`,
+      text: `${donation.username || "Anonymous"} has completed a donation successfully! If username is available, add it in donators section of README.md.`,
+    };
+
+
+    // Send email
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify(emailPayload),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Resend API failed: ${JSON.stringify(error)}`);
+    }
   }
 
   // Save the updated record back to DB
