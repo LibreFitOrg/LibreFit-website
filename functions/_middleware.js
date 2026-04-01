@@ -23,7 +23,6 @@ export async function onRequest({ request, env, next }) {
           url: request.url,
           message: error.message || "Unknown Error",
           stack: error.stack || "No stack trace",
-          timestamp: new Date()
         }
       ).onConflictDoUpdate(
         {
@@ -33,7 +32,6 @@ export async function onRequest({ request, env, next }) {
             url: request.url,
             message: error.message || "Unknown Error",
             stack: error.stack || "No stack trace",
-            timestamp: new Date()
           }
         }
       );

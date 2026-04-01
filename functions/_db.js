@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, uuid, doublePrecision } from "drizzle-orm/pg-core";
 
 export const donations = pgTable("donations", 
   {
@@ -9,7 +9,11 @@ export const donations = pgTable("donations",
     trade_id: text("trade_id"),
     status: text("status"),
     webhook_key: text("webhook_key"),
-    code: text("code")
+    code: text("code"),
+    coin: text("coin"),
+    amount: doublePrecision("amount"),
+    created_timestamp: timestamp("timestamp").defaultNow(),
+    last_update_timestamp: timestamp("timestamp").defaultNow(),
   }
 );
 
@@ -26,7 +30,7 @@ export const errorLogs = pgTable("error_logs", {
   url: text("url").notNull(),
   message: text("message").notNull(),
   stack: text("stack").notNull(),
-  timestamp: timestamp("timestamp").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
 });
 
 // Connection Helper

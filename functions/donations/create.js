@@ -72,7 +72,6 @@ export async function onRequestPost({ request, env }) {
       trade_id: tradeId,
       status: 'anonpaynew', // The initial status from Trocador
       webhook_key: webhookKey,
-      code: ''
     })
 
   const urlDonationDesc = `

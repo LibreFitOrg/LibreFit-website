@@ -18,6 +18,20 @@ export async function onRequestPost({ request, env }) {
     return new Response('Trade ID missing', { status: 400 });
   }
 
+  const coin = donationData.coin_to;
+
+  if (!coin) {
+    console.log("Webhook received a request without a coin.");
+    return new Response('Coin missing', { status: 400 });
+  }
+
+  const amount = donationData.amount_to;
+
+  if (!amount) {
+    console.log("Webhook received a request without an amount.");
+    return new Response('Amount missing', { status: 400 });
+  }
+
   // Initialize DB
   const db = getDb(env);
 
@@ -55,8 +69,8 @@ export async function onRequestPost({ request, env }) {
     const emailPayload = {
       from: fromAddress,
       to: [toAddress],
-      subject: `${donation.username || "Anonymous"} has donated`,
-      text: `${donation.username || "Anonymous"} has completed a donation successfully! If username is available, add it in donators section of README.md.`,
+      subject: `${donation.username || "Anonymous"} completed a donation`,
+      text: `${donation.username || "Anonymous"} has donated ${amount} of ${coin} successfully! If username is available, add it in donators section of README.md.`,
     };
 
 
@@ -80,7 +94,10 @@ export async function onRequestPost({ request, env }) {
   await db.update(donations)
     .set({ 
       status: donationData.status,
-      code: code
+      code: code,
+      coin: coin,
+      amount: amount,
+      last_update_timestamp: new Date()
     })
     .where(eq(donations.id, donation.id))
 
