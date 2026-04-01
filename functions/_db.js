@@ -12,8 +12,8 @@ export const donations = pgTable("donations",
     code: text("code"),
     coin: text("coin"),
     amount: doublePrecision("amount"),
-    created_timestamp: timestamp("timestamp").defaultNow(),
-    last_update_timestamp: timestamp("timestamp").defaultNow(),
+    created_timestamp: timestamp("created_timestamp").defaultNow(),
+    last_update_timestamp: timestamp("last_update_timestamp").defaultNow(),
   }
 );
 
