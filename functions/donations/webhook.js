@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getDb, donations } from "../_db.js";
 import { signString } from '../_supporter-code-sign.js';
+import * as openpgp from 'openpgp';
 
 export async function onRequestPost({ request, env }) {
   const { PRIVATE_KEY, CONTACT_EMAIL, SUBDOMAIN, RESEND_API_KEY } = env;
@@ -55,6 +56,8 @@ export async function onRequestPost({ request, env }) {
   let code = donation.code
 
   if(donationData.status == 'finished') {
+    //--------- Create and sign code ------------------
+
     // Private Key (PKCS#8 format from Kotlin)
     // Sample: MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD0I8Xc6wJHNxCIxMTVdBe/bHIUgiB1sPjj2lm5+EnLdQ==
     const privateKeyB64 = PRIVATE_KEY;
@@ -62,15 +65,39 @@ export async function onRequestPost({ request, env }) {
     const signature = await signString(donation.id, privateKeyB64);
     code = `${donation.id}.${signature}`;
 
+    //---------------- Send alert ---------------------
     // Prepare email
     const fromAddress = `Donation alert <donation@${SUBDOMAIN}>`;
     const toAddress = `${CONTACT_EMAIL}`;
+
+    // Prepare encryption
+    const pgpKeyPath = '/pgp_key.asc';  
+
+    const keyResponse = await fetch(`${url.origin}${pgpKeyPath}`);
+    if (!keyResponse.ok) {
+        throw new Error(`Network error: Could not fetch PGP key from ${pgpKeyPath}`);
+    }
+    const publicKeyArmored = await keyResponse.text();
+
+    const isAnonymous = !donation.username;
+    const baseMessage = `${donation.username || "Anonymous"} has donated ${amount} of ${coin} successfully!`;
+    const plaintextMessage = isAnonymous 
+      ? baseMessage 
+      : `${baseMessage} Add it in donators section of README.md and app's about.`;
+    
+    // Encrypt the message
+    const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
+
+    const encryptedMessage = await openpgp.encrypt({
+        message: await openpgp.createMessage({ text: plaintextMessage }),
+        encryptionKeys: publicKey,
+    });
     
     const emailPayload = {
       from: fromAddress,
       to: [toAddress],
       subject: `${donation.username || "Anonymous"} completed a donation`,
-      text: `${donation.username || "Anonymous"} has donated ${amount} of ${coin} successfully! If username is available, add it in donators section of README.md.`,
+      text: encryptedMessage,
     };
 
 
