@@ -42,9 +42,7 @@ export async function onRequestGet({ request, env } ) {
       Go to donation <a href="https://trocador.app/anonpay/checkout/${trade_id}">page</a>
     `
 
-    if (!donation.code) {
-      code = donation.code
-    }
+    code = donation.code ?? code;
     
     const waitingKeywords = ["anonpaynew", "waiting", "confirming", "sending", "paid_partially"];
     if(waitingKeywords.includes(donation.status)) {
