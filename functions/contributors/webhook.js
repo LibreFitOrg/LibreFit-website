@@ -5,12 +5,12 @@ import { signString } from '../_supporter-code-sign.js';
 export async function onRequestPost({ request, env }) {
   const { GITHUB_WEBHOOK_SECRET, PRIVATE_KEY } = env;
 
-  const signature = request.headers.get("x-hub-signature-256");
+  const hubSignature = request.headers.get("x-hub-signature-256");
   const body = await request.text();
 
   // Security verification
-  if (signature) {
-    const isValid = await verify(GITHUB_WEBHOOK_SECRET, body, signature);
+  if (hubSignature) {
+    const isValid = await verify(GITHUB_WEBHOOK_SECRET, body, hubSignature);
     if (!isValid) return new Response("Invalid Signature", { status: 401 });
   }
 
@@ -39,7 +39,7 @@ export async function onRequestPost({ request, env }) {
     await db.insert(contributors)
       .values(
         {
-          githudId: githubId,
+          githubId: githubId,
           code: code
         }
       )
