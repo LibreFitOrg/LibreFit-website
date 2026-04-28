@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
+    "@octokit/core": "^7.0.6",
+    "@octokit/plugin-paginate-rest": "^14.0.0",
     "@octokit/webhooks-methods": "^6.0.0",
     "drizzle-orm": "^0.45.1",
     "openpgp": "^6.2.2",
