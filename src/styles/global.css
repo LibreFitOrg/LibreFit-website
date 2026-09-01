@@ -524,84 +524,6 @@
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
   }
 
-  /* --- Header --- */
-  .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: color-mix(in oklab, var(--md-sys-color-surface) 70%, transparent);
-    backdrop-filter: saturate(120%) blur(20px);
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  }
-  .header-inner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding-block: var(--space-4);
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    text-decoration: none;
-    color: inherit;
-    border-radius: var(--radius-sm);
-    transition: background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
-  }
-  .brand-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
-    box-shadow: var(--md-elev-1);
-  }
-  .brand-logo {
-    width: 24px;
-    height: 24px;
-  }
-  .brand-title {
-    margin: 0;
-    font-family: var(--md-ref-typeface-brand);
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.27;
-    letter-spacing: 0;
-  }
-  .brand-title-accent {
-    color: var(--md-sys-color-primary);
-  }
-  .brand:focus-visible {
-    outline: 3px solid var(--md-sys-color-primary);
-    outline-offset: 2px;
-  }
-  .brand:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
-  }
-  .nav-chips {
-    display: flex;
-    overflow-x: auto;
-    gap: var(--space-2);
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    /* Hide scrollbar for cleaner appearance */
-    scrollbar-width: none;
-    padding: 4px;
-  }
-  .nav-chips::-webkit-scrollbar {
-    display: none;
-  }
-
-  @media (min-width: 600px) {
-    .header-inner {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-  }
-
   /* --- Hero Section --- */
   .hero {
     position: relative;
@@ -1101,19 +1023,14 @@
     transform: scale(0.96);
   }
 
-  .nav-chips .md-assist-chip {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
-
   /* Active navigation chip */
-  .nav-chips a.md-assist-chip.active {
+  .md-assist-chip.active {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
     border-color: transparent;
   }
 
-  .nav-chips a.md-assist-chip.active::before {
+  .md-assist-chip.active::before {
     background-color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 8%, transparent);
   }
 

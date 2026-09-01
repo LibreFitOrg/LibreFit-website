@@ -12,26 +12,26 @@ const links = [
 ];
 ---
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="/" aria-label="LibreFit Home">
-      <span class="brand-icon">
-        <img class="brand-logo" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+<header class="sticky top-0 z-10 border-b border-outline-variant bg-surface/70 backdrop-blur-xl backdrop-saturate-150">
+  <div class="container flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <a class="flex items-center gap-3 rounded-sm no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2" href="/" aria-label="LibreFit Home">
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+        <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
       </span>
-      <p class="brand-title">
-        <span class="brand-title-accent">Libre</span>Fit
+      <p class="m-0 text-2xl font-bold leading-[1.27]">
+        <span class="text-primary">Libre</span>Fit
       </p>
     </a>
 
-    <nav class="nav-chips" aria-label="Primary navigation">
+    <nav class="flex overflow-x-auto gap-2 p-1 [scroll-snap-type:x_mandatory] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Primary navigation">
       {links.map(({ href, label, icon }) => (
         isCurrent(href) ? (
-          <a class="md-assist-chip active" aria-current="page">
+          <a class="md-assist-chip active snap-start shrink-0" aria-current="page">
             <span class="material-symbols-outlined">{icon}</span>
             {label}
           </a>
         ) : (
-          <a href={href} class="md-assist-chip">
+          <a href={href} class="md-assist-chip snap-start shrink-0">
             <span class="material-symbols-outlined">{icon}</span>
             {label}
           </a>
