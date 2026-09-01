@@ -25,7 +25,7 @@
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-paginate-rest": "^14.0.0",
     "@octokit/webhooks-methods": "^6.0.0",
-    "astro": "^5.13.1",
+    "astro": "^7.2.10",
     "drizzle-orm": "^0.45.1",
     "openpgp": "^6.2.2",
     "postgres": "^3.4.7"
