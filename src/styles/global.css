@@ -52,6 +52,12 @@
   --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
   --color-outline: var(--md-sys-color-outline);
   --color-outline-variant: var(--md-sys-color-outline-variant);
+  --color-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --color-surface-container-low: var(--md-sys-color-surface-container-low);
+  --color-surface-container: var(--md-sys-color-surface-container);
+  --color-surface-container-high: var(--md-sys-color-surface-container-high);
+  --color-surface-container-highest: var(--md-sys-color-surface-container-highest);
+  --color-scrim: var(--md-sys-color-scrim);
   --color-inverse-surface: var(--md-sys-color-inverse-surface);
   --color-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
   --color-inverse-primary: var(--md-sys-color-inverse-primary);
@@ -980,4 +986,288 @@
     animation: ripple var(--md-motion-duration-medium4) var(--md-motion-easing-standard);
     pointer-events: none;
   }
+}
+
+/* ===============================================================
+   HEADER & NAVIGATION (Material Design 3)
+   Top app bar link row (desktop) + modal navigation drawer
+   (mobile). All rules are additive; the scrolled-state rule is
+   unlayered so it outranks Tailwind's utilities layer.
+   =============================================================== */
+@layer components {
+
+  /* Base motion for the app bar (colors transition on scroll state) */
+  .md-top-app-bar {
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  /* --- Desktop navigation item (pill with M3 active indicator) --- */
+  .md-nav-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 40px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.1px;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  /* M3 state layer */
+  .md-nav-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-nav-item:hover::before { opacity: 0.08; }
+  .md-nav-item:active::before { opacity: 0.12; }
+
+  .md-nav-item:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  .md-nav-item .material-symbols-outlined { font-size: 20px; }
+
+  /* Active destination: secondary-container pill + filled icon */
+  .md-nav-item[aria-current='page'] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-nav-item[aria-current='page']::before {
+    background-color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-nav-item[aria-current='page'] .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* --- Icon button (menu / close), 48px touch target --- */
+  .md-icon-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .md-icon-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-icon-button:hover::before { opacity: 0.08; }
+  .md-icon-button:active::before { opacity: 0.12; }
+
+  .md-icon-button:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* --- Modal navigation drawer (native <dialog>) --- */
+  .md-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    width: min(360px, 86vw); /* M3 drawer width */
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    background-color: var(--md-sys-color-surface-container-low);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-elev-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(0);
+    transition:
+      transform var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized),
+      display var(--md-motion-duration-medium2) allow-discrete,
+      overlay var(--md-motion-duration-medium2) allow-discrete;
+  }
+
+  /* Closed / closing position (off-canvas, right edge) */
+  .md-drawer:not([open]) {
+    transform: translateX(100%);
+  }
+
+  @starting-style {
+    .md-drawer[open] {
+      transform: translateX(100%);
+    }
+  }
+
+  /* M3 scrim over the rest of the page */
+  .md-drawer::backdrop {
+    background-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+    transition:
+      background-color var(--md-motion-duration-medium1) var(--md-motion-easing-standard),
+      display var(--md-motion-duration-medium2) allow-discrete,
+      overlay var(--md-motion-duration-medium2) allow-discrete;
+  }
+
+  @starting-style {
+    .md-drawer[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+
+  /* --- Drawer navigation item (M3: 56dp, active indicator pill) --- */
+  .md-drawer-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.1px;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  .md-drawer-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-drawer-item:hover::before { opacity: 0.08; }
+  .md-drawer-item:active::before { opacity: 0.12; }
+
+  .md-drawer-item:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  .md-drawer-item .material-symbols-outlined { font-size: 24px; }
+
+  .md-drawer-item[aria-current='page'] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-drawer-item[aria-current='page']::before {
+    background-color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-drawer-item[aria-current='page'] .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* --- Skip-to-content link (revealed on keyboard focus) --- */
+  .skip-link {
+    position: fixed;
+    top: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: 100;
+    padding: 10px var(--space-4);
+    border-radius: var(--radius-full);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: var(--md-elev-2);
+    opacity: 0;
+    transform: translateY(-200%);
+    transition:
+      opacity var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      transform var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  .skip-link:focus-visible {
+    opacity: 1;
+    transform: translateY(0);
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Lock background scroll while the modal drawer is open */
+  body[data-drawer-open] {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .md-top-app-bar,
+    .md-drawer,
+    .md-drawer::backdrop,
+    .md-nav-item,
+    .md-nav-item::before,
+    .md-drawer-item,
+    .md-drawer-item::before,
+    .md-icon-button,
+    .md-icon-button::before,
+    .skip-link {
+      transition: none;
+    }
+  }
+}
+
+/* Unlayered on purpose: cascade layers rank unlayered styles above
+   @layer utilities, so this overrides bg-surface/70 while scrolled. */
+.md-top-app-bar[data-scrolled] {
+  background-color: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 92%, transparent);
+  box-shadow: var(--md-elev-2);
 }

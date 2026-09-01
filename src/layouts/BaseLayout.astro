@@ -24,9 +24,11 @@ const { title, description, canonical, robots } = Astro.props;
   <body>
     <script src="https://keepandroidopen.org/banner.js"></script>
 
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
     <Header />
 
-    <main class="container">
+    <main id="main-content" class="container">
       <slot />
     </main>
 
