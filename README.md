@@ -1,6 +1,11 @@
 # LibreFit Website
 
-The official website for LibreFit, built with Vite and Cloudflare Pages to handle contact forms, donations and supporter code rewards.
+The official website for LibreFit, built with [Astro](https://astro.build) and Cloudflare Pages to handle contact forms, donations and supporter code rewards.
+
+Pages live in `src/pages` as `.astro` components sharing the `BaseLayout` (header/footer/SEO). The
+Material Design 3 token system and global styles are in `src/styles/global.css`. The static build
+(`npm run build`) emits flat `.html` files (`privacy.html`, `contact-result/contact-success.html`,
+`404.html`, ...) so every legacy URL keeps working with the [functions](./functions).
 
 ## ⚡ Quick Start
 
@@ -12,12 +17,13 @@ The official website for LibreFit, built with Vite and Cloudflare Pages to handl
 2.  **Local Development**
     *   **Frontend only:**
         ```bash
-        npx vite
+        npm run dev
         ```
     *   **Full Site (Frontend + Backend Functions):**
-        *Required to test `contact.js` form handling locally and the other [functions](./functions).*
+        *Required to test `contact.js` form handling locally and the other [functions](./functions).
+        Build the site first (`npm run build`), then serve `dist/` with the functions.*
         ```bash
-        npx wrangler pages dev .
+        npm run build && npx wrangler pages dev dist
         ```
 
 3.  **Build for Production**

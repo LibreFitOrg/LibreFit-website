@@ -2,9 +2,12 @@
   "name": "librefit-website",
   "version": "1.0.0",
   "description": "Official LibreFit website",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "vite build",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,12 +25,12 @@
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-paginate-rest": "^14.0.0",
     "@octokit/webhooks-methods": "^6.0.0",
+    "astro": "^5.13.1",
     "drizzle-orm": "^0.45.1",
     "openpgp": "^6.2.2",
     "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "vite": "^7.2.2",
     "wrangler": "^4.43.0"
   }
 }

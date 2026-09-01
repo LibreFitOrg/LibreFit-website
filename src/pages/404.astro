@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Page not found"
+  description="This page wasn't found, but you can head back to the homepage."
+  canonical="/404"
+  robots="noindex,follow"
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 class="hero-title md-typescale-display-medium">Page Not Found</h1>
+      <p class="hero-subtitle md-typescale-body-large">Sorry, the page you are looking for doesn't exist or has been moved.</p>
+
+      <a href="/" class="md-filled-button">
+        <span class="material-symbols-outlined">home</span>
+        Go to home
+      </a>
+    </div>
+  </section>
+</BaseLayout>

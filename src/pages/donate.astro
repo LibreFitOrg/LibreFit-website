@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Let's build it together"
+  description="Discover how you can improve LibreFit."
+  canonical="/donate"
+>
+  <div class="content-card">
+    <style>
+      .form-group { margin-bottom: var(--space-4); }
+
+      /* Overwrite `content-card a` of global.css */
+      .md-filled-button,
+      .md-filled-button:hover,
+      .md-filled-button:focus-visible {
+        color: var(--md-sys-color-on-primary) !important;
+        text-decoration: none !important;
+      }
+
+      label {
+        display: block;
+        margin-bottom: var(--space-2);
+      }
+
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        padding: var(--space-3);
+        font-family: var(--md-ref-typeface-plain);
+        font-size: 1rem;
+        background-color: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        border: 1px solid var(--md-sys-color-outline);
+        border-radius: var(--radius-sm);
+        transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+      }
+
+      input[type="number"]:focus,
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--md-sys-color-primary);
+        box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+      }
+
+      /* Make the main button full-width */
+      .md-filled-button {
+        width: 100%;
+      }
+    </style>
+
+    <h1 class="md-typescale-display-small bold">Let's build it together ❤️</h1>
+    <p class="md-typescale-body-large ">
+      LibreFit is a passion project, built by one person who believes software should be open,
+      simple, beautiful, and above all, respectful of your privacy.
+    </p>
+    <p class="md-typescale-body-large">
+      I pour countless hours into designing, coding, and refining every detail to create the best
+      possible experience. It's a commitment to you, the user, and to a better digital world.
+    </p>
+    <p class="md-typescale-body-large">
+      LibreFit is only possible with your support, whether by donating or by contributing to code
+      or translations. Check <a href="https://github.com/LibreFitOrg/LibreFit/CONTRIBUTING.md">GitHub</a> to know how to contribute to the project. If you want to donate instead, see below.
+    </p>
+    <p class="md-typescale-title-medium">
+      All donators and contributors get the supporter version and a credit in the app and on GitHub.
+    </p>
+
+    <hr>
+
+    <h1 class="md-typescale-headline-large bold">
+      Donate
+    </h1>
+
+    <label class="form-group md-typescale-body-large"></label> If you want to send a message to
+    appreciate/comment/request alongside your donation, visit <a href="/contact.html">contact page</a>.</label>
+
+    <h2 class="md-typescale-headline-small">
+      Direct donation
+    </h2>
+
+    <p class="md-typescale-body-large">
+      Direct donations are tricky to track (so <b>no supporter code</b> and no credit) but they
+      provide the greatest privacy, minimal fees and no minimum amount. Monero address below:
+    </p>
+
+    <pre class="scrollable-code">842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
+
+    <h2 class="md-typescale-headline-small">
+      Integrated processor
+    </h2>
+
+    <form action="/donations/create" method="POST">
+      <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.</label>
+
+      <div class="form-group">
+        <label for="username" class="md-typescale-title-small">[Optional] Insert a name/username/alias (and eventual GitHub username/website/email) in order to be credited in README.md and LibreFit's about.</label>
+        <input type="text" id="username" name="username">
+      </div>
+
+      <div class="form-group">
+        <input type="checkbox" id="use-xmr" name="use-xmr">   I want to use Monero
+      </div>
+
+      <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
+
+      <div style="margin-top: var(--space-6);">
+        <button type="submit" class="md-filled-button">Donate crypto</button>
+      </div>
+    </form>
+
+    <hr>
+
+    <h1 class="md-typescale-headline-large bold">Get supporter code</h1>
+
+    <h2 class="md-typescale-headline-medium">Donators</h2>
+    <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
+
+    <form action="/donations/status" method="GET">
+      <label for="id">DONATION ID:</label>
+      <input
+        type="text"
+        id="id"
+        name="id"
+        placeholder="e.g., c02831c7-0de2-474b-84ca-9d622cec062b"
+        required
+        maxlength="36"
+        minlength="36"
+        title="Enter a valid ID with UUID v4 format"
+        pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"
+      >
+
+      <div style="margin-top: var(--space-6);">
+        <button type="submit" class="md-filled-button">Check donation status</button>
+      </div>
+    </form>
+
+    <h2 class="md-typescale-headline-medium">Contributors</h2>
+    <p>Once your pull request is merged, login below with your Github account to receive your supporter code.</p>
+
+    <a href="/contributors/login" class="md-filled-button">
+      <span class="material-symbols-outlined">login</span>
+      GitHub login
+    </a>
+
+  </div>
+</BaseLayout>

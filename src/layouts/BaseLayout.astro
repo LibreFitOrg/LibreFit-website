@@ -1,0 +1,35 @@
+---
+import SeoHead from '../components/SeoHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path without the domain, e.g. "/privacy" */
+  canonical: string;
+  /** robots meta value, defaults to "index,follow" */
+  robots?: string;
+}
+
+const { title, description, canonical, robots } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <SeoHead title={title} description={description} canonical={canonical} robots={robots} />
+  </head>
+  <body>
+    <script src="https://keepandroidopen.org/banner.js"></script>
+
+    <Header />
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

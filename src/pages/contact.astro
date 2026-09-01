@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Contact us"
+  description="Contact LibreFit's team by filling a form."
+  canonical="/contact"
+>
+  <!-- Client-side encryption form: see src/main.js -->
+  <script src="../scripts/main.js"></script>
+
+  <noscript>
+    <!-- It hides some elements when js is disabled-->
+    <style>.no-js{display:none !important}</style>
+  </noscript>
+
+  <style>
+    .form-group { margin-bottom: var(--space-4); }
+
+    label {
+      display: block;
+      margin-bottom: var(--space-2);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: var(--space-3);
+      font-family: var(--md-ref-typeface-plain);
+      font-size: 1rem;
+      background-color: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-on-surface);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--radius-sm);
+      transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="file"]:focus
+    textarea:focus {
+      outline: none;
+      border-color: var(--md-sys-color-primary);
+      box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+    }
+
+    .turnstile-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    /* Make the main button full-width */
+    .md-filled-button {
+      width: 100%;
+    }
+
+    textarea {
+      resize: none;
+    }
+  </style>
+
+  <div class="content-card">
+    <h1 class="md-typescale-display-small bold">Contact</h1>
+    <hr>
+    <h2 class="md-typescale-headline-medium">E-mail</h2>
+
+    <noscript>
+      <p class="md-typescale-body-large">Use the <a href="/pgp_key.asc" download>PGP key</a>.</p>
+    </noscript>
+
+    <p class="md-typescale-body-large no-js">Fill out the form below (it will be encrypted locally before sending) or use the <a href="/pgp_key.asc" download>PGP key</a>.</p>
+    <p class="md-typescale-body-large">Fingerprint:</p>
+    <p class="md-typescale-body-medium">da1dee1a266579e850756f1981f0819560627270</p>
+    <form id="contact-form" class="no-js" method="POST" action="/contact" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="email" class="md-typescale-title-small">Email</label>
+        <input type="email" id="email" name="email" required pattern={"[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}"}>
+      </div>
+
+      <div class="form-group">
+        <label for="subject" class="md-typescale-title-small">Subject</label>
+        <input type="text" id="subject" name="subject" required>
+      </div>
+
+      <div class="form-group">
+        <label for="message" class="md-typescale-title-small">Message</label>
+        <textarea id="message" name="message" rows="5" required maxlength="1000" minlength="5" style="resize: vertical;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="pgp-key" class="md-typescale-title-small">Your PGP key to receive encrypted email replies (Optional)</label>
+        <input id="pgp-key" type="file" name="pgp-key" accept=".asc, application/pgp-keys">
+      </div>
+
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+      <div class="turnstile-container">
+        <div class="cf-turnstile"
+            data-sitekey="0x4AAAAAAB8JCf8sSsYyrET5"
+            data-callback="onTurnstileSuccess"
+            data-error-callback="onTurnstileError"
+            data-expired-callback="onTurnstileError"
+            data-timeout-callback="onTurnstileError"></div>
+      </div>
+
+      <div style="margin-top: var(--space-6);">
+        <button id="submitButton" type="submit" class="md-filled-button" disabled>Send encrypted message</button>
+      </div>
+    </form>
+    <hr>
+
+    <script is:inline>
+      const submitButton = document.getElementById("submitButton");
+
+      function enableSubmitButton(token) {
+          submitButton.disabled = false;
+      }
+
+      function disableSubmitButton() {
+          submitButton.disabled = true;
+      }
+    </script>
+
+    <h2 class="md-typescale-headline-medium">SimpleX</h2>
+    <p class="md-typescale-body-large"><a href="https://simplex.chat" target="_blank" rel="noopener noreferrer" >SimpleX</a> is an anonymous, decentralized messenger providing end-to-end encrypted chats without requiring phone numbers, emails, or any personal identifier—not even random IDs.</p>
+    <p class="md-typescale-body-large">Tap <a href="https://smp11.simplex.im/a#LmK6yqFdXNpdT7BUmTjCvBuu48_-knEtSpMEc5iyynA" target="_blank" rel="noopener noreferrer" >here</a> to start a chat.</p>
+  </div>
+</BaseLayout>

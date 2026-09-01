@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const features = [
+  {
+    icon: 'exercise',
+    title: 'Extensive Exercise Library',
+    description:
+      'Browse hundreds of exercises, each paired with photos and step-by-step execution.',
+  },
+  {
+    icon: 'track_changes',
+    title: 'Real-Time Workout Log',
+    description:
+      'Capture every set, rep, rest interval, and load on the fly with built-in timers.',
+  },
+  {
+    icon: 'architecture',
+    title: 'Custom Workout Builder',
+    description:
+      'Create custom workouts—select any exercises, set numbers, reps, and loads.',
+  },
+  {
+    icon: 'cloud_off',
+    title: 'Offline',
+    description: 'Works without internet, always. Your data is yours.',
+  },
+  {
+    icon: 'code',
+    title: 'Open-Source',
+    description:
+      'Licensed under GPL-3.0, you can inspect, audit, and contribute to the codebase.',
+  },
+  {
+    icon: 'palette',
+    title: 'Material Expressive',
+    description:
+      'Experience a sleek, modern UI built with the latest Material Expressive components.',
+  },
+];
+---
+
+<BaseLayout
+  title="LibreFit - The free and private workout tracker"
+  description="LibreFit is a free, open-source workout tracker built for privacy. Plan, track, and analyse your fitness journey with a rich dataset of hundreds of exercises."
+  canonical="/"
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <div class="hero-logo-wrapper" aria-hidden="true">
+        <img class="hero-logo" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+      </div>
+
+      <h1 id="hero-title" class="hero-title animate-hero md-typescale-display-medium bold">
+        Track your workouts<br>
+        <span class="words">
+          <span>easily</span>
+          <span>privately</span>
+          <span>freely</span>
+        </span>
+      </h1>
+
+      <div class="chip-group animate-hero animation-delay-0-5s">
+        <div class="md-assist-chip">
+          <span class="material-symbols-outlined">license</span>
+          Open source (GPL-3.0)
+        </div>
+        <div class="md-assist-chip">
+          <span class="material-symbols-outlined">shield_lock</span>
+          Privacy-first
+        </div>
+        <div class="md-assist-chip">
+          <span class="material-symbols-outlined">palette</span>
+          Material Expressive
+        </div>
+      </div>
+
+      <p class="hero-subtitle md-typescale-body-large animate-hero animation-delay-1s">
+        Create personalized workouts from a rich dataset of exercises, each with images and
+        step-by-step instructions. Track every set, rep, rest interval, and load in real time and
+        visualize progress with insightful charts.
+      </p>
+
+      <div class="button-group animate-hero animation-delay-1-5s">
+        <a
+          id="download-button"
+          href="https://github.com/LibreFitOrg/LibreFit/releases/latest/download/LibreFit.apk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-filled-button"
+        >
+          <span class="material-symbols-outlined">download</span>
+          Download
+        </a>
+        <a
+          href="https://f-droid.org/packages/org.librefit.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-tonal-button"
+        >
+          <span class="material-symbols-outlined">android</span>
+          F-Droid
+        </a>
+        <a
+          href="https://github.com/LibreFitOrg/LibreFit"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-text-button"
+        >
+          <span class="material-symbols-outlined">code</span>
+          Source code
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="glow"></div>
+      <div class="phone">
+        <img
+          class="phone-img"
+          src="/assets/screenshot.png"
+          alt="LibreFit app screenshot during a workout loggin showing an exercise with its sets."
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" aria-label="Key features">
+    <div class="features">
+      {
+        features.map(({ icon, title, description }) => (
+          <article class="feature reveal">
+            <div class="feature-header">
+              <span class="material-symbols-outlined filled">{icon}</span>
+              <h2 class="feature-title md-typescale-title-medium">{title}</h2>
+            </div>
+            <p class="feature-description md-typescale-body-medium">{description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
