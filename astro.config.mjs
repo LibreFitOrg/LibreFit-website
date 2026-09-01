@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,5 +17,8 @@ export default defineConfig({
     // pure-HTML site (e.g. /privacy.html, /contact-result/contact-success.html,
     // /404.html) so no external links or Cloudflare Pages behaviors break.
     format: 'file',
+  },
+  vite: {
+    plugins: [tailwindcss()],
   },
 });
