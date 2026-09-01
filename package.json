@@ -22,15 +22,15 @@
   },
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
-    "@octokit/core": "^7.0.6",
-    "@octokit/plugin-paginate-rest": "^14.0.0",
+    "@octokit/core": "^7.0.8",
+    "@octokit/plugin-paginate-rest": "^15.0.0",
     "@octokit/webhooks-methods": "^6.0.0",
     "astro": "^7.2.10",
     "drizzle-orm": "^0.45.1",
-    "openpgp": "^6.2.2",
-    "postgres": "^3.4.7"
+    "openpgp": "^6.3.1",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
-    "wrangler": "^4.43.0"
+    "wrangler": "^4.127.1"
   }
 }
