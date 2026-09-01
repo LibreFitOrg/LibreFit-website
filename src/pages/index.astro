@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import screenshot from '../assets/screenshot.png';
 
 const features = [
   {
@@ -116,13 +118,13 @@ const features = [
     <div class="grid place-items-center relative isolate mt-6 mb-6 lg:my-0" aria-hidden="true">
       <div class="absolute inset-[1%] -z-10 opacity-70 blur-[20px] saturate-[1.2] bg-[radial-gradient(100%_75%_at_70%_30%,color-mix(in_oklab,var(--md-sys-color-primary)_25%,transparent),transparent_60%),radial-gradient(75%_100%_at_20%_70%,color-mix(in_oklab,var(--md-sys-color-tertiary)_20%,transparent),transparent_70%)] animate-[glowShift_5s_var(--md-motion-easing-emphasized)_infinite_alternate] motion-reduce:animate-none"></div>
       <div class="w-[min(320px,80vw)] aspect-[9/19.5] rounded-[32px] relative overflow-hidden border border-outline-variant/50 shadow-elev-3 bg-[linear-gradient(135deg,var(--md-sys-color-surface-container-highest),var(--md-sys-color-surface-container)),radial-gradient(120%_80%_at_30%_10%,color-mix(in_oklab,var(--md-sys-color-primary)_8%,transparent),transparent_60%)] animate-[float_6s_ease-in-out_infinite] transition-transform duration-300 ease-standard hover:[transform:scale(1.02)_translateY(-4px)] motion-reduce:animate-none motion-reduce:[transition:none] motion-reduce:hover:[transform:none] after:content-[''] after:absolute after:inset-[2px] after:rounded-[30px] after:border after:border-black/50 after:pointer-events-none">
-        <img
+        <Image
           class="w-full h-full object-cover"
-          src="/assets/screenshot.png"
+          src={screenshot}
           alt="LibreFit app screenshot during a workout loggin showing an exercise with its sets."
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
+          layout="constrained"
+          width={640}
+          priority
         />
       </div>
     </div>
