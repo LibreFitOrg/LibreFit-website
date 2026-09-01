@@ -8,48 +8,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   canonical="/donate"
 >
   <div class="content-card">
-    <style>
-      .form-group { margin-bottom: var(--space-4); }
-
-      /* Overwrite `content-card a` of global.css */
-      .md-filled-button,
-      .md-filled-button:hover,
-      .md-filled-button:focus-visible {
-        color: var(--md-sys-color-on-primary) !important;
-        text-decoration: none !important;
-      }
-
-      label {
-        display: block;
-        margin-bottom: var(--space-2);
-      }
-
-      input[type="number"],
-      input[type="text"] {
-        width: 100%;
-        padding: var(--space-3);
-        font-family: var(--md-ref-typeface-plain);
-        font-size: 1rem;
-        background-color: var(--md-sys-color-surface-container);
-        color: var(--md-sys-color-on-surface);
-        border: 1px solid var(--md-sys-color-outline);
-        border-radius: var(--radius-sm);
-        transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
-      }
-
-      input[type="number"]:focus,
-      input[type="text"]:focus {
-        outline: none;
-        border-color: var(--md-sys-color-primary);
-        box-shadow: 0 0 0 1px var(--md-sys-color-primary);
-      }
-
-      /* Make the main button full-width */
-      .md-filled-button {
-        width: 100%;
-      }
-    </style>
-
     <h1 class="md-typescale-display-small bold">Let's build it together ❤️</h1>
     <p class="md-typescale-body-large ">
       LibreFit is a passion project, built by one person who believes software should be open,
@@ -85,27 +43,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       provide the greatest privacy, minimal fees and no minimum amount. Monero address below:
     </p>
 
-    <pre class="scrollable-code">842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
+    <pre class="content-card-code">842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
 
     <h2 class="md-typescale-headline-small">
       Integrated processor
     </h2>
 
     <form action="/donations/create" method="POST">
-      <label class="form-group md-typescale-body-large" for="amount_usd">You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.</label>
+      <label class="block mb-4 md-typescale-body-large" for="amount_usd">You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.</label>
 
-      <div class="form-group">
-        <label for="username" class="md-typescale-title-small">[Optional] Insert a name/username/alias (and eventual GitHub username/website/email) in order to be credited in README.md and LibreFit's about.</label>
-        <input type="text" id="username" name="username">
+      <div class="mb-4">
+        <label for="username" class="block mb-2 md-typescale-title-small">[Optional] Insert a name/username/alias (and eventual GitHub username/website/email) in order to be credited in README.md and LibreFit's about.</label>
+        <input type="text" id="username" name="username" class="md-text-field">
       </div>
 
-      <div class="form-group">
+      <div class="mb-4">
         <input type="checkbox" id="use-xmr" name="use-xmr">   I want to use Monero
       </div>
 
       <label class="form-group md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
 
-      <div style="margin-top: var(--space-6);">
+      <div class="mt-6">
         <button type="submit" class="md-filled-button">Donate crypto</button>
       </div>
     </form>
@@ -118,7 +76,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
 
     <form action="/donations/status" method="GET">
-      <label for="id">DONATION ID:</label>
+      <label for="id" class="block mb-2">DONATION ID:</label>
       <input
         type="text"
         id="id"
@@ -129,17 +87,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         minlength="36"
         title="Enter a valid ID with UUID v4 format"
         pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"
+        class="md-text-field"
       >
 
-      <div style="margin-top: var(--space-6);">
-        <button type="submit" class="md-filled-button">Check donation status</button>
+      <div class="mt-6">
+        <button type="submit" class="md-filled-button w-full">Check donation status</button>
       </div>
     </form>
 
     <h2 class="md-typescale-headline-medium">Contributors</h2>
     <p>Once your pull request is merged, login below with your Github account to receive your supporter code.</p>
 
-    <a href="/contributors/login" class="md-filled-button">
+    <a href="/contributors/login" class="md-filled-button text-on-primary no-underline hover:no-underline focus-visible:no-underline">
       <span class="material-symbols-outlined">login</span>
       GitHub login
     </a>

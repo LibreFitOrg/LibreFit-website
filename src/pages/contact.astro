@@ -15,54 +15,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <style>.no-js{display:none !important}</style>
   </noscript>
 
-  <style>
-    .form-group { margin-bottom: var(--space-4); }
-
-    label {
-      display: block;
-      margin-bottom: var(--space-2);
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="file"],
-    textarea {
-      width: 100%;
-      padding: var(--space-3);
-      font-family: var(--md-ref-typeface-plain);
-      font-size: 1rem;
-      background-color: var(--md-sys-color-surface-container);
-      color: var(--md-sys-color-on-surface);
-      border: 1px solid var(--md-sys-color-outline);
-      border-radius: var(--radius-sm);
-      transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
-    }
-
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="file"]:focus
-    textarea:focus {
-      outline: none;
-      border-color: var(--md-sys-color-primary);
-      box-shadow: 0 0 0 1px var(--md-sys-color-primary);
-    }
-
-    .turnstile-container {
-      display: flex;
-      justify-content: center;
-      margin: 1rem 0;
-    }
-
-    /* Make the main button full-width */
-    .md-filled-button {
-      width: 100%;
-    }
-
-    textarea {
-      resize: none;
-    }
-  </style>
-
   <div class="content-card">
     <h1 class="md-typescale-display-small bold">Contact</h1>
     <hr>
@@ -76,29 +28,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p class="md-typescale-body-large">Fingerprint:</p>
     <p class="md-typescale-body-medium">da1dee1a266579e850756f1981f0819560627270</p>
     <form id="contact-form" class="no-js" method="POST" action="/contact" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="email" class="md-typescale-title-small">Email</label>
-        <input type="email" id="email" name="email" required pattern={"[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}"}>
+      <div class="mb-4">
+        <label for="email" class="block mb-2 md-typescale-title-small">Email</label>
+        <input type="email" id="email" name="email" required pattern={"[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}"} class="md-text-field">
       </div>
 
-      <div class="form-group">
-        <label for="subject" class="md-typescale-title-small">Subject</label>
-        <input type="text" id="subject" name="subject" required>
+      <div class="mb-4">
+        <label for="subject" class="block mb-2 md-typescale-title-small">Subject</label>
+        <input type="text" id="subject" name="subject" required class="md-text-field">
       </div>
 
-      <div class="form-group">
-        <label for="message" class="md-typescale-title-small">Message</label>
-        <textarea id="message" name="message" rows="5" required maxlength="1000" minlength="5" style="resize: vertical;"></textarea>
+      <div class="mb-4">
+        <label for="message" class="block mb-2 md-typescale-title-small">Message</label>
+        <textarea id="message" name="message" rows="5" required maxlength="1000" minlength="5" class="md-text-field resize-y"></textarea>
       </div>
 
-      <div class="form-group">
-        <label for="pgp-key" class="md-typescale-title-small">Your PGP key to receive encrypted email replies (Optional)</label>
-        <input id="pgp-key" type="file" name="pgp-key" accept=".asc, application/pgp-keys">
+      <div class="mb-4">
+        <label for="pgp-key" class="block mb-2 md-typescale-title-small">Your PGP key to receive encrypted email replies (Optional)</label>
+        <input id="pgp-key" type="file" name="pgp-key" accept=".asc, application/pgp-keys" class="md-text-field">
       </div>
 
       <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-      <div class="turnstile-container">
+      <div class="flex justify-center my-4">
         <div class="cf-turnstile"
             data-sitekey="0x4AAAAAAB8JCf8sSsYyrET5"
             data-callback="onTurnstileSuccess"
@@ -107,8 +59,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             data-timeout-callback="onTurnstileError"></div>
       </div>
 
-      <div style="margin-top: var(--space-6);">
-        <button id="submitButton" type="submit" class="md-filled-button" disabled>Send encrypted message</button>
+      <div class="mt-6">
+        <button id="submitButton" type="submit" class="md-filled-button w-full" disabled>Send encrypted message</button>
       </div>
     </form>
     <hr>

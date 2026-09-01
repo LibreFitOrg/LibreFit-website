@@ -874,9 +874,23 @@
     font-family: 'Courier New', Courier, monospace;
   }
 
-  /* --- Material Icons Base sizing (filled variant) --- */
-  .material-symbols-outlined.filled {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  /* --- Text fields (contact & donate forms) --- */
+  .md-text-field {
+    width: 100%;
+    padding: var(--space-3);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 1rem;
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--radius-sm);
+    transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+  }
+
+  .md-text-field:focus {
+    outline: none;
+    border-color: var(--md-sys-color-primary);
+    box-shadow: 0 0 0 1px var(--md-sys-color-primary);
   }
 
   /* --- MD3 Base Component Styles --- */
