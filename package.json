@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run build:templates-css",
+    "build:site-css": "astro build",
+    "build:templates-css": "tailwindcss -i templates/app.css -o public/styles.css --minify",
     "preview": "astro preview",
     "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
