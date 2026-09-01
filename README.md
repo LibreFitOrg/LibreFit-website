@@ -2,10 +2,31 @@
 
 The official website for LibreFit, built with [Astro](https://astro.build) and Cloudflare Pages to handle contact forms, donations and supporter code rewards.
 
-Pages live in `src/pages` as `.astro` components sharing the `BaseLayout` (header/footer/SEO). The
-Material Design 3 token system and global styles are in `src/styles/global.css`. The static build
-(`npm run build`) emits flat `.html` files (`privacy.html`, `contact-result/contact-success.html`,
+Pages live in `src/pages` as `.astro` components sharing the `BaseLayout` (header/footer/SEO).
+Styling is **Tailwind CSS v4** (CSS-first config) with the [Material Design 3](https://m3.material.io)
+token system: `src/styles/global.css` is the single entry that imports Tailwind, maps every MD3
+color/elevation/shape/motion token to Tailwind's `@theme` namespaces, and defines the MD3
+typography utilities plus a small set of MD3 component classes (`.md-*`) in `@layer components`.
+
+The static build (`npm run build`) emits flat `.html` files (`privacy.html`, `contact-result/contact-success.html`,
 `404.html`, ...) so every legacy URL keeps working with the [functions](./functions).
+
+### Styling architecture
+
+- `src/styles/global.css` — Tailwind v4 entry (CSS-first, no `tailwind.config.js`): `@theme`
+  tokens (MD3 colors → `text-primary`, `bg-surface-container`, etc.; MD3 elevation →
+  `shadow-elev-*`; MD3 motion easings → `ease-*`; site breakpoints 600/900 px → `sm:`/`lg:`),
+  `@utility` definitions (`container`, `md-typescale-*`, `reveal`, `animate-hero`, ...) and the
+  MD3 component classes (`.md-assist-chip`, `.md-filled-button`, `.md-text-field`, `content-card`
+  ecosystem, ...) shared by every page.
+- `templates/app.css` — separate Tailwind entry for the [worker templates](./templates):
+  it imports `src/styles/global.css` and scans `templates/*.html`, so the Cloudflare Pages worker
+  pages (`/status.html`, `/error.html`) receive the same design system through the generated
+  `public/styles.css`. `public/styles.css` is a **build artifact** — regenerate it with
+  `npm run build:templates-css` (runs automatically as part of `npm run build`).
+- Pages use Tailwind utilities directly in markup; shared primitives (MD3 buttons/chips,
+  typography scale, `reveal`/`animate-hero` animations) remain as component classes because they
+  are reused across pages and rely on state layers/ripples that don't map 1:1 to utilities.
 
 ## ⚡ Quick Start
 
@@ -30,6 +51,19 @@ Material Design 3 token system and global styles are in `src/styles/global.css`.
     ```bash
     npm run build
     ```
+
+## 🎨 Styling
+
+Tailwind CSS v4 via the Vite plugin (`@tailwindcss/vite`), CSS-first configuration. All Material
+Design 3 tokens (dark color scheme, elevation, shape, motion) live in `src/styles/global.css` and
+are exposed both as CSS variables (single source of truth) and as Tailwind theme tokens, e.g.
+`text-primary`, `bg-surface-container-high`, `border-outline-variant`, `shadow-elev-2`,
+`ease-emphasized`, `rounded-2xl` (28px), `lg:` (900px).
+
+Worker-rendered pages (donation status / server error) are plain HTML templates under `templates/`
+served by Cloudflare Pages Functions; they share the same design tokens via a second Tailwind
+entry (`templates/app.css`) compiled to `public/styles.css` by `@tailwindcss/cli` during
+`npm run build`.
 
 ## ⚖ License
 

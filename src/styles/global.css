@@ -483,7 +483,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-text,
   .animate-hero {
     animation: none;
     opacity: 1;
