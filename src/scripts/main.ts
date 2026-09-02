@@ -1,15 +1,23 @@
 import * as openpgp from 'openpgp'
 
+// Turnstile resolves these callbacks by name at runtime through the
+// data-callback attributes in contact.astro.
+declare global {
+  interface Window {
+    onTurnstileSuccess: (token: string) => void;
+    onTurnstileError: () => void;
+  }
+}
 
-let form = null;
-let messageTextarea = null;
-let submitButton = null;
+let form: HTMLFormElement;
+let messageTextarea: HTMLTextAreaElement;
+let submitButton: HTMLButtonElement;
 
-let originalButtonText = null;
+let originalButtonText: string | null;
 
 const pgpKeyPath = '/pgp_key.asc';
 
-async function encryptContactForm(event) {
+async function encryptContactForm(event: SubmitEvent) {
     // Prevent the default form submission
     event.preventDefault();
 
@@ -23,7 +31,7 @@ async function encryptContactForm(event) {
         }
         const publicKeyArmored = await response.text();
         const plaintextMessage = messageTextarea.value;
-        
+
         // Encrypt the message
         const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
 
@@ -55,11 +63,11 @@ async function encryptContactForm(event) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => 
+window.addEventListener('DOMContentLoaded', () =>
     {
-        form = document.getElementById('contact-form');
-        messageTextarea = document.getElementById('message');
-        submitButton = document.getElementById("submitButton");
+        form = document.getElementById('contact-form') as HTMLFormElement;
+        messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
+        submitButton = document.getElementById("submitButton") as HTMLButtonElement;
         originalButtonText = submitButton.textContent
 
         form.addEventListener('submit', encryptContactForm)
@@ -68,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () =>
 
 
 // Define the logic for turnstile verification
-const enableButton = (token) => {
+const enableButton = (token: string) => {
   submitButton.disabled = false;
 };
 const disableButton = () => {
@@ -79,7 +87,7 @@ window.onTurnstileError = disableButton;
 
 
 
-window.addEventListener('pageshow', function(event) 
+window.addEventListener('pageshow', function(event)
     {
     // The event.persisted property is true if the page is being restored from bfcache.
         if (event.persisted) {

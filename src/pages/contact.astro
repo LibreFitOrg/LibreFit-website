@@ -7,8 +7,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Contact LibreFit's team by filling a form."
   canonical="/contact"
 >
-  <!-- Client-side encryption form: see src/main.js -->
-  <script src="../scripts/main.js"></script>
+  <!-- Client-side encryption form: see src/scripts/main.ts -->
+  <script src="../scripts/main.ts"></script>
 
   <noscript>
     <!-- It hides some elements when js is disabled-->
@@ -67,18 +67,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </form>
     <hr>
-
-    <script is:inline>
-      const submitButton = document.getElementById("submitButton");
-
-      function enableSubmitButton(token) {
-          submitButton.disabled = false;
-      }
-
-      function disableSubmitButton() {
-          submitButton.disabled = true;
-      }
-    </script>
 
     <h2 class="md-typescale-headline-medium">SimpleX</h2>
     <p class="md-typescale-body-large"><a href="https://simplex.chat" target="_blank" rel="noopener noreferrer" >SimpleX</a> is an anonymous, decentralized messenger providing end-to-end encrypted chats without requiring phone numbers, emails, or any personal identifier—not even random IDs.</p>
