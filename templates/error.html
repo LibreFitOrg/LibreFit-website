@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0E1416" />
-  <meta name="robots" content="index,follow">
+  <!-- Served for any unexpected server error: keep out of search indexes.
+       No single canonical URL applies (this template backs every 500). -->
+  <meta name="robots" content="noindex,follow">
 
   <title>LibreFit - Internal Server Error</title>
   <meta name="description" content="LibreFit's website encountered an unexpected error so try again in a few minutes.">
-  
+
   <link rel="icon" href="/assets/logo.svg">
 
   <link rel="stylesheet" href="/styles.css">
@@ -31,57 +33,139 @@
   <meta name="twitter:description" content="Free, open-source, privacy-first workout tracker. Plan, track, and analyze your fitness journeys with a rich dataset of hundreds of exercises.">
   <meta name="twitter:image" content="https://librefit.org/assets/rich_preview_logo.png">
 
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://librefit.org/">
-
 </head>
 <body>
+  <script src="https://keepandroidopen.org/banner.js"></script>
 
-  <header class="sticky top-0 z-10 border-b border-outline-variant bg-surface/70 backdrop-blur-xl backdrop-saturate-150">
-    <div class="container flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-      <a class="flex items-center gap-3 rounded-sm no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2" href="/" aria-label="LibreFit Home">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <!-- Scroll sentinel: leaves the viewport as soon as the page scrolls,
+       triggering the M3 "pinned top app bar" elevated state. -->
+  <div id="header-sentinel" class="h-px w-full" aria-hidden="true"></div>
+
+  <header class="md-top-app-bar sticky top-0 z-10 border-b border-outline-variant bg-surface/70 backdrop-blur-xl backdrop-saturate-150">
+    <div class="container flex h-16 items-center justify-between gap-4">
+      <a
+        class="flex h-12 items-center gap-3 rounded-full p-1 pr-4 no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2"
+        href="/"
+        aria-label="LibreFit Home"
+      >
         <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
-          <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="">
+          <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
         </span>
         <p class="m-0 text-2xl font-bold leading-[1.27]">
           <span class="text-primary">Libre</span>Fit
         </p>
       </a>
 
-      <nav class="flex overflow-x-auto gap-2 p-1 [scroll-snap-type:x_mandatory] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Primary navigation">
-        <a href="/" class="md-assist-chip snap-start shrink-0" aria-current="page">
-          <span class="material-symbols-outlined">home</span>
+      <!-- Desktop: M3 top app bar link row with pill active indicator -->
+      <nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
+        <a href="/" class="md-nav-item" aria-current="page">
+          <span class="material-symbols-outlined" aria-hidden="true">home</span>
           Home
         </a>
-        <a href="/privacy.html" class="md-assist-chip snap-start shrink-0">
-          <span class="material-symbols-outlined">policy</span>
+        <a href="/privacy.html" class="md-nav-item">
+          <span class="material-symbols-outlined" aria-hidden="true">policy</span>
           Privacy
         </a>
-        <a href="/donate.html" class="md-assist-chip snap-start shrink-0">
-          <span class="material-symbols-outlined">favorite</span>
+        <a href="/donate.html" class="md-nav-item">
+          <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
           Donate
         </a>
-        <a href="/license.html" class="md-assist-chip snap-start shrink-0">
-          <span class="material-symbols-outlined">license</span>
+        <a href="/license.html" class="md-nav-item">
+          <span class="material-symbols-outlined" aria-hidden="true">license</span>
           License
         </a>
-        <a href="/contact.html" class="md-assist-chip snap-start shrink-0">
-          <span class="material-symbols-outlined">person</span>
+        <a href="/contact.html" class="md-nav-item">
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
           Contact
         </a>
       </nav>
+
+      <!-- Mobile: hamburger opens the modal navigation drawer -->
+      <button
+        id="open-drawer"
+        type="button"
+        class="md-icon-button lg:hidden"
+        aria-expanded="false"
+        aria-controls="site-drawer"
+        aria-label="Open navigation menu"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
     </div>
+
+    <!-- Mobile: M3 modal navigation drawer (native <dialog>) -->
+    <dialog id="site-drawer" class="md-drawer" aria-label="Site navigation">
+      <div class="drawer-header flex items-center justify-between gap-2 p-4 pb-2">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+            <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+          </span>
+          <p class="m-0 text-xl font-bold leading-[1.27]">
+            <span class="text-primary">Libre</span>Fit
+          </p>
+        </div>
+        <button type="button" class="md-icon-button drawer-close" aria-label="Close navigation menu">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-1 p-4 pt-2" aria-label="Mobile">
+        <a href="/" class="md-drawer-item" aria-current="page">
+          <span class="material-symbols-outlined" aria-hidden="true">home</span>
+          Home
+        </a>
+        <a href="/privacy.html" class="md-drawer-item">
+          <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+          Privacy
+        </a>
+        <a href="/donate.html" class="md-drawer-item">
+          <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+          Donate
+        </a>
+        <a href="/license.html" class="md-drawer-item">
+          <span class="material-symbols-outlined" aria-hidden="true">license</span>
+          License
+        </a>
+        <a href="/contact.html" class="md-drawer-item">
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+          Contact
+        </a>
+      </nav>
+    </dialog>
+
+    <!-- No-JS fallback (CSS-only, scoped to the same breakpoint as the
+         layout so exactly one navigation renders in every case). -->
+    <noscript>
+      <style>
+        #open-drawer { display: none; }
+        @media (max-width: 899.98px) {
+          #site-drawer {
+            position: static;
+            display: block;
+            width: 100%;
+            max-width: none;
+            border-radius: 0;
+            box-shadow: none;
+            transform: none;
+          }
+          #site-drawer .drawer-header { display: none; }
+          #site-drawer nav { flex-direction: row; flex-wrap: wrap; }
+        }
+      </style>
+    </noscript>
   </header>
 
-  <main class="container">
+  <main id="main-content" class="container">
     <section class="grid items-start gap-6 pt-[clamp(1rem,4vw,1.5rem)] pb-[clamp(2rem,6vw,72px)]" aria-labelledby="hero-title">
       <div>
         <h1 class="m-0 mb-3 md-typescale-display-medium bold">Internal Server Error</h1>
         <p class="m-0 mb-5 md-typescale-body-large text-on-surface-variant">There was an unexpected error. Please wait a minute and try again. If error persists, contact us and provide the following reference code:</p>
 
         <pre class="content-card-code overflow-x-auto whitespace-pre select-all cursor-pointer md-typescale-title-medium">{{ERROR_ID}}</pre>
-        
-        <a href="/index.html" class="md-filled-button">
+
+        <a href="/" class="md-filled-button">
           <span class="material-symbols-outlined">home</span>
           Go home
         </a>
@@ -90,19 +174,128 @@
     </section>
   </main>
 
-  <footer class="py-8 border-t border-outline-variant bg-surface-container-low">
-    <div class="container grid gap-3">
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="md-assist-chip"><span class="material-symbols-outlined">android</span> Jetpack Compose</div>
-        <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy‑first</div>
-        <div class="md-assist-chip"><span class="material-symbols-outlined">palette</span> Material Expressive</div>
-      </div>
-      <div class="md-typescale-body-small flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-        <span>© 2026 LibreFit. <a href="/license.html" class="text-primary no-underline hover:underline">GPL-3.0 licensed with additional terms</a>. No trackers. No cloud.</span>
+  <footer class="mt-auto border-t border-outline-variant bg-surface-container-low">
+    <div class="container py-10 grid gap-8">
+      <!-- Brand + quick links -->
+      <div class="grid gap-6 sm:grid-cols-[auto_1fr] sm:items-start sm:justify-between">
+        <a
+          class="flex h-12 items-center gap-3 self-start rounded-full p-1 pr-4 no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2"
+          href="/"
+          aria-label="LibreFit Home"
+        >
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+            <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+          </span>
+          <span class="text-xl font-bold leading-[1.27]">
+            <span class="text-primary">Libre</span>Fit
+          </span>
+        </a>
 
+        <nav class="flex flex-wrap items-center gap-x-1 gap-y-2 sm:justify-end" aria-label="Footer">
+          <a href="/privacy.html" class="md-nav-item">Privacy</a>
+          <a href="/license.html" class="md-nav-item">License</a>
+          <a href="/donate.html" class="md-nav-item">Donate</a>
+          <a href="/contact.html" class="md-nav-item">Contact</a>
+          <a
+            href="https://github.com/LibreFitOrg/LibreFit"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="md-nav-item"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">code</span>
+            Source
+          </a>
+        </nav>
+      </div>
+
+      <!-- License line + badges -->
+      <div class="flex flex-col gap-4 border-t border-outline-variant pt-6 md:flex-row md:items-center md:justify-between">
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="md-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>
+            Privacy-first
+          </div>
+          <div class="md-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+            No trackers · No cloud
+          </div>
+          <div class="md-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">palette</span>
+            Material Expressive
+          </div>
+        </div>
+        <p class="m-0 md-typescale-body-small text-on-surface-variant">
+          © 2026 LibreFit.
+          <a href="/license.html" class="text-primary no-underline hover:underline">GPL-3.0 licensed with additional terms</a>.
+        </p>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Vanilla-JS port of the Header.astro script: these templates are served
+    // raw by Pages Functions, so there is no bundler/TypeScript step here.
+    (function () {
+      var header = document.querySelector('.md-top-app-bar');
+      var sentinel = document.getElementById('header-sentinel');
+
+      // --- M3 pinned top app bar: elevate once content scrolls beneath it ---
+      if (header && sentinel && 'IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          if (entries[0] && entries[0].isIntersecting) {
+            header.removeAttribute('data-scrolled');
+          } else {
+            header.setAttribute('data-scrolled', '');
+          }
+        });
+        observer.observe(sentinel);
+      }
+
+      // --- Skip link: make the target focusable just-in-time ---
+      var skipLink = document.querySelector('a.skip-link');
+      if (skipLink) {
+        skipLink.addEventListener('click', function () {
+          var target = document.getElementById(skipLink.hash.slice(1));
+          if (!target) return;
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        });
+      }
+
+      // --- Modal navigation drawer ---
+      var menuButton = document.querySelector('#open-drawer');
+      var drawer = document.querySelector('#site-drawer');
+      var closeButton = drawer ? drawer.querySelector('.drawer-close') : null;
+
+      if (menuButton && drawer && typeof drawer.showModal === 'function') {
+        menuButton.addEventListener('click', function () {
+          drawer.showModal();
+          menuButton.setAttribute('aria-expanded', 'true');
+          document.body.dataset.drawerOpen = '';
+        });
+
+        if (closeButton) {
+          closeButton.addEventListener('click', function () { drawer.close(); });
+        }
+
+        // Click on the scrim (the backdrop area of the dialog itself) closes it.
+        drawer.addEventListener('click', function (event) {
+          if (event.target === drawer) drawer.close();
+        });
+
+        drawer.addEventListener('close', function () {
+          menuButton.setAttribute('aria-expanded', 'false');
+          delete document.body.dataset.drawerOpen;
+          menuButton.focus();
+        });
+
+        // Choosing a destination closes the drawer.
+        drawer.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () { drawer.close(); });
+        });
+      }
+    })();
+  </script>
 
 </body>
 </html>
