@@ -1,9 +1,18 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://librefit.org',
+  // Auto-generate sitemap-index.xml on every build from the actual pages.
+  // Exclude noindex pages (transactional form results) — sitemaps should
+  // only list indexable URLs.
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/contact-result/'),
+    }),
+  ],
   // Fully static output
   output: 'static',
   // Astro v7 changed the default compressHTML from `true` to `'jsx'`

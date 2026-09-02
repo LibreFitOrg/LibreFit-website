@@ -7,9 +7,9 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  /** Canonical path without the domain, e.g. "/privacy" */
-  canonical: string;
-  /** robots meta value, defaults to "index,follow" */
+  /** Canonical path without the domain, e.g. "/privacy". Omit on noindex pages. */
+  canonical?: string;
+  /** robots meta value, defaults to "index,follow,max-image-preview:large" */
   robots?: string;
 }
 

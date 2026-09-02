@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@octokit/core": "^7.0.8",
     "@octokit/plugin-paginate-rest": "^15.0.0",
     "@octokit/webhooks-methods": "^6.0.0",

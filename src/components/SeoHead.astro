@@ -2,21 +2,27 @@
 interface Props {
   title: string;
   description: string;
-  /** Canonical path without the domain, e.g. "/privacy" */
-  canonical: string;
-  /** robots meta value, defaults to "index,follow" */
+  /** Canonical path without the domain, e.g. "/privacy". Omit on non-indexable pages (noindex) to avoid a contradictory canonical. */
+  canonical?: string;
+  /** robots meta value, defaults to "index,follow,max-image-preview:large" */
   robots?: string;
+  /** Open Graph / Twitter title, defaults to `title` */
+  ogTitle?: string;
+  /** Open Graph / Twitter description, defaults to `description` */
+  ogDescription?: string;
 }
 
 const {
   title,
   description,
   canonical,
-  robots = 'index,follow',
+  robots = 'index,follow,max-image-preview:large',
+  ogTitle = title,
+  ogDescription = description,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://librefit.org');
-const canonicalUrl = new URL(canonical, siteUrl).href;
+const canonicalUrl = canonical ? new URL(canonical, siteUrl).href : undefined;
 const previewImage = new URL('/assets/rich_preview_logo.png', siteUrl).href;
 ---
 
@@ -31,21 +37,21 @@ const previewImage = new URL('/assets/rich_preview_logo.png', siteUrl).href;
 <meta name="description" content={description}>
 
 <link rel="icon" href="/assets/logo.svg">
-<link rel="canonical" href={canonicalUrl}>
+{canonicalUrl && <link rel="canonical" href={canonicalUrl}>}
 
 <!-- Open graph-->
 <meta property="og:type" content="website">
-<meta property="og:url" content={canonicalUrl}>
-<meta property="og:title" content="LibreFit — The free and private workout tracker">
-<meta property="og:description" content="Free, open-source, privacy-first workout tracker. Plan, track, and analyze your fitness journeys with a rich dataset of hundreds of exercises.">
+{canonicalUrl && <meta property="og:url" content={canonicalUrl}>}
+<meta property="og:title" content={ogTitle}>
+<meta property="og:description" content={ogDescription}>
 <meta property="og:image" content={previewImage}>
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:height" content="620">
 <meta property="og:image:alt" content="LibreFit preview">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="LibreFit">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LibreFit — The free and private workout tracker">
-<meta name="twitter:description" content="Free, open-source, privacy-first workout tracker. Plan, track, and analyze your fitness journeys with a rich dataset of hundreds of exercises.">
+<meta name="twitter:title" content={ogTitle}>
+<meta name="twitter:description" content={ogDescription}>
 <meta name="twitter:image" content={previewImage}>
