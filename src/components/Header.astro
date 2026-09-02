@@ -127,6 +127,10 @@ const links = [
           border-radius: 0;
           box-shadow: none;
           transform: none;
+          /* The opaque modal background is only correct while the drawer
+             floats above a scrim; inline (no-JS) it must not cover the
+             app bar's translucent backdrop-blur background. */
+          background-color: transparent;
         }
         #site-drawer .drawer-header { display: none; }
         #site-drawer nav { flex-direction: row; flex-wrap: wrap; }
