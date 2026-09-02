@@ -1,16 +1,27 @@
 import html from '../../templates/status.html';
 import { getDb, contributors } from "../_db.js";
 import { eq } from "drizzle-orm";
+import type { Env } from "../types.js";
 
-export async function onRequest({ request, env }) {
+interface GitHubTokenResponse {
+  access_token?: string;
+  error?: string;
+}
+
+interface GitHubUserResponse {
+  login: string;
+  id: number;
+}
+
+export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
 
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
 
   // HTML for response
-  let page;
-  
+  let page: string;
+
   if (!code) {
     page = html
         .replace('{{STATUS_TITLE}}', `GitHub Login Error`)
@@ -33,7 +44,7 @@ export async function onRequest({ request, env }) {
       code
     })
   });
-  const tokenData = await tokenResp.json();
+  const tokenData: GitHubTokenResponse = await tokenResp.json();
 
 
 
@@ -52,7 +63,7 @@ export async function onRequest({ request, env }) {
   const userResp = await fetch("https://api.github.com/user", {
     headers: { "Authorization": `Bearer ${tokenData.access_token}`, "User-Agent": "Pages" }
   });
-  const userData = await userResp.json();
+  const userData: GitHubUserResponse = await userResp.json();
   const username = userData.login;
   const githubId = userData.id;
 
@@ -62,8 +73,8 @@ export async function onRequest({ request, env }) {
   // Fetch user
   const records = await db.select()
     .from(contributors)
-    .where(eq(contributors.githubId, githubId));  
-  
+    .where(eq(contributors.githubId, githubId));
+
   // Check if user exits, then show code
   if (records.length != 0) {
     const record = records[0];
@@ -88,4 +99,4 @@ export async function onRequest({ request, env }) {
 
   url.searchParams.delete("code");
   return new Response( page, { headers: { "Content-Type": "text/html" } });
-}
+};

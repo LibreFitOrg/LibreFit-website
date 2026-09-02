@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "preview:cf": "astro build && wrangler pages dev dist",
     "astro": "astro",
+    "check:functions": "tsc -p functions --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,9 +35,11 @@
     "postgres": "^3.4.9"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260902.1",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
     "wrangler": "^4.127.1"
   }
 }

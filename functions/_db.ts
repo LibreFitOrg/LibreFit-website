@@ -1,8 +1,10 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { integer, pgTable, text, timestamp, uuid, doublePrecision } from "drizzle-orm/pg-core";
+import type { InferSelectModel } from "drizzle-orm";
+import type { Env } from "./types.js";
 
-export const donations = pgTable("donations", 
+export const donations = pgTable("donations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     username: text("username"),
@@ -26,15 +28,19 @@ export const contributors = pgTable("contributors",
 
 export const errorLogs = pgTable("error_logs", {
   id: uuid("id").primaryKey(),
-  method: text("method").notNull(), 
+  method: text("method").notNull(),
   url: text("url").notNull(),
   message: text("message").notNull(),
   stack: text("stack").notNull(),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
+export type Donation = InferSelectModel<typeof donations>;
+export type Contributor = InferSelectModel<typeof contributors>;
+export type ErrorLog = InferSelectModel<typeof errorLogs>;
+
 // Connection Helper
-export function getDb(env) {
+export function getDb(env: Env) {
   // Prefer the Hyperdrive binding (pooling + caching in production).
   // Fall back to a plain DATABASE_URL secret for local/dev setups
   // where no Hyperdrive config is bound.

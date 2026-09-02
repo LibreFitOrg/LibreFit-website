@@ -2,8 +2,23 @@ import { eq } from "drizzle-orm";
 import { getDb, donations } from "../_db.js";
 import { signString } from '../_supporter-code-sign.js';
 import * as openpgp from 'openpgp';
+import type { Env } from "../types.js";
 
-export async function onRequestPost({ request, env }) {
+interface TrocadorWebhookPayload {
+  trade_id?: string;
+  coin_to?: string;
+  amount_to?: string | number;
+  status?: string;
+}
+
+interface ResendEmailPayload {
+  from: string;
+  to: string[];
+  subject: string;
+  text: string;
+}
+
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const { PRIVATE_KEY, CONTACT_EMAIL, SUBDOMAIN, RESEND_API_KEY } = env;
 
   // Get key from the URL
@@ -11,7 +26,7 @@ export async function onRequestPost({ request, env }) {
   const receivedKey = url.searchParams.get('key');
 
   // Trocador sends the data as JSON in the POST body
-  const donationData = await request.json();
+  const donationData: TrocadorWebhookPayload = await request.json();
   const tradeId = donationData.trade_id;
 
   if (!tradeId) {
@@ -71,7 +86,7 @@ export async function onRequestPost({ request, env }) {
     const toAddress = `${CONTACT_EMAIL}`;
 
     // Prepare encryption
-    const pgpKeyPath = '/pgp_key.asc';  
+    const pgpKeyPath = '/pgp_key.asc';
 
     const keyResponse = await fetch(`${url.origin}${pgpKeyPath}`);
     if (!keyResponse.ok) {
@@ -81,10 +96,10 @@ export async function onRequestPost({ request, env }) {
 
     const isAnonymous = !donation.username;
     const baseMessage = `${donation.username || "Anonymous"} has donated ${amount} of ${coin} successfully!`;
-    const plaintextMessage = isAnonymous 
-      ? baseMessage 
+    const plaintextMessage = isAnonymous
+      ? baseMessage
       : `${baseMessage} Add it in donators section of README.md and app's about.`;
-    
+
     // Encrypt the message
     const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
 
@@ -92,8 +107,8 @@ export async function onRequestPost({ request, env }) {
         message: await openpgp.createMessage({ text: plaintextMessage }),
         encryptionKeys: publicKey,
     });
-    
-    const emailPayload = {
+
+    const emailPayload: ResendEmailPayload = {
       from: fromAddress,
       to: [toAddress],
       subject: `${donation.username || "Anonymous"} completed a donation`,
@@ -119,15 +134,15 @@ export async function onRequestPost({ request, env }) {
 
   // Save the updated record back to DB
   await db.update(donations)
-    .set({ 
+    .set({
       status: donationData.status,
       code: code,
       coin: coin,
-      amount: amount,
+      amount: amount as number, // Trocador may report the amount as string; passed through as-is (as in the original)
       last_update_timestamp: new Date()
     })
     .where(eq(donations.id, donation.id))
 
   // Acknowledge receipt
   return new Response('OK', { status: 200 });
-}
+};

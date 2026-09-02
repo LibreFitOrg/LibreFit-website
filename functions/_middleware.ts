@@ -1,18 +1,20 @@
 import errorTemplate from '../templates/error.html';
 import { getDb, errorLogs } from "./_db.js";
+import type { Env } from "./types.js";
 
-export async function onRequest({ request, env, next }) {
+export const onRequest: PagesFunction<Env> = async ({ request, env, next }) => {
   try {
     // Run the actual request
-    return await next(); 
+    return await next();
   } catch (error) {
     // Generate a Request ID for unexcepted errors tracking
     const requestId = crypto.randomUUID();
 
+    const err = error as { message?: string; stack?: string };
     console.error(`Error [${requestId}]:`, error);
 
     // Log to database in safe wrapper
-    try { 
+    try {
       // Initialize DB
       const db = getDb(env);
 
@@ -21,8 +23,8 @@ export async function onRequest({ request, env, next }) {
           id: requestId,
           method: request.method,
           url: request.url,
-          message: error.message || "Unknown Error",
-          stack: error.stack || "No stack trace",
+          message: err.message || "Unknown Error",
+          stack: err.stack || "No stack trace",
         }
       ).onConflictDoUpdate(
         {
@@ -30,8 +32,8 @@ export async function onRequest({ request, env, next }) {
           set: {
             method: request.method,
             url: request.url,
-            message: error.message || "Unknown Error",
-            stack: error.stack || "No stack trace",
+            message: err.message || "Unknown Error",
+            stack: err.stack || "No stack trace",
           }
         }
       );
@@ -47,4 +49,4 @@ export async function onRequest({ request, env, next }) {
       headers: { "Content-Type": "text/html" }
     });
   }
-}
+};

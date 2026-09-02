@@ -1,7 +1,13 @@
 import html from '../../templates/status.html';
 import { getDb, donations } from "../_db.js";
+import type { Env } from "../types.js";
 
-export async function onRequestPost({ request, env }) {
+interface TrocadorCreateResponse {
+  ID?: string;
+  url?: string;
+}
+
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const { XMR_ADDRESS, SOL_ADDRESS } = env;
 
   // Get the data from the form
@@ -12,7 +18,7 @@ export async function onRequestPost({ request, env }) {
   const webhookKey = crypto.randomUUID(); // Used for webhook validation
   const webhookUrl = `${siteURL.origin}/donations/webhook?key=${webhookKey}`;
 
-  
+
   const trocadorUrl = new URL('https://trocador.app/anonpay/');
 
   // Fro official docs: https://trocador.app/anonpaydocumentation
@@ -40,7 +46,7 @@ export async function onRequestPost({ request, env }) {
   const apiResponse = await fetch(trocadorUrl.toString());
 
   const responseText = await apiResponse.text();
-  let data;
+  let data: TrocadorCreateResponse;
 
   try {
     data = JSON.parse(responseText);
@@ -63,7 +69,7 @@ export async function onRequestPost({ request, env }) {
   // Initialize DB
   const db = getDb(env);
 
-  const username = formData.get('username');
+  const username = formData.get('username') as string | null;
 
   await db.insert(donations)
     .values({
@@ -87,6 +93,6 @@ export async function onRequestPost({ request, env }) {
       .replace('{{URL_DESC}}', `${urlDonationDesc}`)
       .replace('{{REDIRECT_SNIPPET}}', `"60;url=${redirectUrl}"`);
 
-  
+
   return new Response(statusHtml, {headers: {'Content-Type': 'text/html',},});
-}
+};

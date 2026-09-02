@@ -3,10 +3,34 @@ import { getDb, contributors } from "../_db.js";
 import { signString } from '../_supporter-code-sign.js';
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
+import type { Env } from "../types.js";
 
+const MinimalOctokit = Octokit.plugin(paginateRest);
+type MinimalOctokit = InstanceType<typeof MinimalOctokit>;
 
-async function getPrContributors({ octokit, owner, repo, pull_number }) {
-  const contributorMap = new Map();
+interface GitHubPullRequestPayload {
+  action?: string;
+  pull_request: {
+    number: number;
+    merged?: boolean;
+  };
+  repository: {
+    name: string;
+    owner: {
+      login: string;
+    };
+  };
+}
+
+async function getPrContributors(
+  { octokit, owner, repo, pull_number }: {
+    octokit: MinimalOctokit;
+    owner: string;
+    repo: string;
+    pull_number: number;
+  }
+) {
+  const contributorMap = new Map<number, string>();
 
   // Use the raw request path
   const iterator = octokit.paginate.iterator(
@@ -19,13 +43,13 @@ async function getPrContributors({ octokit, owner, repo, pull_number }) {
       // Check author (who wrote the code)
       if (c.author?.id) {
         const name = c.commit?.author?.name || c.author.login;
-        contributorMap.set(c.author.id, name); 
+        contributorMap.set(c.author.id as number, name);
       }
 
       // Check committer (who applied the code)
       if (c.committer?.id && c.committer?.login !== "web-flow") {
         const name = c.commit?.committer?.name || c.committer.login;
-        contributorMap.set(c.committer.id, name); 
+        contributorMap.set(c.committer.id as number, name);
       }
     }
   }
@@ -33,7 +57,7 @@ async function getPrContributors({ octokit, owner, repo, pull_number }) {
   return contributorMap;
 }
 
-export async function onRequestPost({ request, env }) {
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const { GITHUB_WEBHOOK_SECRET, PRIVATE_KEY, GITHUB_TOKEN } = env;
 
   const hubSignature = request.headers.get("x-hub-signature-256");
@@ -48,16 +72,14 @@ export async function onRequestPost({ request, env }) {
   const eventType = request.headers.get("x-github-event");
   if (eventType !== "pull_request") {
     // Return 200 immediately for non-PR events so GitHub doesn't mark it as failed
-    return new Response("OK"); 
+    return new Response("OK");
   }
 
-  const payload = JSON.parse(body);
+  const payload: GitHubPullRequestPayload = JSON.parse(body);
 
   // Filter: only closed and merged PRs
   if (payload.action === 'closed' && payload.pull_request.merged) {
     // Get contributors
-    const MinimalOctokit = Octokit.plugin(paginateRest);
-
     const octokit = new MinimalOctokit({ auth: GITHUB_TOKEN });
 
     const prContributors = await getPrContributors({
@@ -88,4 +110,4 @@ export async function onRequestPost({ request, env }) {
   }
 
   return new Response("OK");
-}
+};

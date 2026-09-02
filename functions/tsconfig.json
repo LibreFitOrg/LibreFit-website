@@ -1,0 +1,22 @@
+{
+  // Standalone config for Cloudflare Pages Functions (deliberately does NOT
+  // extend the root Astro tsconfig: the root project uses DOM lib + Astro
+  // types, while Functions need the Workers runtime types instead).
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // No DOM lib: global Request/Response/crypto/atob/btoa/fetch etc. come
+    // from @cloudflare/workers-types instead.
+    "lib": ["ES2022"],
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./**/*"]
+}
