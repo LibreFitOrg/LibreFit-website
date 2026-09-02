@@ -9,6 +9,7 @@
     "build:site-css": "astro build",
     "build:templates-css": "tailwindcss -i templates/app.css -o public/styles.css --minify",
     "preview": "astro preview",
+    "preview:cf": "astro build && wrangler pages dev dist",
     "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

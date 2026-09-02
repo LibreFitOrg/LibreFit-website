@@ -35,6 +35,18 @@ export const errorLogs = pgTable("error_logs", {
 
 // Connection Helper
 export function getDb(env) {
-  const client = postgres(env.HYPERDRIVE.connectionString);
+  // Prefer the Hyperdrive binding (pooling + caching in production).
+  // Fall back to a plain DATABASE_URL secret for local/dev setups
+  // where no Hyperdrive config is bound.
+  const connectionString = env?.HYPERDRIVE?.connectionString ?? env?.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      "Database not configured: missing HYPERDRIVE binding " +
+      "(add [[hyperdrive]] to wrangler.toml) or DATABASE_URL secret."
+    );
+  }
+
+  const client = postgres(connectionString);
   return drizzle(client);
 }

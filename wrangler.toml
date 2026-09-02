@@ -2,3 +2,8 @@ name = "librefit-website"
 compatibility_date = "2026-09-02"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
+
+# Hyperdrive: connects Pages Functions to the PostgreSQL database.
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "fad595d919ba402a8623c3a775cb5dbf"
