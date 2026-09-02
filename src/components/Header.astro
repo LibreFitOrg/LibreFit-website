@@ -75,7 +75,7 @@ const links = [
 
   <!-- Mobile: M3 modal navigation drawer (native <dialog>) -->
   <dialog id="site-drawer" class="md-drawer" aria-label="Site navigation">
-    <div class="flex items-center justify-between gap-2 p-4 pb-2">
+    <div class="drawer-header flex items-center justify-between gap-2 p-4 pb-2">
       <div class="flex items-center gap-3">
         <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
           <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
@@ -106,21 +106,31 @@ const links = [
     </nav>
   </dialog>
 
-  <!-- No-JS fallback: expose the navigation inline instead of the drawer -->
+  <!-- No-JS fallback (CSS-only, scoped to the same breakpoint as the
+       layout so exactly one navigation renders in every case):
+       - The hamburger is a no-op without JS -> remove it at all widths.
+       - Below lg (900px, mirrors --breakpoint-lg) the closed <dialog>
+         is promoted to an inline navigation; the desktop pill nav is
+         hidden there, so there is still only one nav. The drawer's
+         brand row is redundant under the app bar and is hidden.
+       - At lg and above the pill nav is the single navigation and the
+         closed <dialog> stays display:none per the UA stylesheet. -->
   <noscript>
     <style>
-      #open-drawer,
-      #site-drawer .drawer-close { display: none; }
-      #site-drawer {
-        position: static;
-        display: block;
-        width: 100%;
-        max-width: none;
-        border-radius: 0;
-        box-shadow: none;
-        transform: none;
+      #open-drawer { display: none; }
+      @media (max-width: 899.98px) {
+        #site-drawer {
+          position: static;
+          display: block;
+          width: 100%;
+          max-width: none;
+          border-radius: 0;
+          box-shadow: none;
+          transform: none;
+        }
+        #site-drawer .drawer-header { display: none; }
+        #site-drawer nav { flex-direction: row; flex-wrap: wrap; }
       }
-      #site-drawer nav { flex-direction: row; flex-wrap: wrap; }
     </style>
   </noscript>
 </header>
