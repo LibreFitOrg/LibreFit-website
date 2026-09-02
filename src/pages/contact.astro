@@ -26,25 +26,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <p class="md-typescale-body-large no-js">Fill out the form below (it will be encrypted locally before sending) or use the <a href="/pgp_key.asc" download>PGP key</a>.</p>
     <p class="md-typescale-body-large">Fingerprint:</p>
-    <p class="md-typescale-body-medium">da1dee1a266579e850756f1981f0819560627270</p>
-    <form id="contact-form" class="no-js" method="POST" action="/contact" enctype="multipart/form-data">
-      <div class="mb-4">
-        <label for="email" class="block mb-2 md-typescale-title-small">Email</label>
+    <pre>da1dee1a266579e850756f1981f0819560627270</pre>
+    <form id="contact-form" class="no-js grid gap-4" method="POST" action="/contact" enctype="multipart/form-data">
+      <div class="grid gap-2">
+        <label for="email" class="md-typescale-title-small">Email</label>
         <input type="email" id="email" name="email" required pattern={"[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}"} class="md-text-field">
       </div>
 
-      <div class="mb-4">
-        <label for="subject" class="block mb-2 md-typescale-title-small">Subject</label>
+      <div class="grid gap-2">
+        <label for="subject" class="md-typescale-title-small">Subject</label>
         <input type="text" id="subject" name="subject" required class="md-text-field">
       </div>
 
-      <div class="mb-4">
-        <label for="message" class="block mb-2 md-typescale-title-small">Message</label>
+      <div class="grid gap-2">
+        <label for="message" class="md-typescale-title-small">Message</label>
         <textarea id="message" name="message" rows="5" required maxlength="1000" minlength="5" class="md-text-field resize-y"></textarea>
       </div>
 
-      <div class="mb-4">
-        <label for="pgp-key" class="block mb-2 md-typescale-title-small">Your PGP key to receive encrypted email replies (Optional)</label>
+      <div class="grid gap-2">
+        <label for="pgp-key" class="md-typescale-title-small">Your PGP key to receive encrypted email replies <span class="text-on-surface-variant">(optional)</span></label>
         <input id="pgp-key" type="file" name="pgp-key" accept=".asc, application/pgp-keys" class="md-text-field">
       </div>
 
@@ -59,8 +59,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             data-timeout-callback="onTurnstileError"></div>
       </div>
 
-      <div class="mt-6">
-        <button id="submitButton" type="submit" class="md-filled-button w-full" disabled>Send encrypted message</button>
+      <div class="flex justify-center">
+        <button id="submitButton" type="submit" class="md-filled-button w-full sm:w-auto" disabled>
+          <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+          Send encrypted message
+        </button>
       </div>
     </form>
     <hr>

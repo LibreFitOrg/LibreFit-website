@@ -1,12 +1,57 @@
-<footer class="py-8 border-t border-outline-variant bg-surface-container-low">
-  <div class="container grid gap-3">
-    <div class="flex flex-wrap items-center gap-2">
-      <div class="md-assist-chip"><span class="material-symbols-outlined">android</span> Jetpack Compose</div>
-      <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy-first</div>
-      <div class="md-assist-chip"><span class="material-symbols-outlined">palette</span> Material Expressive</div>
+<footer class="mt-auto border-t border-outline-variant bg-surface-container-low">
+  <div class="container py-10 grid gap-8">
+    <!-- Brand + quick links -->
+    <div class="grid gap-6 sm:grid-cols-[auto_1fr] sm:items-start sm:justify-between">
+      <a
+        class="flex h-12 items-center gap-3 self-start rounded-full p-1 pr-4 no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2"
+        href="/"
+        aria-label="LibreFit Home"
+      >
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+          <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+        </span>
+        <span class="text-xl font-bold leading-[1.27]">
+          <span class="text-primary">Libre</span>Fit
+        </span>
+      </a>
+
+      <nav class="flex flex-wrap items-center gap-x-1 gap-y-2 sm:justify-end" aria-label="Footer">
+        <a href="/privacy.html" class="md-nav-item">Privacy</a>
+        <a href="/license.html" class="md-nav-item">License</a>
+        <a href="/donate.html" class="md-nav-item">Donate</a>
+        <a href="/contact.html" class="md-nav-item">Contact</a>
+        <a
+          href="https://github.com/LibreFitOrg/LibreFit"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-nav-item"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">code</span>
+          Source
+        </a>
+      </nav>
     </div>
-    <div class="md-typescale-body-small flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-      <span>© 2026 LibreFit. <a href="/license.html" class="text-primary no-underline hover:underline">GPL-3.0 licensed with additional terms</a>. No trackers. No cloud.</span>
+
+    <!-- License line + badges -->
+    <div class="flex flex-col gap-4 border-t border-outline-variant pt-6 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>
+          Privacy-first
+        </div>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+          No trackers · No cloud
+        </div>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">palette</span>
+          Material Expressive
+        </div>
+      </div>
+      <p class="m-0 md-typescale-body-small text-on-surface-variant">
+        © 2026 LibreFit.
+        <a href="/license.html" class="text-primary no-underline hover:underline">GPL-3.0 licensed with additional terms</a>.
+      </p>
     </div>
   </div>
 </footer>

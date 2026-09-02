@@ -86,6 +86,10 @@
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
   --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* MD3 Expressive spring motion (web fallback: linear() spring curve).
+     Falls back to --ease-emphasized in browsers without linear(). */
+  --ease-spring: var(--md-ease-spring);
 }
 
 /* ===============================================================
@@ -234,6 +238,15 @@
   --md-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --md-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
   --md-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* MD3 Expressive spring: physical, slightly-overshooting curve
+     encoded as linear() (graceful fallback via @supports below). */
+  --md-ease-spring: linear(
+    0, 0.009 1.1%, 0.035 2.2%, 0.142 4.7%, 0.283 7%, 0.72 13.4%, 0.938 16.6%,
+    1.068 20.1%, 1.117 22.4%, 1.11 23.9%, 1.09 25.9%, 1.005 30.5%, 0.878 36.9%,
+    0.785 42.4%, 0.737 47.2%, 0.726 50.4%, 0.742 54.6%, 0.813 62.4%, 0.977 76.3%,
+    1.048 84.1%, 1.061 88.7%, 1.054 93.6%, 1.05 100%
+  );
 }
 
 /* =============================================== */
@@ -285,6 +298,11 @@
 
 @utility bold {
   font-weight: bold;
+}
+
+/* Consistent vertical rhythm for page sections */
+@utility section {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 /* =============================================== */
@@ -543,6 +561,33 @@
     color: var(--md-sys-color-on-surface);
   }
 
+  /* Vertical rhythm: generous, consistent spacing between headlines
+     and text (M3 uses large space-after headings, smaller space-before
+     paragraphs; clear hierarchy beats equal spacing). */
+  .content-card h2 {
+    margin: var(--space-8) 0 var(--space-3);
+  }
+
+  .content-card h2:first-child {
+    margin-block-start: 0;
+  }
+
+  .content-card h3 {
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .content-card p {
+    margin: 0 0 var(--space-4);
+  }
+
+  .content-card p:last-of-type {
+    margin-block-end: 0;
+  }
+
+  .content-card pre {
+    margin-block: var(--space-4);
+  }
+
   .content-card .intro-text {
     color: var(--md-sys-color-on-surface-variant);
     margin: 0;
@@ -680,23 +725,60 @@
     font-family: 'Courier New', Courier, monospace;
   }
 
-  /* --- Text fields (contact & donate forms) --- */
+  /* --- Text fields (contact & donate forms) — M3 outlined spec --- */
   .md-text-field {
     width: 100%;
-    padding: var(--space-3);
+    min-height: 48px; /* M3 minimum touch target */
+    padding: var(--space-2) var(--space-4);
     font-family: var(--md-ref-typeface-plain);
     font-size: 1rem;
-    background-color: var(--md-sys-color-surface-container);
+    background-color: transparent;
     color: var(--md-sys-color-on-surface);
     border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--radius-sm);
-    transition: all var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+    border-radius: var(--radius-xs);
+    transition:
+      border-color var(--md-motion-duration-short2) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+  }
+
+  .md-text-field:hover {
+    border-color: var(--md-sys-color-on-surface);
   }
 
   .md-text-field:focus {
     outline: none;
     border-color: var(--md-sys-color-primary);
-    box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+    box-shadow: 0 0 0 1px var(--md-sys-color-primary); /* M3 2px active indicator */
+  }
+
+  /* M3 checkbox: accent on primary, 48px touch target via margin trick */
+  .md-checkbox {
+    appearance: none;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 15px; /* 18px box + 2*15px margin = 48px touch target */
+    border: 2px solid var(--md-sys-color-on-surface-variant);
+    border-radius: var(--radius-xs);
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      background-color var(--md-motion-duration-short3) var(--md-motion-easing-standard),
+      border-color var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-checkbox:checked {
+    background-color: var(--md-sys-color-primary);
+    border-color: var(--md-sys-color-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .md-checkbox:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
   }
 
   /* --- MD3 Base Component Styles --- */
@@ -796,26 +878,6 @@
   .md-text-button:focus-visible {
     outline: 3px solid var(--md-sys-color-primary);
     outline-offset: 2px;
-  }
-
-  /* --- Material Icons Base --- */
-  .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    white-space: nowrap;
-    direction: ltr;
-    display: inline-block;
-    vertical-align: middle;
-    font-feature-settings: "liga";
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-    user-select: none;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
   }
 
   /* --- Chips --- */
@@ -1270,4 +1332,115 @@
 .md-top-app-bar[data-scrolled] {
   background-color: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 92%, transparent);
   box-shadow: var(--md-elev-2);
+}
+
+/* ===============================================================
+   M3 EXPRESSIVE COMPONENTS
+   CSS-native subset of the Expressive update: spring motion,
+   shape morphing, button groups and non-interactive badges.
+   Everything is progressive enhancement: linear() springs fall
+   back to --ease-emphasized, and all motion is disabled under
+   prefers-reduced-motion.
+   =============================================================== */
+@layer components {
+
+  /* --- Non-interactive badge (chip look without interactive affordances) --- */
+  .md-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 32px;
+    padding-inline: var(--space-4);
+    padding-inline-start: var(--space-2);
+    border-radius: var(--radius-sm);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    cursor: default;
+    user-select: none;
+  }
+
+  .md-badge .material-symbols-outlined {
+    font-size: 18px;
+    margin-inline-end: -2px;
+  }
+
+  /* --- Expressive feature card (spring lift + shape morph) --- */
+  .md-feature-card {
+    position: relative;
+    padding: var(--space-6);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container);
+    transition:
+      transform var(--md-motion-duration-medium2) var(--md-ease-spring),
+      border-radius var(--md-motion-duration-medium2) var(--md-ease-spring),
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  @supports not (transition-timing-function: linear(0, 1)) {
+    .md-feature-card {
+      transition-timing-function: var(--md-motion-easing-emphasized);
+    }
+  }
+
+  .md-feature-card:hover {
+    border-radius: var(--radius-3xl); /* expressive morph: 28px -> 32px */
+    transform: translateY(-4px);
+    background-color: var(--md-sys-color-surface-container-high);
+    box-shadow: var(--md-elev-2);
+  }
+
+  /* --- Expressive button group (shape-shifting joined pills) --- */
+  .md-button-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+
+  .md-button-group > * {
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      border-radius var(--md-motion-duration-medium1) var(--md-ease-spring),
+      transform var(--md-motion-duration-short4) var(--md-ease-spring);
+  }
+
+  /* Joined pills: outer edges stay rounded, inner edges flatten */
+  .md-button-group > * + * {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .md-button-group > *:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* The hovered/focused member morphs to a full capsule and pops forward */
+  .md-button-group > *:hover,
+  .md-button-group > *:focus-visible {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--radius-full);
+  }
+
+  /* --- Reduced motion: disable all Expressive movement --- */
+  @media (prefers-reduced-motion: reduce) {
+    .md-feature-card,
+    .md-button-group > * {
+      transition: none;
+    }
+
+    .md-feature-card:hover,
+    .md-button-group > *:hover {
+      transform: none;
+    }
+  }
 }

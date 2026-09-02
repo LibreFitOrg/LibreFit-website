@@ -9,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
   <div class="content-card">
     <h1 class="md-typescale-display-small bold">Let's build it together ❤️</h1>
-    <p class="md-typescale-body-large ">
+    <p class="md-typescale-body-large">
       LibreFit is a passion project, built by one person who believes software should be open,
       simple, beautiful, and above all, respectful of your privacy.
     </p>
@@ -27,81 +27,97 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <hr>
 
-    <h1 class="md-typescale-headline-large bold">
-      Donate
-    </h1>
+    <!-- Section: Donate (h2 — the h1 is the page title above) -->
+    <h2 class="md-typescale-headline-large bold">Donate</h2>
+    <p class="md-typescale-body-large">
+      If you want to send a message to appreciate/comment/request alongside your donation, visit the
+      <a href="/contact.html">contact page</a>.
+    </p>
 
-      <label class="block mb-4 md-typescale-body-large">If you want to send a message to
-    appreciate/comment/request alongside your donation, visit <a href="/contact.html">contact page</a>.</label>
-
-    <h2 class="md-typescale-headline-small">
-      Direct donation
-    </h2>
-
+    <h3 class="md-typescale-headline-medium">Direct donation</h3>
     <p class="md-typescale-body-large">
       Direct donations are tricky to track (so <b>no supporter code</b> and no credit) but they
       provide the greatest privacy, minimal fees and no minimum amount. Monero address below:
     </p>
 
-    <pre class="content-card-code">842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
+    <pre>842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
 
-    <h2 class="md-typescale-headline-small">
-      Integrated processor
-    </h2>
+    <h3 class="md-typescale-headline-medium">Integrated processor</h3>
 
-    <form action="/donations/create" method="POST">
-      <label class="block mb-4 md-typescale-body-large" for="amount_usd">You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.</label>
+    <form action="/donations/create" method="POST" class="grid gap-4">
+      <p class="m-0 md-typescale-body-large">
+        You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.
+      </p>
 
-      <div class="mb-4">
-        <label for="username" class="block mb-2 md-typescale-title-small">[Optional] Insert a name/username/alias (and eventual GitHub username/website/email) in order to be credited in README.md and LibreFit's about.</label>
-        <input type="text" id="username" name="username" class="md-text-field">
+      <div class="grid gap-2">
+        <label for="username" class="md-typescale-title-small">
+          Name/username/alias for the credit (optional)
+        </label>
+        <input type="text" id="username" name="username" class="md-text-field" placeholder="e.g., janedoe — with GitHub username, website or email">
+        <p class="m-0 md-typescale-body-small text-on-surface-variant">
+          Used to credit you in README.md and LibreFit's about screen.
+        </p>
       </div>
 
-      <div class="mb-4">
-        <input type="checkbox" id="use-xmr" name="use-xmr">   I want to use Monero
-      </div>
+      <label class="flex items-center gap-2 -my-3 cursor-pointer" for="use-xmr">
+        <input type="checkbox" id="use-xmr" name="use-xmr" class="md-checkbox !my-0">
+        <span class="md-typescale-body-large">I want to use Monero</span>
+      </label>
 
-      <label class="block mb-4 md-typescale-title-medium">To request your supporter code, save immediately your DONATION ID when it's shown.</label>
+      <p class="m-0 md-typescale-title-medium">
+        To request your supporter code, save immediately your DONATION ID when it's shown.
+      </p>
 
-      <div class="mt-6">
-        <button type="submit" class="md-filled-button">Donate crypto</button>
+      <div class="mt-2 flex justify-center">
+        <button type="submit" class="md-filled-button w-full sm:w-auto">
+          <span class="material-symbols-outlined" aria-hidden="true">volunteer_activism</span>
+          Donate crypto
+        </button>
       </div>
     </form>
 
     <hr>
 
-    <h1 class="md-typescale-headline-large bold">Get supporter code</h1>
+    <!-- Section: Supporter code (h2) with subsections (h3) -->
+    <h2 class="md-typescale-headline-large bold">Get supporter code</h2>
 
-    <h2 class="md-typescale-headline-medium">Donators</h2>
-    <p>Once you have donated, insert your DONATION ID to receive your supporter code.</p>
+    <h3 class="md-typescale-headline-medium">Donators</h3>
+    <p class="md-typescale-body-large">Once you have donated, insert your DONATION ID to receive your supporter code.</p>
 
-    <form action="/donations/status" method="GET">
-      <label for="id" class="block mb-2">DONATION ID:</label>
-      <input
-        type="text"
-        id="id"
-        name="id"
-        placeholder="e.g., c02831c7-0de2-474b-84ca-9d622cec062b"
-        required
-        maxlength="36"
-        minlength="36"
-        title="Enter a valid ID with UUID v4 format"
-        pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"
-        class="md-text-field"
-      >
+    <form action="/donations/status" method="GET" class="grid gap-4">
+      <div class="grid gap-2">
+        <label for="id" class="md-typescale-title-small">DONATION ID</label>
+        <input
+          type="text"
+          id="id"
+          name="id"
+          placeholder="e.g., c02831c7-0de2-474b-84ca-9d622cec062b"
+          required
+          maxlength="36"
+          minlength="36"
+          title="Enter a valid ID with UUID v4 format"
+          pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"
+          class="md-text-field"
+        >
+      </div>
 
-      <div class="mt-6">
-        <button type="submit" class="md-filled-button w-full">Check donation status</button>
+      <div class="flex justify-center">
+        <button type="submit" class="md-filled-button w-full sm:w-auto">
+          <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+          Check donation status
+        </button>
       </div>
     </form>
 
-    <h2 class="md-typescale-headline-medium">Contributors</h2>
-    <p>Once your pull request is merged, login below with your Github account to receive your supporter code.</p>
+    <h3 class="md-typescale-headline-medium">Contributors</h3>
+    <p class="md-typescale-body-large">Once your pull request is merged, login below with your GitHub account to receive your supporter code.</p>
 
-    <a href="/contributors/login" class="md-filled-button text-on-primary no-underline hover:no-underline focus-visible:no-underline">
-      <span class="material-symbols-outlined">login</span>
-      GitHub login
-    </a>
+    <div class="flex justify-center">
+      <a href="/contributors/login" class="md-outlined-button w-full sm:w-auto">
+        <span class="material-symbols-outlined" aria-hidden="true">login</span>
+        GitHub login
+      </a>
+    </div>
 
   </div>
 </BaseLayout>

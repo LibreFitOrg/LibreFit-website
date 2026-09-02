@@ -63,16 +63,16 @@ const features = [
       </h1>
 
       <div class="animate-hero animation-delay-0-5s flex flex-wrap items-center justify-center gap-2 mb-4 lg:justify-start">
-        <div class="md-assist-chip">
-          <span class="material-symbols-outlined">license</span>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">license</span>
           Open source (GPL-3.0)
         </div>
-        <div class="md-assist-chip">
-          <span class="material-symbols-outlined">shield_lock</span>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>
           Privacy-first
         </div>
-        <div class="md-assist-chip">
-          <span class="material-symbols-outlined">palette</span>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">palette</span>
           Material Expressive
         </div>
       </div>
@@ -83,7 +83,7 @@ const features = [
         visualize progress with insightful charts.
       </p>
 
-      <div class="animate-hero animation-delay-1-5s flex flex-wrap items-center justify-center gap-3 mt-6 lg:justify-start">
+      <div class="animate-hero animation-delay-1-5s flex flex-wrap items-center justify-center mt-6 lg:justify-start md-button-group">
         <a
           id="download-button"
           href="https://github.com/LibreFitOrg/LibreFit/releases/latest/download/LibreFit.apk"
@@ -130,11 +130,11 @@ const features = [
     </div>
   </section>
 
-  <section class="pt-6 pb-8" aria-label="Key features">
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 mt-8">
+  <section class="section" aria-label="Key features">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">
       {
         features.map(({ icon, title, description }) => (
-          <article class="reveal p-6 rounded-[28px] border border-outline-variant shadow-elev-0 bg-[radial-gradient(circle_at_10%_10%,color-mix(in_oklab,var(--md-sys-color-on-surface)_3%,transparent)_0%,transparent_40%),var(--md-sys-color-surface-container)] will-change-transform [transition:transform_var(--md-motion-duration-medium1)_var(--md-motion-easing-emphasized),background-color_var(--md-motion-duration-short4)_var(--md-motion-easing-standard),box-shadow_var(--md-motion-duration-short4)_var(--md-motion-easing-standard)] hover:-translate-y-1 hover:scale-[1.01] hover:bg-surface-container-high hover:shadow-elev-2 motion-reduce:[transition:none] motion-reduce:hover:[transform:none]">
+          <article class="reveal md-feature-card">
             <div class="flex items-center gap-3 mb-3">
               <span class="material-symbols-outlined filled text-primary text-[28px]">{icon}</span>
               <h2 class="m-0 md-typescale-title-medium">{title}</h2>
@@ -143,6 +143,33 @@ const features = [
           </article>
         ))
       }
+    </div>
+  </section>
+
+  <section class="section pt-0" aria-label="Get LibreFit">
+    <div class="flex flex-col items-center gap-3 text-center">
+      <h2 class="m-0 md-typescale-headline-large">Start tracking today</h2>
+      <p class="m-0 md-typescale-body-large text-on-surface-variant">Free forever. No account needed. No trackers.</p>
+      <div class="flex flex-wrap items-center justify-center md-button-group">
+        <a
+          href="https://github.com/LibreFitOrg/LibreFit/releases/latest/download/LibreFit.apk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-filled-button"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          Download
+        </a>
+        <a
+          href="https://f-droid.org/packages/org.librefit.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-tonal-button"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">android</span>
+          F-Droid
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>
