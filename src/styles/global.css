@@ -1,0 +1,1446 @@
+/* ===============================================================
+   Tailwind CSS v4 entry (CSS-first, no tailwind.config.js)
+   ---------------------------------------------------------------
+   Structure:
+   1. Tailwind import
+   2. @theme — MD3 tokens mapped to Tailwind theme namespaces
+   3. @font-face + MD3 :root reference variables (unlayered)
+   4. @layer base — element styles
+   5. @utility — global utilities (container, typography, animations)
+   6. @layer components — legacy MD3 component classes, kept verbatim
+      while pages are migrated one-by-one to utilities
+   =============================================================== */
+
+@import "tailwindcss";
+
+/* ===============================================================
+   THEME — Material Design 3 tokens mapped to Tailwind v4 namespaces
+   =============================================================== */
+@theme {
+  /* Typeface */
+  --font-sans: 'Roboto', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: 'Courier New', Courier, monospace;
+
+  /* Breakpoints (site design uses 600px / 900px) */
+  --breakpoint-sm: 600px;
+  --breakpoint-lg: 900px;
+
+  /* MD3 color roles (dark scheme) — reference the canonical :root
+     variables below so there is a single source of truth. */
+  --color-primary: var(--md-sys-color-primary);
+  --color-surface-tint: var(--md-sys-color-surface-tint);
+  --color-on-primary: var(--md-sys-color-on-primary);
+  --color-primary-container: var(--md-sys-color-primary-container);
+  --color-on-primary-container: var(--md-sys-color-on-primary-container);
+  --color-secondary: var(--md-sys-color-secondary);
+  --color-on-secondary: var(--md-sys-color-on-secondary);
+  --color-secondary-container: var(--md-sys-color-secondary-container);
+  --color-on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --color-tertiary: var(--md-sys-color-tertiary);
+  --color-on-tertiary: var(--md-sys-color-on-tertiary);
+  --color-tertiary-container: var(--md-sys-color-tertiary-container);
+  --color-on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+  --color-error: var(--md-sys-color-error);
+  --color-on-error: var(--md-sys-color-on-error);
+  --color-error-container: var(--md-sys-color-error-container);
+  --color-on-error-container: var(--md-sys-color-on-error-container);
+  --color-background: var(--md-sys-color-background);
+  --color-on-background: var(--md-sys-color-on-background);
+  --color-surface: var(--md-sys-color-surface);
+  --color-on-surface: var(--md-sys-color-on-surface);
+  --color-surface-variant: var(--md-sys-color-surface-variant);
+  --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --color-outline: var(--md-sys-color-outline);
+  --color-outline-variant: var(--md-sys-color-outline-variant);
+  --color-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --color-surface-container-low: var(--md-sys-color-surface-container-low);
+  --color-surface-container: var(--md-sys-color-surface-container);
+  --color-surface-container-high: var(--md-sys-color-surface-container-high);
+  --color-surface-container-highest: var(--md-sys-color-surface-container-highest);
+  --color-scrim: var(--md-sys-color-scrim);
+  --color-inverse-surface: var(--md-sys-color-inverse-surface);
+  --color-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+  --color-inverse-primary: var(--md-sys-color-inverse-primary);
+
+  /* MD3 border radius (shape scale) */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
+
+  /* MD3 elevation */
+  --shadow-elev-0: var(--md-elev-0);
+  --shadow-elev-1: var(--md-elev-1);
+  --shadow-elev-2: var(--md-elev-2);
+  --shadow-elev-3: var(--md-elev-3);
+  --shadow-elev-4: var(--md-elev-4);
+  --shadow-elev-5: var(--md-elev-5);
+
+  /* MD3 motion easing */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --ease-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* MD3 Expressive spring motion (web fallback: linear() spring curve).
+     Falls back to --ease-emphasized in browsers without linear(). */
+  --ease-spring: var(--md-ease-spring);
+}
+
+/* ===============================================================
+   FONT IMPORTS & DEFINITIONS
+   =============================================================== */
+
+/* Material Symbols (Icons) */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined-v284-latin-regular.woff2') format('woff2');
+}
+
+/* Roboto (UI Text) */
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/roboto-v49-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/roboto-v49-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/roboto-v49-latin-700.woff2') format('woff2');
+}
+
+/* MD3 :root reference tokens (single source of truth for colors,
+   motion and elevation; consumed by @theme above and by the
+   component classes below). */
+:root {
+  color-scheme: dark;
+
+  /* Typeface */
+  --md-ref-typeface-brand: 'Roboto', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+  --md-ref-typeface-plain: var(--md-ref-typeface-brand);
+
+  /* Dark color scheme */
+  --md-sys-color-primary: rgb(130 211 227);
+  --md-sys-color-surface-tint: rgb(130 211 227);
+  --md-sys-color-on-primary: rgb(0 54 62);
+  --md-sys-color-primary-container: rgb(0 78 89);
+  --md-sys-color-on-primary-container: rgb(160 239 255);
+  --md-sys-color-secondary: rgb(177 203 209);
+  --md-sys-color-on-secondary: rgb(28 52 57);
+  --md-sys-color-secondary-container: rgb(51 75 79);
+  --md-sys-color-on-secondary-container: rgb(205 231 237);
+  --md-sys-color-tertiary: rgb(188 197 235);
+  --md-sys-color-on-tertiary: rgb(38 47 77);
+  --md-sys-color-tertiary-container: rgb(60 70 101);
+  --md-sys-color-on-tertiary-container: rgb(219 225 255);
+  --md-sys-color-error: rgb(255 180 171);
+  --md-sys-color-on-error: rgb(105 0 5);
+  --md-sys-color-error-container: rgb(147 0 10);
+  --md-sys-color-on-error-container: rgb(255 218 214);
+  --md-sys-color-background: rgb(14 20 22);
+  --md-sys-color-on-background: rgb(222 227 229);
+  --md-sys-color-surface: rgb(14 20 22);
+  --md-sys-color-on-surface: rgb(222 227 229);
+  --md-sys-color-surface-variant: rgb(63 72 74);
+  --md-sys-color-on-surface-variant: rgb(191 200 202);
+  --md-sys-color-outline: rgb(137 146 149);
+  --md-sys-color-outline-variant: rgb(63 72 74);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(222 227 229);
+  --md-sys-color-inverse-on-surface: rgb(43 49 51);
+  --md-sys-color-inverse-primary: rgb(0 104 118);
+  --md-sys-color-primary-fixed: rgb(160 239 255);
+  --md-sys-color-on-primary-fixed: rgb(0 31 37);
+  --md-sys-color-primary-fixed-dim: rgb(130 211 227);
+  --md-sys-color-on-primary-fixed-variant: rgb(0 78 89);
+  --md-sys-color-secondary-fixed: rgb(205 231 237);
+  --md-sys-color-on-secondary-fixed: rgb(5 31 35);
+  --md-sys-color-secondary-fixed-dim: rgb(177 203 209);
+  --md-sys-color-on-secondary-fixed-variant: rgb(51 75 79);
+  --md-sys-color-tertiary-fixed: rgb(219 225 255);
+  --md-sys-color-on-tertiary-fixed: rgb(16 26 55);
+  --md-sys-color-tertiary-fixed-dim: rgb(188 197 235);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(60 70 101);
+  --md-sys-color-surface-dim: rgb(14 20 22);
+  --md-sys-color-surface-bright: rgb(52 58 60);
+  --md-sys-color-surface-container-lowest: rgb(9 15 16);
+  --md-sys-color-surface-container-low: rgb(23 29 30);
+  --md-sys-color-surface-container: rgb(27 33 34);
+  --md-sys-color-surface-container-high: rgb(37 43 44);
+  --md-sys-color-surface-container-highest: rgb(48 54 55);
+
+  /* MD3 Spacing Scale */
+  --md-spacing-base: 4px;
+  --space-1: calc(var(--md-spacing-base) * 1);  /* 4px */
+  --space-2: calc(var(--md-spacing-base) * 2);  /* 8px */
+  --space-3: calc(var(--md-spacing-base) * 3);  /* 12px */
+  --space-4: calc(var(--md-spacing-base) * 4);  /* 16px */
+  --space-5: calc(var(--md-spacing-base) * 5);  /* 20px */
+  --space-6: calc(var(--md-spacing-base) * 6);  /* 24px */
+  --space-7: calc(var(--md-spacing-base) * 7);  /* 28px */
+  --space-8: calc(var(--md-spacing-base) * 8);  /* 32px */
+
+  /* MD3 Border Radius */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-xxl: 28px;
+  --radius-full: 1000px;
+
+  /* MD3 Elevation (Dark Theme) */
+  --md-elev-0: none;
+  --md-elev-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-elev-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-elev-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.30), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+  --md-elev-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.30), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+  --md-elev-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.30), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+
+  /* MD3 Motion */
+  --md-motion-duration-short1: 50ms;
+  --md-motion-duration-short2: 100ms;
+  --md-motion-duration-short3: 150ms;
+  --md-motion-duration-short4: 200ms;
+  --md-motion-duration-medium1: 250ms;
+  --md-motion-duration-medium2: 300ms;
+  --md-motion-duration-medium3: 350ms;
+  --md-motion-duration-medium4: 400ms;
+  --md-motion-duration-long1: 450ms;
+  --md-motion-duration-long2: 500ms;
+  --md-motion-duration-long3: 550ms;
+  --md-motion-duration-long4: 600ms;
+
+  /* MD3 Easing Functions */
+  --md-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* MD3 Expressive spring: physical, slightly-overshooting curve
+     encoded as linear() (graceful fallback via @supports below). */
+  --md-ease-spring: linear(
+    0, 0.009 1.1%, 0.035 2.2%, 0.142 4.7%, 0.283 7%, 0.72 13.4%, 0.938 16.6%,
+    1.068 20.1%, 1.117 22.4%, 1.11 23.9%, 1.09 25.9%, 1.005 30.5%, 0.878 36.9%,
+    0.785 42.4%, 0.737 47.2%, 0.726 50.4%, 0.742 54.6%, 0.813 62.4%, 0.977 76.3%,
+    1.048 84.1%, 1.061 88.7%, 1.054 93.6%, 1.05 100%
+  );
+}
+
+/* =============================================== */
+/* GLOBAL STYLES & RESETS (base layer)
+/* =============================================== */
+
+@layer base {
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  main {
+    flex-grow: 1;
+    padding-block: clamp(var(--space-6), 8vh, var(--space-8));
+  }
+}
+
+/* =============================================== */
+/* CUSTOM UTILITIES
+/* =============================================== */
+
+/* Visually hidden class for accessibility */
+@utility visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Global container */
+@utility container {
+  width: min(1080px, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(var(--space-4), 4vw, var(--space-6));
+}
+
+@utility bold {
+  font-weight: bold;
+}
+
+/* Consistent vertical rhythm for page sections */
+@utility section {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+/* =============================================== */
+/* MATERIAL DESIGN 3 TYPOGRAPHY SCALE
+/* =============================================== */
+
+@utility md-typescale-display-large {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: clamp(3.5rem, 8vw, 4rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.25px;
+}
+
+@utility md-typescale-display-medium {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-display-small {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-headline-large {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: clamp(1.75rem, 4vw, 2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-headline-medium {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: clamp(1.5rem, 3.5vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-headline-small {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-title-large {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.27;
+  letter-spacing: 0;
+}
+
+@utility md-typescale-title-medium {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.15px;
+}
+
+@utility md-typescale-title-small {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.43;
+  letter-spacing: 0.1px;
+}
+
+@utility md-typescale-body-large {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+@utility md-typescale-body-medium {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: 0.25px;
+}
+
+@utility md-typescale-body-small {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: 0.4px;
+}
+
+@utility md-typescale-label-large {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.43;
+  letter-spacing: 0.1px;
+}
+
+@utility md-typescale-label-medium {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.33;
+  letter-spacing: 0.5px;
+}
+
+@utility md-typescale-label-small {
+  font-family: var(--md-ref-typeface-plain);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.5px;
+}
+
+/* =============================================== */
+/* ANIMATIONS (keyframes kept verbatim from the old stylesheet)
+/* =============================================== */
+
+@keyframes glowShift {
+  from { transform: translateY(0) rotate(0deg) scale(1.1); }
+  to   { transform: translateY(-24px) rotate(2deg) scale(1.05); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-20px) rotate(0); }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flip {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  5%, 30% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  35%, 100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+/* Apply the fade-up animation linked to the scroll timeline */
+@utility reveal {
+  animation: fade-up linear;
+  animation-timeline: view();
+  /* Animation starts when the element is 10% visible and ends when it's 30% visible. */
+  animation-range: entry 10% cover 30%;
+}
+
+/* Animation for text (used for hero section) */
+@utility animate-hero {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s cubic-bezier(0.2,1,0.3,1) forwards;
+}
+
+@utility animation-delay-0-5s {
+  animation-delay: 0.5s;
+}
+
+@utility animation-delay-1s {
+  animation-delay: 1s;
+}
+
+@utility animation-delay-1-5s {
+  animation-delay: 1.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================== */
+/* LEGACY COMPONENT LAYER
+/* These classes are still referenced by pages/components that
+   have not been migrated yet. Each commit removes the rules it
+   replaces with Tailwind utilities.
+/* =============================================== */
+@layer components {
+
+  /* --- Material Icons Base --- */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    display: inline-block;
+    vertical-align: middle;
+    font-feature-settings: "liga";
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* Utility class for filled icons */
+  .material-symbols-outlined.filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* --- privacy policy and license page --- */
+
+  .content-card {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    padding: clamp(var(--space-6), 6vw, var(--space-8));
+    border-radius: 28px; /* --radius-xxl */
+  }
+
+  .content-card h1 {
+    margin: 0 0 var(--space-4) 0;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* Vertical rhythm: generous, consistent spacing between headlines
+     and text (M3 uses large space-after headings, smaller space-before
+     paragraphs; clear hierarchy beats equal spacing). */
+  .content-card h2 {
+    margin: var(--space-8) 0 var(--space-3);
+  }
+
+  .content-card h2:first-child {
+    margin-block-start: 0;
+  }
+
+  .content-card h3 {
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .content-card p {
+    margin: 0 0 var(--space-4);
+  }
+
+  .content-card p:last-of-type {
+    margin-block-end: 0;
+  }
+
+  .content-card pre {
+    margin-block: var(--space-4);
+  }
+
+  .content-card .intro-text {
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+  .intro-text a {
+    color: var(--md-sys-color-primary)
+  }
+  .intro-text a:hover,
+  .intro-text a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .policy-section {
+    margin-block-start: var(--space-8);
+  }
+
+  .policy-section h2 {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .policy-section p {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* Add space between consecutive paragraphs inside a section */
+  .policy-section p + p {
+    margin-block-start: var(--space-4);
+  }
+
+  .effective-date {
+    color: var(--md-sys-color-on-surface-variant);
+    font-style: italic;
+  }
+
+  .content-card a {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .content-card a:hover,
+  .content-card a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .content-card hr {
+    border: none;
+    height: 1px;
+    background-color: var(--md-sys-color-outline-variant);
+    margin: var(--space-8) 0;
+  }
+  .attribution {
+    text-align: center;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: var(--space-6);
+  }
+  .content-card pre {
+    background-color: var(--md-sys-color-surface-container-high);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    font-family: 'Courier New', Courier, monospace; /* Standard monospace font */
+    white-space: pre-wrap; /* Allows long lines to wrap neatly */
+    overflow-x: auto; /* Horizontal scroll for overflow */
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  /* Styling for the license summary list */
+  .summary-list {
+    list-style: none;
+    padding-left: 0;
+    margin-block-start: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .summary-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 1rem; /* md-typescale-body-large font-size */
+    line-height: 1.5;
+  }
+
+  .summary-list .material-symbols-outlined {
+    color: var(--md-sys-color-primary);
+    font-size: 24px;
+    margin-top: 1px; /* Minor alignment adjustment */
+  }
+
+  /* Trademark Policy Table */
+  .content-card table {
+    width: 100%;
+    margin-block-start: var(--space-4);
+    border-collapse: collapse;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--radius-lg);
+    overflow: hidden; /* Ensures border-radius is respected by child elements */
+  }
+
+  .content-card th,
+  .content-card td {
+    padding: var(--space-4);
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .content-card th {
+    background-color: var(--md-sys-color-surface-container-high);
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .content-card tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .content-card td .icon-permitted {
+    color: var(--md-sys-color-primary); /* Using primary theme color for positive */
+    font-weight: 700;
+  }
+
+  .content-card td .icon-restricted {
+    color: var(--md-sys-color-error); /* Using error theme color for negative */
+    font-weight: 700;
+  }
+
+  .content-card code {
+    background-color: var(--md-sys-color-surface-container-low);
+    padding: 2px 6px;
+    border-radius: var(--radius-xs);
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  /* --- Text fields (contact & donate forms) — M3 outlined spec --- */
+  .md-text-field {
+    width: 100%;
+    min-height: 48px; /* M3 minimum touch target */
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 1rem;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--radius-xs);
+    transition:
+      border-color var(--md-motion-duration-short2) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short2) var(--md-motion-easing-standard);
+  }
+
+  .md-text-field:hover {
+    border-color: var(--md-sys-color-on-surface);
+  }
+
+  .md-text-field:focus {
+    outline: none;
+    border-color: var(--md-sys-color-primary);
+    box-shadow: 0 0 0 1px var(--md-sys-color-primary); /* M3 2px active indicator */
+  }
+
+  /* M3 checkbox: accent on primary, 48px touch target via margin trick */
+  .md-checkbox {
+    appearance: none;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 15px; /* 18px box + 2*15px margin = 48px touch target */
+    border: 2px solid var(--md-sys-color-on-surface-variant);
+    border-radius: var(--radius-xs);
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      background-color var(--md-motion-duration-short3) var(--md-motion-easing-standard),
+      border-color var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-checkbox:checked {
+    background-color: var(--md-sys-color-primary);
+    border-color: var(--md-sys-color-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .md-checkbox:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* --- MD3 Base Component Styles --- */
+  .md-assist-chip,
+  .md-filled-button,
+  .md-outlined-button,
+  .md-tonal-button,
+  .md-text-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    box-sizing: border-box;
+    font-family: var(--md-ref-typeface-plain);
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    overflow: hidden; /* For ripple effect */
+    isolation: isolate;
+  }
+
+  /* Ripple Effect Container */
+  .md-assist-chip::before,
+  .md-filled-button::before,
+  .md-outlined-button::before,
+  .md-tonal-button::before,
+  .md-text-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+    z-index: -1;
+  }
+
+  /* add a translate-Y to the button itself */
+  .md-assist-chip:hover,
+  .md-filled-button:hover,
+  .md-tonal-button:hover,
+  .md-outlined-button:hover,
+  .md-text-button:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Hover State Layer */
+  .md-assist-chip:hover::before {
+    opacity: 1;
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  }
+
+  .md-filled-button:hover::before {
+    opacity: 1;
+    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 8%, transparent);
+  }
+
+  .md-tonal-button:hover::before {
+    opacity: 1;
+    background-color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 8%, transparent);
+  }
+
+  .md-outlined-button:hover::before,
+  .md-text-button:hover::before {
+    opacity: 1;
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  }
+
+  /* Active/Pressed State Layer */
+  .md-assist-chip:active::before {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+  }
+
+  .md-filled-button:active::before {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 12%, transparent);
+  }
+
+  .md-tonal-button:active::before {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 12%, transparent);
+  }
+
+  .md-outlined-button:active::before,
+  .md-text-button:active::before {
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 12%, transparent);
+  }
+
+  /* Focus states for keyboard navigation */
+  .md-assist-chip:focus-visible,
+  .md-filled-button:focus-visible,
+  .md-outlined-button:focus-visible,
+  .md-tonal-button:focus-visible,
+  .md-text-button:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* --- Chips --- */
+  .md-assist-chip {
+    height: 32px;
+    padding-inline: var(--space-4);
+    padding-inline-start: var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--md-sys-color-outline);
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  .md-assist-chip .material-symbols-outlined {
+    font-size: 18px;
+    margin-inline-end: -2px;
+  }
+
+  /* Chip active state */
+  .md-assist-chip:active {
+    transform: scale(0.96);
+  }
+
+  /* Active navigation chip */
+  .md-assist-chip.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-color: transparent;
+  }
+
+  .md-assist-chip.active::before {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 8%, transparent);
+  }
+
+  /* --- Buttons --- */
+  .md-filled-button,
+  .md-outlined-button,
+  .md-tonal-button,
+  .md-text-button {
+    height: 40px;
+    padding-inline: var(--space-6);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  /* Button with icons */
+  .md-filled-button .material-symbols-outlined,
+  .md-outlined-button .material-symbols-outlined,
+  .md-tonal-button .material-symbols-outlined {
+    margin-inline-start: -8px;
+    margin-inline-end: -4px;
+  }
+
+  .md-text-button .material-symbols-outlined {
+    margin-inline-end: -4px;
+  }
+
+  /* Filled Button */
+  .md-filled-button {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    box-shadow: var(--md-elev-1);
+    border: none;
+  }
+
+  .md-filled-button:hover {
+    box-shadow: var(--md-elev-2);
+  }
+
+  .md-filled-button:active {
+    box-shadow: var(--md-elev-1);
+    transform: scale(0.96);
+  }
+
+  /* Filled Tonal Button component */
+  .md-tonal-button {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    box-shadow: var(--md-elev-0);
+    border: none;
+  }
+
+  .md-tonal-button:hover {
+    box-shadow: var(--md-elev-1);
+  }
+
+  .md-tonal-button:active {
+    box-shadow: var(--md-elev-0);
+    transform: scale(0.96);
+  }
+
+  /* Outlined Button */
+  .md-outlined-button {
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    border: 1px solid var(--md-sys-color-outline);
+    box-shadow: none;
+  }
+
+  .md-outlined-button:active {
+    transform: scale(0.96);
+  }
+
+  /* Text Button */
+  .md-text-button {
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    padding-inline: var(--space-3);
+    border: none;
+    box-shadow: none;
+  }
+
+  .md-text-button:active {
+    transform: scale(0.96);
+  }
+
+  .md-text-button svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    margin-inline-start: -2px;
+  }
+
+  /* Disabled state */
+  .md-filled-button:disabled,
+  .md-outlined-button:disabled,
+  .md-tonal-button:disabled,
+  .md-text-button:disabled,
+  .md-assist-chip:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Ripple Effect Animation */
+  @keyframes ripple {
+    from {
+      transform: scale(0);
+      opacity: 0.5;
+    }
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  /* Ripple on click (requires JS for full implementation, this is CSS-only approximation) */
+  .md-filled-button:active::after,
+  .md-outlined-button:active::after,
+  .md-tonal-button:active::after,
+  .md-text-button:active::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    animation: ripple var(--md-motion-duration-medium4) var(--md-motion-easing-standard);
+    pointer-events: none;
+  }
+}
+
+/* ===============================================================
+   HEADER & NAVIGATION (Material Design 3)
+   Top app bar link row (desktop) + modal navigation drawer
+   (mobile). All rules are additive; the scrolled-state rule is
+   unlayered so it outranks Tailwind's utilities layer.
+   =============================================================== */
+@layer components {
+
+  /* Base motion for the app bar (colors transition on scroll state) */
+  .md-top-app-bar {
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  /* --- Desktop navigation item (pill with M3 active indicator) --- */
+  .md-nav-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 40px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.1px;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  /* M3 state layer */
+  .md-nav-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-nav-item:hover::before { opacity: 0.08; }
+  .md-nav-item:active::before { opacity: 0.12; }
+
+  .md-nav-item:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  .md-nav-item .material-symbols-outlined { font-size: 20px; }
+
+  /* Active destination: secondary-container pill + filled icon */
+  .md-nav-item[aria-current='page'] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-nav-item[aria-current='page']::before {
+    background-color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-nav-item[aria-current='page'] .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* --- Icon button (menu / close), 48px touch target --- */
+  .md-icon-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .md-icon-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-icon-button:hover::before { opacity: 0.08; }
+  .md-icon-button:active::before { opacity: 0.12; }
+
+  .md-icon-button:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* --- Modal navigation drawer (native <dialog>) --- */
+  .md-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    width: min(360px, 86vw); /* M3 drawer width */
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    background-color: var(--md-sys-color-surface-container-low);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-elev-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(0);
+    transition:
+      transform var(--md-motion-duration-medium2) var(--md-motion-easing-emphasized),
+      display var(--md-motion-duration-medium2) allow-discrete,
+      overlay var(--md-motion-duration-medium2) allow-discrete;
+  }
+
+  /* Closed / closing position (off-canvas, right edge) */
+  .md-drawer:not([open]) {
+    transform: translateX(100%);
+  }
+
+  @starting-style {
+    .md-drawer[open] {
+      transform: translateX(100%);
+    }
+  }
+
+  /* M3 scrim over the rest of the page */
+  .md-drawer::backdrop {
+    background-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+    transition:
+      background-color var(--md-motion-duration-medium1) var(--md-motion-easing-standard),
+      display var(--md-motion-duration-medium2) allow-discrete,
+      overlay var(--md-motion-duration-medium2) allow-discrete;
+  }
+
+  @starting-style {
+    .md-drawer[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+
+  /* --- Drawer navigation item (M3: 56dp, active indicator pill) --- */
+  .md-drawer-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.1px;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      color var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  .md-drawer-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-motion-duration-short3) var(--md-motion-easing-standard);
+  }
+
+  .md-drawer-item:hover::before { opacity: 0.08; }
+  .md-drawer-item:active::before { opacity: 0.12; }
+
+  .md-drawer-item:focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  .md-drawer-item .material-symbols-outlined { font-size: 24px; }
+
+  .md-drawer-item[aria-current='page'] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-drawer-item[aria-current='page']::before {
+    background-color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .md-drawer-item[aria-current='page'] .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  /* --- Skip-to-content link (revealed on keyboard focus) --- */
+  .skip-link {
+    position: fixed;
+    top: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: 100;
+    padding: 10px var(--space-4);
+    border-radius: var(--radius-full);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: var(--md-elev-2);
+    opacity: 0;
+    transform: translateY(-200%);
+    transition:
+      opacity var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      transform var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  .skip-link:focus-visible {
+    opacity: 1;
+    transform: translateY(0);
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Lock background scroll while the modal drawer is open */
+  body[data-drawer-open] {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .md-top-app-bar,
+    .md-drawer,
+    .md-drawer::backdrop,
+    .md-nav-item,
+    .md-nav-item::before,
+    .md-drawer-item,
+    .md-drawer-item::before,
+    .md-icon-button,
+    .md-icon-button::before,
+    .skip-link {
+      transition: none;
+    }
+  }
+}
+
+/* Unlayered on purpose: cascade layers rank unlayered styles above
+   @layer utilities, so this overrides bg-surface/70 while scrolled. */
+.md-top-app-bar[data-scrolled] {
+  background-color: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 92%, transparent);
+  box-shadow: var(--md-elev-2);
+}
+
+/* ===============================================================
+   M3 EXPRESSIVE COMPONENTS
+   CSS-native subset of the Expressive update: spring motion,
+   shape morphing, button groups and non-interactive badges.
+   Everything is progressive enhancement: linear() springs fall
+   back to --ease-emphasized, and all motion is disabled under
+   prefers-reduced-motion.
+   =============================================================== */
+@layer components {
+
+  /* --- Non-interactive badge (chip look without interactive affordances) --- */
+  .md-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 32px;
+    padding-inline: var(--space-4);
+    padding-inline-start: var(--space-2);
+    border-radius: var(--radius-sm);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    cursor: default;
+    user-select: none;
+  }
+
+  .md-badge .material-symbols-outlined {
+    font-size: 18px;
+    margin-inline-end: -2px;
+  }
+
+  /* --- Expressive feature card (spring lift + shape morph) --- */
+  .md-feature-card {
+    position: relative;
+    padding: var(--space-6);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container);
+    transition:
+      transform var(--md-motion-duration-medium2) var(--md-ease-spring),
+      border-radius var(--md-motion-duration-medium2) var(--md-ease-spring),
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  }
+
+  @supports not (transition-timing-function: linear(0, 1)) {
+    .md-feature-card {
+      transition-timing-function: var(--md-motion-easing-emphasized);
+    }
+  }
+
+  .md-feature-card:hover {
+    border-radius: var(--radius-3xl); /* expressive morph: 28px -> 32px */
+    transform: translateY(-4px);
+    background-color: var(--md-sys-color-surface-container-high);
+    box-shadow: var(--md-elev-2);
+  }
+
+  /* --- Expressive button group (shape-shifting joined pills) --- */
+  .md-button-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+
+  .md-button-group > * {
+    transition:
+      background-color var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard),
+      border-radius var(--md-motion-duration-medium1) var(--md-ease-spring),
+      transform var(--md-motion-duration-short4) var(--md-ease-spring);
+  }
+
+  /* Joined pills: outer edges stay rounded, inner edges flatten */
+  .md-button-group > * + * {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .md-button-group > *:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* The hovered/focused member morphs to a full capsule and pops forward */
+  .md-button-group > *:hover,
+  .md-button-group > *:focus-visible {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--radius-full);
+  }
+
+  /* --- Reduced motion: disable all Expressive movement --- */
+  @media (prefers-reduced-motion: reduce) {
+    .md-feature-card,
+    .md-button-group > * {
+      transition: none;
+    }
+
+    .md-feature-card:hover,
+    .md-button-group > *:hover {
+      transform: none;
+    }
+  }
+}

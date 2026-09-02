@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path without the domain, e.g. "/privacy" */
+  canonical: string;
+  /** robots meta value, defaults to "index,follow" */
+  robots?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  robots = 'index,follow',
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://librefit.org');
+const canonicalUrl = new URL(canonical, siteUrl).href;
+const previewImage = new URL('/assets/rich_preview_logo.png', siteUrl).href;
+---
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E1416">
+<meta name="robots" content={robots}>
+<meta name="generator" content={Astro.generator}>
+
+<title>{title}</title>
+<meta name="description" content={description}>
+
+<link rel="icon" href="/assets/logo.svg">
+<link rel="canonical" href={canonicalUrl}>
+
+<!-- Open graph-->
+<meta property="og:type" content="website">
+<meta property="og:url" content={canonicalUrl}>
+<meta property="og:title" content="LibreFit — The free and private workout tracker">
+<meta property="og:description" content="Free, open-source, privacy-first workout tracker. Plan, track, and analyze your fitness journeys with a rich dataset of hundreds of exercises.">
+<meta property="og:image" content={previewImage}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LibreFit preview">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="LibreFit">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LibreFit — The free and private workout tracker">
+<meta name="twitter:description" content="Free, open-source, privacy-first workout tracker. Plan, track, and analyze your fitness journeys with a rich dataset of hundreds of exercises.">
+<meta name="twitter:image" content={previewImage}>

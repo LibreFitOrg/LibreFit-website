@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Let's build it together"
+  description="Discover how you can improve LibreFit."
+  canonical="/donate"
+>
+  <div class="content-card">
+    <h1 class="md-typescale-display-small bold">Let's build it together ❤️</h1>
+    <p class="md-typescale-body-large">
+      LibreFit is a passion project, built by one person who believes software should be open,
+      simple, beautiful, and above all, respectful of your privacy.
+    </p>
+    <p class="md-typescale-body-large">
+      I pour countless hours into designing, coding, and refining every detail to create the best
+      possible experience. It's a commitment to you, the user, and to a better digital world.
+    </p>
+    <p class="md-typescale-body-large">
+      LibreFit is only possible with your support, whether by donating or by contributing to code
+      or translations. Check <a href="https://github.com/LibreFitOrg/LibreFit/CONTRIBUTING.md">GitHub</a> to know how to contribute to the project. If you want to donate instead, see below.
+    </p>
+    <p class="md-typescale-title-medium">
+      All donators and contributors get the supporter version and a credit in the app and on GitHub.
+    </p>
+
+    <hr>
+
+    <!-- Section: Donate (h2 — the h1 is the page title above) -->
+    <h2 class="md-typescale-headline-large bold">Donate</h2>
+    <p class="md-typescale-body-large">
+      If you want to send a message to appreciate/comment/request alongside your donation, visit the
+      <a href="/contact.html">contact page</a>.
+    </p>
+
+    <h3 class="md-typescale-headline-medium">Direct donation</h3>
+    <p class="md-typescale-body-large">
+      Direct donations are tricky to track (so <b>no supporter code</b> and no credit) but they
+      provide the greatest privacy, minimal fees and no minimum amount. Monero address below:
+    </p>
+
+    <pre>842RPDZ851EitDZZxCEp1sjjyDpsaV74xAJBTPU6X7TrDAbpDrjq5rRfaF3Q8PnXyQeUYs2xLoxFpZb7ZpSJxBvdDgFVpww</pre>
+
+    <h3 class="md-typescale-headline-medium">Integrated processor</h3>
+
+    <form action="/donations/create" method="POST" class="grid gap-4">
+      <p class="m-0 md-typescale-body-large">
+        You will be redirected to <a href="https://trocador.app" target="_blank" rel="noopener noreferrer">Trocador</a> to complete your donation with the cryptocurrency of your choice.
+      </p>
+
+      <div class="grid gap-2">
+        <label for="username" class="md-typescale-title-small">
+          Name/username/alias for the credit (optional)
+        </label>
+        <input type="text" id="username" name="username" class="md-text-field" placeholder="e.g., janedoe — with GitHub username, website or email">
+        <p class="m-0 md-typescale-body-small text-on-surface-variant">
+          Used to credit you in README.md and LibreFit's about screen.
+        </p>
+      </div>
+
+      <label class="flex items-center gap-2 -my-3 cursor-pointer" for="use-xmr">
+        <input type="checkbox" id="use-xmr" name="use-xmr" class="md-checkbox !my-0">
+        <span class="md-typescale-body-large">I want to use Monero</span>
+      </label>
+
+      <p class="m-0 md-typescale-title-medium">
+        To request your supporter code, save immediately your DONATION ID when it's shown.
+      </p>
+
+      <div class="mt-2 flex justify-center">
+        <button type="submit" class="md-filled-button w-full sm:w-auto">
+          <span class="material-symbols-outlined" aria-hidden="true">volunteer_activism</span>
+          Donate crypto
+        </button>
+      </div>
+    </form>
+
+    <hr>
+
+    <!-- Section: Supporter code (h2) with subsections (h3) -->
+    <h2 class="md-typescale-headline-large bold">Get supporter code</h2>
+
+    <h3 class="md-typescale-headline-medium">Donators</h3>
+    <p class="md-typescale-body-large">Once you have donated, insert your DONATION ID to receive your supporter code.</p>
+
+    <form action="/donations/status" method="GET" class="grid gap-4">
+      <div class="grid gap-2">
+        <label for="id" class="md-typescale-title-small">DONATION ID</label>
+        <input
+          type="text"
+          id="id"
+          name="id"
+          placeholder="e.g., c02831c7-0de2-474b-84ca-9d622cec062b"
+          required
+          maxlength="36"
+          minlength="36"
+          title="Enter a valid ID with UUID v4 format"
+          pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"
+          class="md-text-field"
+        >
+      </div>
+
+      <div class="flex justify-center">
+        <button type="submit" class="md-filled-button w-full sm:w-auto">
+          <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+          Check donation status
+        </button>
+      </div>
+    </form>
+
+    <h3 class="md-typescale-headline-medium">Contributors</h3>
+    <p class="md-typescale-body-large">Once your pull request is merged, login below with your GitHub account to receive your supporter code.</p>
+
+    <div class="flex justify-center">
+      <a href="/contributors/login" class="md-outlined-button w-full sm:w-auto">
+        <span class="material-symbols-outlined" aria-hidden="true">login</span>
+        GitHub login
+      </a>
+    </div>
+
+  </div>
+</BaseLayout>

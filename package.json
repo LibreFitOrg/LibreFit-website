@@ -2,9 +2,14 @@
   "name": "librefit-website",
   "version": "1.0.0",
   "description": "Official LibreFit website",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "vite build",
+    "dev": "astro dev",
+    "build": "astro build && npm run build:templates-css",
+    "build:site-css": "astro build",
+    "build:templates-css": "tailwindcss -i templates/app.css -o public/styles.css --minify",
+    "preview": "astro preview",
+    "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,15 +24,18 @@
   },
   "homepage": "https://github.com/LibreFitOrg/LibreFit-website#readme",
   "dependencies": {
-    "@octokit/core": "^7.0.6",
-    "@octokit/plugin-paginate-rest": "^14.0.0",
+    "@octokit/core": "^7.0.8",
+    "@octokit/plugin-paginate-rest": "^15.0.0",
     "@octokit/webhooks-methods": "^6.0.0",
+    "astro": "^7.2.10",
     "drizzle-orm": "^0.45.1",
-    "openpgp": "^6.2.2",
-    "postgres": "^3.4.7"
+    "openpgp": "^6.3.1",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
-    "vite": "^7.2.2",
-    "wrangler": "^4.43.0"
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "wrangler": "^4.127.1"
   }
 }

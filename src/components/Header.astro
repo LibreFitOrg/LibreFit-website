@@ -1,0 +1,195 @@
+---
+// Normalize a pathname for comparison: drop the ".html"/".htm" suffix
+// (build output uses format: 'file'), drop trailing slashes, and treat
+// "/index" as the site root. Handles "/privacy", "/privacy.html" and "/".
+const normalize = (p: string) =>
+  p.replace(/\.html?$/, '').replace(/\/+$/, '') || '/';
+
+const currentPath = normalize(Astro.url.pathname).replace(/^\/index$/, '/');
+
+const isCurrent = (href: string) => {
+  const target = normalize(href);
+  if (target === '/') return currentPath === '/';
+  // Exact match, or a sub-path of the destination (e.g. contact-result
+  // pages keep "Contact" highlighted).
+  return currentPath === target || currentPath.startsWith(`${target}/`);
+};
+
+const links = [
+  { href: '/', label: 'Home', icon: 'home' },
+  { href: '/privacy.html', label: 'Privacy', icon: 'policy' },
+  { href: '/donate.html', label: 'Donate', icon: 'favorite' },
+  { href: '/license.html', label: 'License', icon: 'license' },
+  { href: '/contact.html', label: 'Contact', icon: 'person' },
+];
+---
+
+<!-- Scroll sentinel: leaves the viewport as soon as the page scrolls,
+     triggering the M3 "pinned top app bar" elevated state. -->
+<div id="header-sentinel" class="h-px w-full" aria-hidden="true"></div>
+
+<header class="md-top-app-bar sticky top-0 z-10 border-b border-outline-variant bg-surface/70 backdrop-blur-xl backdrop-saturate-150">
+  <div class="container flex h-16 items-center justify-between gap-4">
+    <a
+      class="flex h-12 items-center gap-3 rounded-full p-1 pr-4 no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2"
+      href="/"
+      aria-label="LibreFit Home"
+    >
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+        <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+      </span>
+      <p class="m-0 text-2xl font-bold leading-[1.27]">
+        <span class="text-primary">Libre</span>Fit
+      </p>
+    </a>
+
+    <!-- Desktop: M3 top app bar link row with pill active indicator -->
+    <nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
+      {links.map(({ href, label, icon }) => (
+        isCurrent(href) ? (
+          <a href={href} class="md-nav-item" aria-current="page">
+            <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
+            {label}
+          </a>
+        ) : (
+          <a href={href} class="md-nav-item">
+            <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
+            {label}
+          </a>
+        )
+      ))}
+    </nav>
+
+    <!-- Mobile: hamburger opens the modal navigation drawer -->
+    <button
+      id="open-drawer"
+      type="button"
+      class="md-icon-button lg:hidden"
+      aria-expanded="false"
+      aria-controls="site-drawer"
+      aria-label="Open navigation menu"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+    </button>
+  </div>
+
+  <!-- Mobile: M3 modal navigation drawer (native <dialog>) -->
+  <dialog id="site-drawer" class="md-drawer" aria-label="Site navigation">
+    <div class="drawer-header flex items-center justify-between gap-2 p-4 pb-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+          <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+        </span>
+        <p class="m-0 text-xl font-bold leading-[1.27]">
+          <span class="text-primary">Libre</span>Fit
+        </p>
+      </div>
+      <button type="button" class="md-icon-button drawer-close" aria-label="Close navigation menu">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <nav class="flex flex-col gap-1 p-4 pt-2" aria-label="Mobile">
+      {links.map(({ href, label, icon }) => (
+        isCurrent(href) ? (
+          <a href={href} class="md-drawer-item" aria-current="page">
+            <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
+            {label}
+          </a>
+        ) : (
+          <a href={href} class="md-drawer-item">
+            <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
+            {label}
+          </a>
+        )
+      ))}
+    </nav>
+  </dialog>
+
+  <!-- No-JS fallback (CSS-only, scoped to the same breakpoint as the
+       layout so exactly one navigation renders in every case):
+       - The hamburger is a no-op without JS -> remove it at all widths.
+       - Below lg (900px, mirrors --breakpoint-lg) the closed <dialog>
+         is promoted to an inline navigation; the desktop pill nav is
+         hidden there, so there is still only one nav. The drawer's
+         brand row is redundant under the app bar and is hidden.
+       - At lg and above the pill nav is the single navigation and the
+         closed <dialog> stays display:none per the UA stylesheet. -->
+  <noscript>
+    <style>
+      #open-drawer { display: none; }
+      @media (max-width: 899.98px) {
+        #site-drawer {
+          position: static;
+          display: block;
+          width: 100%;
+          max-width: none;
+          border-radius: 0;
+          box-shadow: none;
+          transform: none;
+        }
+        #site-drawer .drawer-header { display: none; }
+        #site-drawer nav { flex-direction: row; flex-wrap: wrap; }
+      }
+    </style>
+  </noscript>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('.md-top-app-bar');
+  const sentinel = document.getElementById('header-sentinel');
+
+  // --- M3 pinned top app bar: elevate once content scrolls beneath it ---
+  if (header && sentinel && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        header.removeAttribute('data-scrolled');
+      } else {
+        header.setAttribute('data-scrolled', '');
+      }
+    });
+    observer.observe(sentinel);
+  }
+
+  // --- Skip link: make the target focusable just-in-time ---
+  // (keeps the DOM free of a static tabindex on a non-interactive
+  // element while still moving focus for keyboard users.)
+  const skipLink = document.querySelector<HTMLAnchorElement>('a.skip-link');
+  skipLink?.addEventListener('click', () => {
+    const target = document.getElementById(skipLink.hash.slice(1));
+    if (!target) return;
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  });
+
+  // --- Modal navigation drawer ---
+  const menuButton = document.querySelector<HTMLButtonElement>('#open-drawer');
+  const drawer = document.querySelector<HTMLDialogElement>('#site-drawer');
+  const closeButton = drawer?.querySelector<HTMLButtonElement>('.drawer-close');
+
+  if (menuButton && drawer && typeof drawer.showModal === 'function') {
+    menuButton.addEventListener('click', () => {
+      drawer.showModal();
+      menuButton.setAttribute('aria-expanded', 'true');
+      document.body.dataset.drawerOpen = '';
+    });
+
+    closeButton?.addEventListener('click', () => drawer.close());
+
+    // Click on the scrim (the backdrop area of the dialog itself) closes it.
+    drawer.addEventListener('click', (event) => {
+      if (event.target === drawer) drawer.close();
+    });
+
+    drawer.addEventListener('close', () => {
+      menuButton.setAttribute('aria-expanded', 'false');
+      delete document.body.dataset.drawerOpen;
+      menuButton.focus();
+    });
+
+    // Choosing a destination closes the drawer.
+    drawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => drawer.close());
+    });
+  }
+</script>

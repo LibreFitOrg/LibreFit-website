@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Invalid form data"
+  description="Form submission encountered an error due to invalid data. Try again."
+  canonical="/contact-result/contact-invalid-data.html"
+>
+  <section class="grid items-start gap-6 pt-[clamp(1rem,4vw,1.5rem)] pb-[clamp(2rem,6vw,72px)]" aria-labelledby="hero-title">
+    <div>
+      <h1 class="m-0 mb-3 md-typescale-display-medium">Message not sent</h1>
+      <p class="m-0 mb-5 md-typescale-body-large text-on-surface-variant">The email is empty or the message is empty or too long (max 1000 characters) or the submitted pgp file is not valid.</p>
+
+      <a href="/contact.html" class="md-filled-button">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Go back
+      </a>
+    </div>
+  </section>
+</BaseLayout>

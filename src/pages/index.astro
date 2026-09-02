@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import screenshot from '../assets/screenshot.png';
+
+const features = [
+  {
+    icon: 'exercise',
+    title: 'Extensive Exercise Library',
+    description:
+      'Browse hundreds of exercises, each paired with photos and step-by-step execution.',
+  },
+  {
+    icon: 'track_changes',
+    title: 'Real-Time Workout Log',
+    description:
+      'Capture every set, rep, rest interval, and load on the fly with built-in timers.',
+  },
+  {
+    icon: 'architecture',
+    title: 'Custom Workout Builder',
+    description:
+      'Create custom workouts—select any exercises, set numbers, reps, and loads.',
+  },
+  {
+    icon: 'cloud_off',
+    title: 'Offline',
+    description: 'Works without internet, always. Your data is yours.',
+  },
+  {
+    icon: 'code',
+    title: 'Open-Source',
+    description:
+      'Licensed under GPL-3.0, you can inspect, audit, and contribute to the codebase.',
+  },
+  {
+    icon: 'palette',
+    title: 'Material Expressive',
+    description:
+      'Experience a sleek, modern UI built with the latest Material Expressive components.',
+  },
+];
+---
+
+<BaseLayout
+  title="LibreFit - The free and private workout tracker"
+  description="LibreFit is a free, open-source workout tracker built for privacy. Plan, track, and analyse your fitness journey with a rich dataset of hundreds of exercises."
+  canonical="/"
+>
+  <section class="relative grid items-start gap-[clamp(1rem,4vw,2rem)] pt-[clamp(1rem,4vw,1.5rem)] pb-[clamp(2rem,6vw,72px)] text-center lg:grid-cols-[1.2fr_1fr] lg:text-left" aria-labelledby="hero-title">
+    <div>
+      <div class="inline-flex items-center justify-center w-[150px] h-[150px] mb-4 rounded-xl bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-2" aria-hidden="true">
+        <img class="w-24 h-24" src="/assets/logo_trimmed.svg" alt="LibreFit logo">
+      </div>
+
+      <h1 id="hero-title" class="animate-hero m-0 mb-3 md-typescale-display-medium bold">
+        Track your workouts<br>
+        <span class="inline-grid h-[1.2em] overflow-hidden align-bottom">
+          <span class="[grid-area:1/1] opacity-0 [transform:translateY(100%)] bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-[flip_9s_cubic-bezier(0.4,0,0.2,1)_infinite]">easily</span>
+          <span class="[grid-area:1/1] opacity-0 [transform:translateY(100%)] bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-[flip_9s_cubic-bezier(0.4,0,0.2,1)_infinite] [animation-delay:3s]">privately</span>
+          <span class="[grid-area:1/1] opacity-0 [transform:translateY(100%)] bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-[flip_9s_cubic-bezier(0.4,0,0.2,1)_infinite] [animation-delay:6s]">freely</span>
+        </span>
+      </h1>
+
+      <div class="animate-hero animation-delay-0-5s flex flex-wrap items-center justify-center gap-2 mb-4 lg:justify-start">
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">license</span>
+          Open source (GPL-3.0)
+        </div>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>
+          Privacy-first
+        </div>
+        <div class="md-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">palette</span>
+          Material Expressive
+        </div>
+      </div>
+
+      <p class="animate-hero animation-delay-1s m-0 mb-5 md-typescale-body-large text-on-surface-variant">
+        Create personalized workouts from a rich dataset of exercises, each with images and
+        step-by-step instructions. Track every set, rep, rest interval, and load in real time and
+        visualize progress with insightful charts.
+      </p>
+
+      <div class="animate-hero animation-delay-1-5s flex flex-wrap items-center justify-center mt-6 lg:justify-start md-button-group">
+        <a
+          id="download-button"
+          href="https://github.com/LibreFitOrg/LibreFit/releases/latest/download/LibreFit.apk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-filled-button"
+        >
+          <span class="material-symbols-outlined">download</span>
+          Download
+        </a>
+        <a
+          href="https://f-droid.org/packages/org.librefit.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-tonal-button"
+        >
+          <span class="material-symbols-outlined">android</span>
+          F-Droid
+        </a>
+        <a
+          href="https://github.com/LibreFitOrg/LibreFit"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-text-button"
+        >
+          <span class="material-symbols-outlined">code</span>
+          Source code
+        </a>
+      </div>
+    </div>
+
+    <div class="grid place-items-center relative isolate mt-6 mb-6 lg:my-0" aria-hidden="true">
+      <div class="absolute inset-[1%] -z-10 opacity-70 blur-[20px] saturate-[1.2] bg-[radial-gradient(100%_75%_at_70%_30%,color-mix(in_oklab,var(--md-sys-color-primary)_25%,transparent),transparent_60%),radial-gradient(75%_100%_at_20%_70%,color-mix(in_oklab,var(--md-sys-color-tertiary)_20%,transparent),transparent_70%)] animate-[glowShift_5s_var(--md-motion-easing-emphasized)_infinite_alternate] motion-reduce:animate-none"></div>
+      <div class="w-[min(320px,80vw)] aspect-[9/19.5] rounded-[32px] relative overflow-hidden border border-outline-variant/50 shadow-elev-3 bg-[linear-gradient(135deg,var(--md-sys-color-surface-container-highest),var(--md-sys-color-surface-container)),radial-gradient(120%_80%_at_30%_10%,color-mix(in_oklab,var(--md-sys-color-primary)_8%,transparent),transparent_60%)] animate-[float_6s_ease-in-out_infinite] transition-transform duration-300 ease-standard hover:[transform:scale(1.02)_translateY(-4px)] motion-reduce:animate-none motion-reduce:[transition:none] motion-reduce:hover:[transform:none] after:content-[''] after:absolute after:inset-[2px] after:rounded-[30px] after:border after:border-black/50 after:pointer-events-none">
+        <Image
+          class="w-full h-full object-cover"
+          src={screenshot}
+          alt="LibreFit app screenshot during a workout loggin showing an exercise with its sets."
+          layout="constrained"
+          width={640}
+          priority
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Key features">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">
+      {
+        features.map(({ icon, title, description }) => (
+          <article class="reveal md-feature-card">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="material-symbols-outlined filled text-primary text-[28px]">{icon}</span>
+              <h2 class="m-0 md-typescale-title-medium">{title}</h2>
+            </div>
+            <p class="m-0 md-typescale-body-medium text-on-surface-variant leading-[1.5]">{description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section pt-0" aria-label="Get LibreFit">
+    <div class="flex flex-col items-center gap-3 text-center">
+      <h2 class="m-0 md-typescale-headline-large">Start tracking today</h2>
+      <p class="m-0 md-typescale-body-large text-on-surface-variant">Free forever. No account needed. No trackers.</p>
+      <div class="flex flex-wrap items-center justify-center md-button-group">
+        <a
+          href="https://github.com/LibreFitOrg/LibreFit/releases/latest/download/LibreFit.apk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-filled-button"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          Download
+        </a>
+        <a
+          href="https://f-droid.org/packages/org.librefit.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="md-tonal-button"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">android</span>
+          F-Droid
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

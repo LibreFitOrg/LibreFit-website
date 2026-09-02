@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Form submission failed"
+  description="Form submission encountered an unexpected error. Try again later."
+  canonical="/contact-result/contact-fail.html"
+>
+  <section class="grid items-start gap-6 pt-[clamp(1rem,4vw,1.5rem)] pb-[clamp(2rem,6vw,72px)]" aria-labelledby="hero-title">
+    <div>
+      <h1 class="m-0 mb-3 md-typescale-display-medium">Message not sent</h1>
+      <p class="m-0 mb-5 md-typescale-body-large text-on-surface-variant">There was an unexpected error when sending the message. Please, try to use other communication methods and inform the administrator about this error.</p>
+
+      <a href="/contact.html" class="md-filled-button">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Go back
+      </a>
+    </div>
+  </section>
+</BaseLayout>

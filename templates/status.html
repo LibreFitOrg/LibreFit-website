@@ -36,47 +36,37 @@
 
   <meta http-equiv="refresh" content={{REDIRECT_SNIPPET}}>
 
-  <style>
-    pre.scrollable-code {
-      overflow-x: auto; /* Scroll horizontally if needed */
-      white-space: pre; /* Keeps text on one line, preserves spaces */
-      user-select: all; /* Let user select whole code when clicking on it */
-      -webkit-user-select: all; /* For older Safari */
-      cursor: pointer; /* Indicates it's actionable */
-    }
-  </style>
-
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/" aria-label="LibreFit Home">
-        <span class="brand-icon">
-          <img class="brand-logo" src="/assets/logo_trimmed.svg" alt="">
+  <header class="sticky top-0 z-10 border-b border-outline-variant bg-surface/70 backdrop-blur-xl backdrop-saturate-150">
+    <div class="container flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <a class="flex items-center gap-3 rounded-sm no-underline text-inherit transition-colors duration-200 hover:bg-on-surface/10 focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-2" href="/" aria-label="LibreFit Home">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-gradient-to-br from-white to-[#F0F0F0] shadow-elev-1">
+          <img class="w-6 h-6" src="/assets/logo_trimmed.svg" alt="">
         </span>
-        <p class="brand-title">
-          <span class="brand-title-accent">Libre</span>Fit
+        <p class="m-0 text-2xl font-bold leading-[1.27]">
+          <span class="text-primary">Libre</span>Fit
         </p>
       </a>
 
-      <nav class="nav-chips" aria-label="Primary navigation">
-        <a href="/" class="md-assist-chip" >
+      <nav class="flex overflow-x-auto gap-2 p-1 [scroll-snap-type:x_mandatory] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Primary navigation">
+        <a href="/" class="md-assist-chip snap-start shrink-0">
           <span class="material-symbols-outlined">home</span>
           Home
         </a>
-        <a href="/privacy.html" class="md-assist-chip" >
+        <a href="/privacy.html" class="md-assist-chip snap-start shrink-0">
           <span class="material-symbols-outlined">policy</span>
           Privacy
         </a>
-        <a aria-current="page" class="md-assist-chip active">
+        <a aria-current="page" class="md-assist-chip active snap-start shrink-0">
           <span class="material-symbols-outlined">favorite</span>
           Donate
         </a>
-        <a href="/license.html" class="md-assist-chip">
+        <a href="/license.html" class="md-assist-chip snap-start shrink-0">
           <span class="material-symbols-outlined">license</span>
           License
         </a>
-        <a href="/contact.html" class="md-assist-chip">
+        <a href="/contact.html" class="md-assist-chip snap-start shrink-0">
           <span class="material-symbols-outlined">person</span>
           Contact
         </a>
@@ -86,14 +76,14 @@
 
   <main class="container">
     <div class="content-card">
-      
+
       <h1 class="md-typescale-headline-large bold">{{STATUS_TITLE}}</h1>
 
       <p class="md-typescale-body-large">
         {{STATUS_DESCRIPTION}}
       </p>
 
-      <pre class="scrollable-code">{{ID}}</pre>
+      <pre class="content-card-code overflow-x-auto whitespace-pre select-all cursor-pointer">{{ID}}</pre>
 
       <p class="md-typescale-body-large">
         {{URL_DESC}}
@@ -103,19 +93,19 @@
 
       <h1 class="md-typescale-headline-large bold">Supporter code</h1>
 
-      <pre class="scrollable-code">{{SUPPORTER_CODE}}</pre>
+      <pre class="content-card-code overflow-x-auto whitespace-pre select-all cursor-pointer">{{SUPPORTER_CODE}}</pre>
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-chips">
+  <footer class="py-8 border-t border-outline-variant bg-surface-container-low">
+    <div class="container grid gap-3">
+      <div class="flex flex-wrap items-center gap-2">
         <div class="md-assist-chip"><span class="material-symbols-outlined">android</span> Jetpack Compose</div>
         <div class="md-assist-chip"><span class="material-symbols-outlined">shield_lock</span> Privacy-first</div>
         <div class="md-assist-chip"><span class="material-symbols-outlined">palette</span> Material Expressive</div>
       </div>
-      <div class="footer-copyright md-typescale-body-small">
-        <span>© 2026 LibreFit. <a href="/license.html">GPL-3.0 licensed with additional terms</a>. No trackers. No cloud.</span>
+      <div class="md-typescale-body-small flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+        <span>© 2026 LibreFit. <a href="/license.html" class="text-primary no-underline hover:underline">GPL-3.0 licensed with additional terms</a>. No trackers. No cloud.</span>
       </div>
     </div>
   </footer>

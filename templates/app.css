@@ -1,0 +1,6 @@
+/* Tailwind entry for Cloudflare Pages worker templates
+   (templates/*.html → public/styles.css served by the worker).
+   Reuses the same theme/tokens/utilities as the Astro site;
+   sources are scanned from this directory's HTML templates. */
+@import "../src/styles/global.css";
+@source "./";
