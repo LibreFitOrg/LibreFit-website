@@ -13,6 +13,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   // Get the data from the form
   const formData = await request.formData();
   const useXmr = formData.get('use-xmr');
+  const username = formData.get('username') as string | null;
 
   const siteURL = new URL(request.url);
   const webhookKey = crypto.randomUUID(); // Used for webhook validation
@@ -39,7 +40,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   trocadorUrl.searchParams.set('direct', 'False'); // Enable tracking of donation status
   trocadorUrl.searchParams.set('remove_direct_pay', 'True'); // Transaction of same coin (without swap) cannot be tracked
   trocadorUrl.searchParams.set('name', 'LibreFit');
-  trocadorUrl.searchParams.set('description', 'Thank you for your support!');
+  trocadorUrl.searchParams.set('description', username ? `Thank you for your support, ${username}!` : 'Thank you for your support!');
   trocadorUrl.searchParams.set('webhook', webhookUrl);
 
 
@@ -68,8 +69,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Initialize DB
   const db = getDb(env);
-
-  const username = formData.get('username') as string | null;
 
   await db.insert(donations)
     .values({
