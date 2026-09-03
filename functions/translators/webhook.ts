@@ -33,6 +33,21 @@ interface WeblateWebhookPayload {
 }
 
 /**
+ * Only human accounts are creditable: skip "anonymous" and Weblate service
+ * accounts ("weblate:commit", "weblate:push", ...) and machine-translation
+ * accounts ("mt:libretranslate", ...). Kept in sync with the backfill script
+ * (scripts/backfill-translators.mjs).
+ */
+function isCreditableUsername(username: string | undefined): username is string {
+  return Boolean(
+    username &&
+    username !== "anonymous" &&
+    !username.startsWith("weblate:") &&
+    !username.startsWith("mt:")
+  );
+}
+
+/**
  * Constant-time comparison of two strings (lengths may differ; differing
  * lengths never match, exactly like the official implementations).
  */
@@ -117,7 +132,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // `author` is the credited translator; `user` is who triggered the event.
   const username = payload.author ?? payload.user;
-  if (!username || username === "anonymous") {
+  if (!isCreditableUsername(username)) {
     return new Response("OK");
   }
 
