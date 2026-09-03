@@ -1,86 +1,117 @@
 # LibreFit Website
 
-The official website for LibreFit, built with [Astro](https://astro.build) and Cloudflare Pages to handle contact forms, donations and supporter code rewards.
+The official LibreFit website — a fully static [Astro](https://astro.build) site deployed on
+[Cloudflare Pages](https://developers.cloudflare.com/pages/), with serverless
+[Pages Functions](./functions) handling contact forms, donations, and supporter code rewards.
 
-Pages live in `src/pages` as `.astro` components sharing the `BaseLayout` (header/footer/SEO).
-Styling is **Tailwind CSS v4** (CSS-first config) with the [Material Design 3](https://m3.material.io)
-token system: `src/styles/global.css` is the single entry that imports Tailwind, maps every MD3
-color/elevation/shape/motion token to Tailwind's `@theme` namespaces, and defines the MD3
-typography utilities plus a small set of MD3 component classes (`.md-*`) in `@layer components`.
+## Tech Stack
 
-The static build (`npm run build`) emits flat `.html` files (`privacy.html`, `contact-result/contact-success.html`,
-`404.html`, ...) so every legacy URL keeps working with the [functions](./functions).
+| Layer     | Technology                                                              |
+| --------- | ----------------------------------------------------------------------- |
+| Frontend  | [Astro](https://astro.build) (static output)                            |
+| Styling   | [Tailwind CSS v4](https://tailwindcss.com) + Material Design 3 tokens   |
+| Backend   | Cloudflare Pages Functions (TypeScript)                                 |
+| Database  | PostgreSQL via [Hyperdrive](https://developers.cloudflare.com/hyperdrive/) |
+| Email     | [Resend](https://resend.com) + [Turnstile](https://developers.cloudflare.com/turnstile/) bot protection |
 
-### Styling architecture
+## Project Structure
 
-- `src/styles/global.css` — Tailwind v4 entry (CSS-first, no `tailwind.config.js`): `@theme`
-  tokens (MD3 colors → `text-primary`, `bg-surface-container`, etc.; MD3 elevation →
-  `shadow-elev-*`; MD3 motion easings → `ease-*`; site breakpoints 600/900 px → `sm:`/`lg:`),
-  `@utility` definitions (`container`, `md-typescale-*`, `reveal`, `animate-hero`, ...) and the
-  MD3 component classes (`.md-assist-chip`, `.md-filled-button`, `.md-text-field`, `content-card`
-  ecosystem, ...) shared by every page.
-- `templates/app.css` — separate Tailwind entry for the [worker templates](./templates):
-  it imports `src/styles/global.css` and scans `templates/*.html`, so the Cloudflare Pages worker
-  pages (`/status.html`, `/error.html`) receive the same design system through the generated
-  `public/styles.css`. `public/styles.css` is a **build artifact** — regenerate it with
-  `npm run build:templates-css` (runs automatically as part of `npm run build`).
-- Pages use Tailwind utilities directly in markup; shared primitives (MD3 buttons/chips,
-  typography scale, `reveal`/`animate-hero` animations) remain as component classes because they
-  are reused across pages and rely on state layers/ripples that don't map 1:1 to utilities.
+```
+├── src/
+│   ├── pages/        # .astro pages, all sharing the BaseLayout (header/footer/SEO)
+│   ├── components/   # Header, Footer, SeoHead
+│   ├── layouts/      # BaseLayout.astro
+│   ├── scripts/      # Client-side TypeScript
+│   └── styles/       # global.css — single Tailwind entry + MD3 design tokens
+├── functions/        # Cloudflare Pages Functions (backend API)
+├── templates/        # Plain HTML templates for worker-rendered pages + their Tailwind entry
+├── public/           # Static assets (logo, fonts, PGP key, robots.txt, build artifacts)
+└── astro.config.ts
+```
 
-## ⚡ Quick Start
+The build emits **flat `.html` files** (`privacy.html`, `404.html`,
+`contact-result/contact-success.html`, …), preserving the exact URL structure of the
+previous pure-HTML site so no legacy link breaks. A sitemap is generated automatically
+on every build (noindex transactional pages excluded).
 
-1.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
+## Quick Start
 
-2.  **Local Development**
-    *   **Frontend only:**
-        ```bash
-        npm run dev
-        ```
-    *   **Full Site (Frontend + Backend Functions):**
-        *Required to test `contact.js` form handling locally and the other [functions](./functions).
-        Build the site first (`npm run build`), then serve `dist/` with the functions.*
-        ```bash
-        npm run build && npx wrangler pages dev dist
-        ```
+**Prerequisites:** [Node.js](https://nodejs.org) 22 (see `.nvmrc`).
 
-3.  **Build for Production**
-    ```bash
-    npm run build
-    ```
+```bash
+# 1. Install dependencies
+npm install
 
-## 🎨 Styling
+# 2. Frontend-only development server
+npm run dev
 
-Tailwind CSS v4 via the Vite plugin (`@tailwindcss/vite`), CSS-first configuration. All Material
-Design 3 tokens (dark color scheme, elevation, shape, motion) live in `src/styles/global.css` and
-are exposed both as CSS variables (single source of truth) and as Tailwind theme tokens, e.g.
-`text-primary`, `bg-surface-container-high`, `border-outline-variant`, `shadow-elev-2`,
-`ease-emphasized`, `rounded-2xl` (28px), `lg:` (900px).
+# 3. Full site preview (frontend + backend functions)
+#    Required to test the contact form and other API routes locally.
+npm run preview:cf
+```
 
-Worker-rendered pages (donation status / server error) are plain HTML templates under `templates/`
-served by Cloudflare Pages Functions; they share the same design tokens via a second Tailwind
-entry (`templates/app.css`) compiled to `public/styles.css` by `@tailwindcss/cli` during
-`npm run build`.
+> `npm run preview:cf` builds the site, then serves `dist/` through the Wrangler Pages
+> dev server together with the [functions](./functions).
 
-## ⚖ License
+### Useful scripts
 
-LibreFit is licensed under the [GNU General Public License v3.0 (GPL-3)](COPYING) and it is subject
-to these [additional terms](ADDITIONAL_TERMS.md).
+| Command                  | Purpose                                                        |
+| ------------------------ | -------------------------------------------------------------- |
+| `npm run dev`            | Astro dev server (frontend only)                               |
+| `npm run build`          | Production build (site + worker-template CSS)                  |
+| `npm run preview`        | Preview the static build without backend functions             |
+| `npm run preview:cf`     | Build + serve with backend functions via Wrangler              |
+| `npm run check:functions`| Type-check the Pages Functions                                 |
+
+## Styling
+
+Styling is **Tailwind CSS v4** (CSS-first, no `tailwind.config.js`) with the
+[Material Design 3](https://m3.material.io) token system:
+
+- **`src/styles/global.css`** — the single design-system entry. It imports Tailwind, maps
+  every MD3 color/elevation/shape/motion token into Tailwind's `@theme` namespaces
+  (`text-primary`, `bg-surface-container`, `shadow-elev-*`, `ease-emphasized`, custom
+  breakpoints `sm:` 600 px / `lg:` 900 px), defines typography utilities
+  (`md-typescale-*`) and the shared MD3 component classes (`.md-filled-button`,
+  `.md-text-field`, …) in `@layer components`.
+- **`templates/app.css`** — a second Tailwind entry for the worker-rendered pages
+  (`/status.html`, `/error.html` under [templates](./templates)). It imports
+  `global.css` and compiles to `public/styles.css` so those pages share the exact same
+  design system. `public/styles.css` is a **build artifact**, regenerated by
+  `npm run build:templates-css` as part of every `npm run build`.
+
+Pages use Tailwind utilities directly in markup. Only primitives reused across pages —
+MD3 buttons/chips, the typography scale, and the `reveal`/`animate-hero` animations —
+stay as component classes, since they rely on state layers/ripples that don't map 1:1
+to utilities.
+
+## Backend
+
+[Pages Functions](./functions) provide the dynamic endpoints:
+
+- **`/contact`** — contact form: Turnstile verification, PGP-encrypted message
+  delivery via Resend, optional public key attachment.
+- **`/donations/*`** — donation creation, status, and payment-provider webhooks.
+- **`/contributors/*`** and **`/translators/*`** — login, status, and webhook endpoints
+  backed by PostgreSQL (through the `HYPERDRIVE` binding, see [wrangler.toml](wrangler.toml)).
+
+Secrets and bindings are configured in the Cloudflare dashboard, not in this repository.
+
+## ⚖️ License
+
+LibreFit is licensed under the [GNU General Public License v3.0 (GPL-3)](COPYING) and is
+subject to these [additional terms](ADDITIONAL_TERMS.md).
 
 In short, this means you are free to use, modify, and distribute the code, but you must:
 
-- **Share your changes**: If you distribute a modified version, you must also license it under the
-  GPLv3.
-- **Give credit:** Keep the original copyright notice and attribute the original work to LibreFit.
-- **Mark your changes:** Clearly indicate that your version is a modification of the original.
-- **Do not use the brand:** You cannot use the name "LibreFit" or its logo to promote your modified
-  version.
+- **Share your changes:** if you distribute a modified version, you must also license it under the GPLv3.
+- **Give credit:** keep the original copyright notice and attribute the original work to LibreFit.
+- **Mark your changes:** clearly indicate that your version is a modification of the original.
+- **Do not use the brand:** you cannot use the name "LibreFit" or its logo to promote your modified version.
 
 ### Branding and Assets
 
-The "LibreFit" name and logos are trademarks. **All Rights Reserved**.
+The "LibreFit" name and logos are trademarks. **All Rights Reserved.**
 
-Their use is governed by the [Trademark Policy](TRADEMARK_POLICY.md) which applies to relevant files located `public/assets`.
+Their use is governed by the [Trademark Policy](TRADEMARK_POLICY.md) and applies to the
+relevant files in `public/assets`.
