@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="LibreFit - Translator login"
+  description="Login with your Weblate account to receive your supporter code."
+  canonical="/translators/login"
+>
+  <div class="content-card">
+    <h1 class="md-typescale-display-small bold">Translator login</h1>
+    <p class="md-typescale-body-large">
+      Translate on <a href="https://hosted.weblate.org/engage/librefit/" target="_blank" rel="noopener noreferrer">Hosted Weblate</a> and get your supporter code here.
+      Since Weblate does not offer a "login with Weblate" option for external sites, we verify your
+      identity with your personal Weblate API key instead.
+    </p>
+
+    <h2 class="md-typescale-headline-medium">How to get your API key</h2>
+    <ol class="md-typescale-body-large grid gap-2 list-decimal list-inside">
+      <li>
+        <a href="https://hosted.weblate.org/accounts/profile/#api" target="_blank" rel="noopener noreferrer">Open your Weblate profile settings</a>
+        and switch to the <b>API access</b> tab.
+      </li>
+      <li>
+        Click the <b>copy</b> button next to <i>"Your personal API key:"</i> to copy it
+        (the key starts with <code>wlu_</code>).
+      </li>
+      <li>Paste the key below and submit the form to receive your supporter code.</li>
+    </ol>
+    <p class="md-typescale-body-small text-on-surface-variant">
+      The key is used once to verify your account and is never stored. You can invalidate it at any
+      time with the <i>"Regenerate API key"</i> button on the same page.
+    </p>
+
+    <hr>
+
+    <form action="/translators/status" method="POST" class="grid gap-4">
+      <div class="grid gap-2">
+        <label for="token" class="md-typescale-title-small">Your personal API key</label>
+        <input
+          type="password"
+          id="token"
+          name="token"
+          placeholder="e.g., wlu_Y0urAp1K3y..."
+          required
+          minlength="10"
+          maxlength="256"
+          autocomplete="off"
+          spellcheck="false"
+          class="md-text-field"
+        >
+        <p class="m-0 md-typescale-body-small text-on-surface-variant">
+          Looking like <code>wlu_...</code> — the same key shown under <i>API access</i> in your Weblate profile.
+        </p>
+      </div>
+
+      <div class="flex justify-center">
+        <button type="submit" class="md-filled-button w-full sm:w-auto">
+          <span class="material-symbols-outlined" aria-hidden="true">login</span>
+          Unlock supporter code
+        </button>
+      </div>
+    </form>
+  </div>
+</BaseLayout>

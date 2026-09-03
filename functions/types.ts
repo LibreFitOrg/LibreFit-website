@@ -27,4 +27,8 @@ export interface Env {
   GITHUB_CLIENT_SECRET: string;
   GITHUB_WEBHOOK_SECRET: string;
   GITHUB_TOKEN: string;
+
+  // --- Translators (functions/translators/*) ---
+  /** Standard Webhooks secret (base64, optionally whsec_-prefixed) configured in the Weblate Webhook add-on. */
+  WEBLATE_WEBHOOK_SECRET: string;
 }

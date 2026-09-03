@@ -1,5 +1,5 @@
-import html from '../../templates/status.html';
 import { getDb, contributors } from "../_db.js";
+import { renderStatusPage } from "../_status-page.js";
 import { eq } from "drizzle-orm";
 import type { Env } from "../types.js";
 
@@ -19,18 +19,13 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
 
-  // HTML for response
-  let page: string;
-
   if (!code) {
-    page = html
-        .replace('{{STATUS_TITLE}}', `GitHub Login Error`)
-        .replace('{{STATUS_DESCRIPTION}}', `You have to login to GitHub from donate page in order to see this page correctly. If you did it and this error persists, contact us.`)
-        .replace('{{ID}}', `Unknown`)
-        .replace('{{SUPPORTER_CODE}}', `Not available`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-    return new Response( page, { headers: { "Content-Type": "text/html" } });
+    return renderStatusPage({
+      statusTitle: `GitHub Login Error`,
+      statusDescription: `You have to login to GitHub from donate page in order to see this page correctly. If you did it and this error persists, contact us.`,
+      id: `Unknown`,
+      supporterCode: `Not available`,
+    });
   }
 
 
@@ -49,14 +44,12 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
 
 
   if (tokenData.error) {
-    page = html
-        .replace('{{STATUS_TITLE}}', `GitHub OAuth Error`)
-        .replace('{{STATUS_DESCRIPTION}}', `There was an error during OAuth with GitHub, try to restart the login. If error persists, contact us.`)
-        .replace('{{ID}}', `Unknown`)
-        .replace('{{SUPPORTER_CODE}}', `Not available`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-    return new Response( page, { headers: { "Content-Type": "text/html" } });
+    return renderStatusPage({
+      statusTitle: `GitHub OAuth Error`,
+      statusDescription: `There was an error during OAuth with GitHub, try to restart the login. If error persists, contact us.`,
+      id: `Unknown`,
+      supporterCode: `Not available`,
+    });
   }
 
   // Identify User
@@ -78,25 +71,19 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   // Check if user exits, then show code
   if (records.length != 0) {
     const record = records[0];
-    const supporterCode = `${record.code}`;
 
-    page = html
-        .replace('{{STATUS_TITLE}}', `Successful login`)
-        .replace('{{STATUS_DESCRIPTION}}', `Thank you for your contribution ${username}! Your supporter code is down below: just copy and paste it inside the app.`)
-        .replace('{{ID}}', `GitHub ID: ${githubId}`)
-        .replace('{{SUPPORTER_CODE}}', `${supporterCode}`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
-  } else {
-    page = html
-        .replace('{{STATUS_TITLE}}', `Successful login but...`)
-        .replace('{{STATUS_DESCRIPTION}}', `Hi ${username}! It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`)
-        .replace('{{ID}}', `GitHub ID: ${githubId}`)
-        .replace('{{SUPPORTER_CODE}}', `Not available`)
-        .replace('{{URL_DESC}}', ``)
-        .replace('{{REDIRECT_SNIPPET}}', ``);
+    return renderStatusPage({
+      statusTitle: `Successful login`,
+      statusDescription: `Thank you for your contribution ${username}! Your supporter code is down below: just copy and paste it inside the app.`,
+      id: `GitHub ID: ${githubId}`,
+      supporterCode: `${record.code}`,
+    });
   }
 
-  url.searchParams.delete("code");
-  return new Response( page, { headers: { "Content-Type": "text/html" } });
+  return renderStatusPage({
+    statusTitle: `Successful login but...`,
+    statusDescription: `Hi ${username}! It looks like you haven't merged any pull request yet. If you think this is an error, contact us.`,
+    id: `GitHub ID: ${githubId}`,
+    supporterCode: `Not available`,
+  });
 };

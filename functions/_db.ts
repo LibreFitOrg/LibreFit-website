@@ -26,6 +26,15 @@ export const contributors = pgTable("contributors",
   }
 );
 
+export const translators = pgTable("translators",
+  {
+    weblateUsername: text("weblate_username").primaryKey(),
+    code: text("code"),
+    createdTimestamp: timestamp("created_at").defaultNow(),
+    lastContributionTimestamp: timestamp("last_contribution_at").defaultNow(),
+  }
+);
+
 export const errorLogs = pgTable("error_logs", {
   id: uuid("id").primaryKey(),
   method: text("method").notNull(),
@@ -37,6 +46,7 @@ export const errorLogs = pgTable("error_logs", {
 
 export type Donation = InferSelectModel<typeof donations>;
 export type Contributor = InferSelectModel<typeof contributors>;
+export type Translator = InferSelectModel<typeof translators>;
 export type ErrorLog = InferSelectModel<typeof errorLogs>;
 
 // Connection Helper
