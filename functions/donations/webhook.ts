@@ -86,7 +86,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const toAddress = `${CONTACT_EMAIL}`;
 
     // Prepare encryption
-    const pgpKeyPath = '/pgp_key.asc';
+    const pgpKeyPath = '/FEB0FD26BBC88CA4ADF92B77B4FAD0FA27CDD62E.asc';
 
     const keyResponse = await fetch(`${url.origin}${pgpKeyPath}`);
     if (!keyResponse.ok) {

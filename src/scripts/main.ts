@@ -15,7 +15,7 @@ let submitButton: HTMLButtonElement;
 
 let originalButtonText: string | null;
 
-const pgpKeyPath = '/pgp_key.asc';
+const pgpKeyPath = '/FEB0FD26BBC88CA4ADF92B77B4FAD0FA27CDD62E.asc';
 
 async function encryptContactForm(event: SubmitEvent) {
     // Prevent the default form submission
